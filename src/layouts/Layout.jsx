@@ -42,6 +42,9 @@ export default function Layout() {
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <Link to="/blog" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <span className="hidden sm:inline">Blog</span>
+            </Link>
             <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
               <ShoppingBag size={16} />
               <span className="hidden sm:inline">Store</span>

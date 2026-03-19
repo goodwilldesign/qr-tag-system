@@ -11,6 +11,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import TagView from './pages/TagView';
 import Store from './pages/Store';
+import Blog from './pages/Blog';
 
 // Protected Pages
 import Dashboard from './pages/Dashboard';
@@ -59,6 +60,7 @@ function App() {
           {/* Public Routes */}
           <Route path="tag/:id" element={<TagView />} />
           <Route path="store" element={<Store />} />
+          <Route path="blog" element={<Blog />} />
 
           {/* Protected Routes */}
           <Route path="dashboard" element={session ? <Dashboard /> : <Navigate to="/login" replace />} />
