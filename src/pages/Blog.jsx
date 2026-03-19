@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, MapPin, KeySquare, CarFront, Baby, Bell, ArrowLeft, Share2 } from 'lucide-react';
 
-const BLOG_POSTS = [
+export const BLOG_POSTS = [
   {
     id: 1,
     title: "Don't Lose Your Best Friend: Why GPS QR Pet Tags Are Better Than Microchips",

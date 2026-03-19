@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom';
-import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import ParticleCanvas from '../components/ParticleCanvas';
+import { BLOG_POSTS } from './Blog';
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const features = [
     {
       title: 'Digital Tags are Free',
@@ -62,44 +64,7 @@ export default function LandingPage() {
     { emoji: '💼', label: 'Luggage' },
   ];
 
-  const tagShowcase = [
-    {
-      title: 'Pet Tags',
-      description: 'Keep your furry friends safe with vet info, allergies, and instant GPS rescue when lost.',
-      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-amber-500 to-orange-500',
-    },
-    {
-      title: 'Child Safety Tags',
-      description: 'Emergency contacts, medical notes, and instant WhatsApp to parents if they wander off.',
-      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-pink-500 to-rose-500',
-    },
-    {
-      title: 'Vehicle Parking Tags',
-      description: 'Dashboard tag for blocking alerts, headlight warnings, and anonymous owner contact.',
-      image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-emerald-500 to-teal-500',
-    },
-    {
-      title: 'Doorbell Tags',
-      description: 'Silent digital doorbell with custom delivery instructions. No more waking the baby.',
-      image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-violet-500 to-purple-500',
-    },
-    {
-      title: 'House Rental Tags',
-      description: 'Airbnb-ready: property photos, Wi-Fi, amenities list, and instant host contact.',
-      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-blue-500 to-indigo-500',
-    },
-    {
-      title: 'Hotel Tags',
-      description: 'Room info, checkout times, concierge contact, and local recommendations for guests.',
-      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600&h=600',
-      color: 'from-cyan-500 to-blue-500',
-    }
-  ];
+  // Removed tagShowcase to replace with recent blog posts
 
   const steps = [
     {
@@ -237,39 +202,66 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Tag Showcase (Square Cards, No Emojis) ────── */}
-      <section className="py-20 md:py-28 bg-slate-50 border-y border-slate-200 w-full">
+      {/* ── Recent Blog Posts ─────────────────────────── */}
+      <section id="products" className="py-20 md:py-28 bg-slate-50 border-y border-slate-200 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Our Products</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">A Tag for Every Need</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">From pets to parking, we have got everything covered with smart QR technology.</p>
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Latest Insights</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">From the TagLink Blog</h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Discover modern ways to use QR tech to secure what matters.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tagShowcase.map((tag, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-100 overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300">
-                <div className="aspect-square overflow-hidden relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {BLOG_POSTS.slice(0, 3).map((post) => (
+              <article 
+                key={post.id} 
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  navigate('/blog');
+                }}
+                className="flex flex-col bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer group"
+              >
+                {/* Image Banner */}
+                <div className="w-full h-56 relative overflow-hidden bg-slate-100">
                   <img 
-                    src={tag.image} 
-                    alt={tag.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    src={post.featuredImage} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${tag.color} opacity-15`}></div>
-                  {/* Title overlay at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-5">
-                    <h3 className="text-lg font-bold text-white">{tag.title}</h3>
+                  <div className={`absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs shadow-sm bg-white/95 backdrop-blur-sm ${post.color}`}>
+                    {post.icon}
+                    {post.readTime.toUpperCase()}
                   </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4">{tag.description}</p>
-                  <Link to="/login" className="inline-flex items-center gap-1.5 text-violet-600 font-bold text-sm hover:text-violet-700 group-hover:translate-x-1 transition-transform">
-                    Get this tag <ArrowRight size={16} />
-                  </Link>
+
+                {/* Content Details */}
+                <div className="p-6 md:p-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">
+                    <BookOpen size={14} />
+                    {post.date}
+                  </div>
+
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight group-hover:text-violet-600 transition-colors line-clamp-3 mb-4">
+                    {post.title}
+                  </h2>
+
+                  <p className="text-slate-500 text-base leading-relaxed mix-blend-multiply line-clamp-3 mb-6 flex-1">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="mt-auto flex items-center gap-2 font-bold text-violet-600 group-hover:translate-x-1 transition-transform">
+                    Read Article &rarr;
+                  </div>
                 </div>
-              </div>
+              </article>
             ))}
+          </div>
+
+          <div className="mt-14 text-center">
+            <Link to="/blog" className="btn btn-secondary px-8 py-3.5 text-slate-700 hover:text-violet-700 font-semibold rounded-xl inline-flex items-center gap-2 transition-all shadow-sm">
+              View All Posts <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
