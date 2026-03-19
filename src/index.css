@@ -51,8 +51,22 @@
     @apply text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600;
   }
 
+  /* Seamless header - transparent by default */
   .navbar {
-    @apply fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm;
+    @apply fixed top-0 w-full z-50 py-4 transition-all duration-300;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
+  }
+
+  /* Frosted glass when scrolled */
+  .navbar-scrolled {
+    @apply py-3;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   .nav-brand {
