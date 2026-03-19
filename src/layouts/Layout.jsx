@@ -49,12 +49,12 @@ export default function Layout() {
               <BookOpen size={16} />
               <span className="hidden sm:inline">Blog</span>
             </Link>
-            <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
-              <ShoppingBag size={16} />
-              <span className="hidden sm:inline">Store</span>
-            </Link>
             {session ? (
               <>
+                <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                  <ShoppingBag size={16} />
+                  <span className="hidden sm:inline">Store</span>
+                </Link>
                 {isAdmin && (
                   <Link to="/admin" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm border-violet-400 text-violet-600 hover:bg-violet-50">
                     <Shield size={16} />

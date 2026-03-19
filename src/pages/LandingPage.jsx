@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, Scan, Bell, MapPin, Key, Car, Baby, Dog, Hotel, Home } from 'lucide-react';
+import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 export default function LandingPage() {
   const features = [
@@ -62,60 +63,41 @@ export default function LandingPage() {
 
   const tagShowcase = [
     {
-      emoji: '🐶',
       title: 'Pet Tags',
       description: 'Keep your furry friends safe with vet info, allergies, and instant GPS rescue when lost.',
-      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-amber-500 to-orange-500',
-      bg: 'bg-amber-50'
     },
     {
-      emoji: '👶',
       title: 'Child Safety Tags',
       description: 'Emergency contacts, medical notes, and instant WhatsApp to parents if they wander off.',
-      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-pink-500 to-rose-500',
-      bg: 'bg-pink-50'
     },
     {
-      emoji: '🚗',
       title: 'Vehicle Parking Tags',
       description: 'Dashboard tag for blocking alerts, headlight warnings, and anonymous owner contact.',
-      image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-emerald-500 to-teal-500',
-      bg: 'bg-emerald-50'
     },
     {
-      emoji: '🔔',
       title: 'Doorbell Tags',
       description: 'Silent digital doorbell with custom delivery instructions. No more waking the baby.',
-      image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-violet-500 to-purple-500',
-      bg: 'bg-violet-50'
     },
     {
-      emoji: '🏠',
       title: 'House Rental Tags',
       description: 'Airbnb-ready: property photos, Wi-Fi, amenities list, and instant host contact.',
-      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-blue-500 to-indigo-500',
-      bg: 'bg-blue-50'
     },
     {
-      emoji: '🏨',
       title: 'Hotel Tags',
       description: 'Room info, checkout times, concierge contact, and local recommendations for guests.',
-      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600',
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600&h=600',
       color: 'from-cyan-500 to-blue-500',
-      bg: 'bg-cyan-50'
     }
-  ];
-
-  const stats = [
-    { value: '6', label: 'Tag Types' },
-    { value: 'Free', label: 'Digital Tags' },
-    { value: '$9.99', label: 'Physical Tag' },
-    { value: '24/7', label: 'AI Support' },
   ];
 
   const steps = [
@@ -129,7 +111,7 @@ export default function LandingPage() {
     {
       step: '02',
       title: 'Add Your Details',
-      description: "Fill in the details you want displayed when someone scans your tag. You control what\'s visible.",
+      description: "Fill in the details you want displayed when someone scans your tag. You control what's visible.",
       icon: <Shield className="h-7 w-7" />,
       color: 'bg-blue-500'
     },
@@ -141,6 +123,43 @@ export default function LandingPage() {
       color: 'bg-emerald-500'
     }
   ];
+
+  const faqs = [
+    {
+      q: 'Is TagLink really free?',
+      a: 'Yes! Digital QR tags are 100% free forever. You can create unlimited tags, customize them, and print them at home. We only charge for premium physical tags (laser-engraved metal or weatherproof stickers) if you choose to order one.'
+    },
+    {
+      q: 'How does the WhatsApp connection work?',
+      a: 'When someone scans your QR tag, they see your tag details along with a "Chat on WhatsApp" button. Tapping it opens a direct WhatsApp conversation with you — no phone number is publicly visible unless you choose to display it.'
+    },
+    {
+      q: 'Can I update my tag details after printing?',
+      a: 'Absolutely. Since the QR code links to your digital profile, you can change your phone number, address, emergency contacts, or any other details at any time. The printed QR code stays the same — it just shows the updated info.'
+    },
+    {
+      q: 'What types of tags can I create?',
+      a: 'TagLink supports 6 tag types: Pet Tags (for dogs, cats, etc.), Child Safety Tags, Vehicle/Parking Tags, Doorbell Tags, House Rental Tags (Airbnb-style), and Hotel Tags. Each type has custom fields designed for that specific use case.'
+    },
+    {
+      q: 'How do physical tags work?',
+      a: 'Physical tags are premium, laser-engraved metal or weatherproof sticker tags that we ship worldwide for free. Each physical tag has a unique QR code pre-linked to your TagLink account. Just scan, set up, and attach it.'
+    },
+    {
+      q: 'Is my personal information safe?',
+      a: 'Privacy is our top priority. You control exactly what information is displayed when someone scans your tag. Sensitive data like your full address or phone number can be hidden — scanners communicate through WhatsApp without ever seeing your number directly.'
+    },
+    {
+      q: 'Do I need an app to use TagLink?',
+      a: 'No app needed! TagLink is entirely web-based. You manage your tags from any browser, and people who scan your QR code see a mobile-friendly web page — no downloads required for either party.'
+    },
+    {
+      q: 'Can I use TagLink internationally?',
+      a: 'Yes, TagLink works worldwide. Our digital tags have no geographic restrictions, and we offer free international shipping on all physical tag orders.'
+    }
+  ];
+
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-slate-50">
@@ -179,20 +198,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Stats Counter Bar ─────────────────────────── */}
-      <section className="bg-slate-900 w-full py-10 md:py-14">
-        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, i) => (
-              <div key={i} className="space-y-1">
-                <p className="text-3xl md:text-4xl font-extrabold text-white">{stat.value}</p>
-                <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Use Cases chips ───────────────────────────── */}
       <section className="py-10 bg-slate-50 border-b border-slate-200 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
@@ -219,7 +224,6 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 max-w-5xl mx-auto">
             {steps.map((s, i) => (
               <div key={i} className="text-center group relative">
-                {/* Connector Line */}
                 {i < steps.length - 1 && (
                   <div className="hidden md:block absolute top-10 left-[calc(50%+3rem)] w-[calc(100%-6rem)] h-0.5 bg-slate-200"></div>
                 )}
@@ -235,32 +239,34 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Tag Showcase ──────────────────────────────── */}
+      {/* ── Tag Showcase (Square Cards, No Emojis) ────── */}
       <section className="py-20 md:py-28 bg-slate-50 border-y border-slate-200 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Our Products</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">A Tag for Every Need</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">From pets to parking, we've got everything covered with smart QR technology.</p>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">From pets to parking, we have got everything covered with smart QR technology.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {tagShowcase.map((tag, i) => (
-              <div key={i} className="bg-white rounded-3xl border border-slate-100 overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300">
-                <div className="h-48 overflow-hidden relative">
+              <div key={i} className="bg-white rounded-2xl border border-slate-100 overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300">
+                <div className="aspect-square overflow-hidden relative">
                   <img 
                     src={tag.image} 
                     alt={tag.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${tag.color} opacity-20`}></div>
-                  <div className="absolute top-4 left-4 text-3xl">{tag.emoji}</div>
+                  <div className={`absolute inset-0 bg-gradient-to-t ${tag.color} opacity-15`}></div>
+                  {/* Title overlay at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-5">
+                    <h3 className="text-lg font-bold text-white">{tag.title}</h3>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{tag.title}</h3>
+                <div className="p-5">
                   <p className="text-slate-500 text-sm leading-relaxed mb-4">{tag.description}</p>
-                  <Link to="/store" className="inline-flex items-center gap-1.5 text-violet-600 font-bold text-sm hover:text-violet-700 group-hover:translate-x-1 transition-transform">
+                  <Link to="/login" className="inline-flex items-center gap-1.5 text-violet-600 font-bold text-sm hover:text-violet-700 group-hover:translate-x-1 transition-transform">
                     Get this tag <ArrowRight size={16} />
                   </Link>
                 </div>
@@ -309,7 +315,7 @@ export default function LandingPage() {
             <Link to="/login" className="btn bg-white text-violet-700 hover:bg-violet-50 px-8 py-4 text-base font-bold shadow-xl shadow-violet-900/30 w-full sm:w-auto">
               Create Your Free Tag →
             </Link>
-            <Link to="/store" className="btn border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 text-base font-bold w-full sm:w-auto">
+            <Link to="/login" className="btn border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 text-base font-bold w-full sm:w-auto">
               Browse Store
             </Link>
           </div>
@@ -354,6 +360,37 @@ export default function LandingPage() {
                 </Link>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ Section ───────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-white border-t border-slate-200 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">FAQ</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Frequently Asked Questions</h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Everything you need to know about TagLink and how it works.</p>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-3">
+            {faqs.map((faq, i) => {
+              const isOpen = openFaq === i;
+              return (
+                <div key={i} className={`bg-white border rounded-2xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-violet-200 shadow-lg shadow-violet-100/50' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between px-6 py-5 text-left gap-4 cursor-pointer"
+                  >
+                    <span className="font-bold text-slate-900 text-base">{faq.q}</span>
+                    <ChevronDown size={20} className={`shrink-0 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-violet-500' : ''}`} />
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <p className="px-6 pb-5 text-slate-500 text-sm leading-relaxed">{faq.a}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
