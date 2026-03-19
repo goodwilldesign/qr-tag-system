@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles } from 'lucide-react';
+import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, Scan, Bell, MapPin, Key, Car, Baby, Dog, Hotel, Home } from 'lucide-react';
 
 export default function LandingPage() {
   const features = [
@@ -60,19 +60,100 @@ export default function LandingPage() {
     { emoji: '💼', label: 'Luggage' },
   ];
 
+  const tagShowcase = [
+    {
+      emoji: '🐶',
+      title: 'Pet Tags',
+      description: 'Keep your furry friends safe with vet info, allergies, and instant GPS rescue when lost.',
+      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600',
+      color: 'from-amber-500 to-orange-500',
+      bg: 'bg-amber-50'
+    },
+    {
+      emoji: '👶',
+      title: 'Child Safety Tags',
+      description: 'Emergency contacts, medical notes, and instant WhatsApp to parents if they wander off.',
+      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=600',
+      color: 'from-pink-500 to-rose-500',
+      bg: 'bg-pink-50'
+    },
+    {
+      emoji: '🚗',
+      title: 'Vehicle Parking Tags',
+      description: 'Dashboard tag for blocking alerts, headlight warnings, and anonymous owner contact.',
+      image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=600',
+      color: 'from-emerald-500 to-teal-500',
+      bg: 'bg-emerald-50'
+    },
+    {
+      emoji: '🔔',
+      title: 'Doorbell Tags',
+      description: 'Silent digital doorbell with custom delivery instructions. No more waking the baby.',
+      image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=600',
+      color: 'from-violet-500 to-purple-500',
+      bg: 'bg-violet-50'
+    },
+    {
+      emoji: '🏠',
+      title: 'House Rental Tags',
+      description: 'Airbnb-ready: property photos, Wi-Fi, amenities list, and instant host contact.',
+      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=600',
+      color: 'from-blue-500 to-indigo-500',
+      bg: 'bg-blue-50'
+    },
+    {
+      emoji: '🏨',
+      title: 'Hotel Tags',
+      description: 'Room info, checkout times, concierge contact, and local recommendations for guests.',
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600',
+      color: 'from-cyan-500 to-blue-500',
+      bg: 'bg-cyan-50'
+    }
+  ];
+
+  const stats = [
+    { value: '6', label: 'Tag Types' },
+    { value: 'Free', label: 'Digital Tags' },
+    { value: '$9.99', label: 'Physical Tag' },
+    { value: '24/7', label: 'AI Support' },
+  ];
+
+  const steps = [
+    {
+      step: '01',
+      title: 'Create Your Tag',
+      description: 'Sign up free and choose your tag type — Pet, Vehicle, Doorbell, Rental, Kid, or Hotel.',
+      icon: <QrCode className="h-7 w-7" />,
+      color: 'bg-violet-500'
+    },
+    {
+      step: '02',
+      title: 'Add Your Details',
+      description: "Fill in the details you want displayed when someone scans your tag. You control what\'s visible.",
+      icon: <Shield className="h-7 w-7" />,
+      color: 'bg-blue-500'
+    },
+    {
+      step: '03',
+      title: 'Print or Order',
+      description: 'Print the QR at home for free, or order a premium laser-engraved steel tag shipped to your door.',
+      icon: <Package className="h-7 w-7" />,
+      color: 'bg-emerald-500'
+    }
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen w-full overflow-x-hidden bg-slate-50">
+    <div className="flex flex-col w-full overflow-x-hidden bg-slate-50">
 
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-24 md:pt-36 pb-20 md:pb-28 w-full overflow-hidden bg-white">
-        {/* subtle gradient blobs */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-violet-100 rounded-full blur-3xl opacity-60 animate-float"></div>
           <div className="absolute -bottom-12 -right-24 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-50 rounded-full blur-3xl opacity-40"></div>
         </div>
 
         <div className="relative z-10 text-center w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          {/* badge */}
           <div className="mx-auto inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200 mb-6 md:mb-8 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-violet-500" />
             <span className="text-xs sm:text-sm font-semibold text-violet-700 tracking-wide">TagLink · Now Live</span>
@@ -98,15 +179,92 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Stats Counter Bar ─────────────────────────── */}
+      <section className="bg-slate-900 w-full py-10 md:py-14">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat, i) => (
+              <div key={i} className="space-y-1">
+                <p className="text-3xl md:text-4xl font-extrabold text-white">{stat.value}</p>
+                <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Use Cases chips ───────────────────────────── */}
-      <section className="py-10 bg-slate-50 border-y border-slate-200 w-full">
+      <section className="py-10 bg-slate-50 border-b border-slate-200 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-400 mb-6">Works for every use case</p>
           <div className="flex flex-wrap justify-center gap-3">
             {useCases.map((u) => (
-              <span key={u.label} className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-600 shadow-sm hover:border-violet-300 hover:text-violet-700 transition-colors">
+              <span key={u.label} className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-600 shadow-sm hover:border-violet-300 hover:text-violet-700 transition-colors cursor-default">
                 <span>{u.emoji}</span> {u.label}
               </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works ──────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-white w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Simple Process</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">How It Works</h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Three simple steps to protect what matters most.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 max-w-5xl mx-auto">
+            {steps.map((s, i) => (
+              <div key={i} className="text-center group relative">
+                {/* Connector Line */}
+                {i < steps.length - 1 && (
+                  <div className="hidden md:block absolute top-10 left-[calc(50%+3rem)] w-[calc(100%-6rem)] h-0.5 bg-slate-200"></div>
+                )}
+                <div className={`w-20 h-20 ${s.color} rounded-3xl flex items-center justify-center mx-auto mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300 relative z-10`}>
+                  {s.icon}
+                </div>
+                <span className="text-xs font-black text-slate-300 uppercase tracking-widest">Step {s.step}</span>
+                <h3 className="text-xl font-bold text-slate-900 mt-2 mb-3">{s.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto">{s.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Tag Showcase ──────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-slate-50 border-y border-slate-200 w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Our Products</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">A Tag for Every Need</h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">From pets to parking, we've got everything covered with smart QR technology.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {tagShowcase.map((tag, i) => (
+              <div key={i} className="bg-white rounded-3xl border border-slate-100 overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300">
+                <div className="h-48 overflow-hidden relative">
+                  <img 
+                    src={tag.image} 
+                    alt={tag.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${tag.color} opacity-20`}></div>
+                  <div className="absolute top-4 left-4 text-3xl">{tag.emoji}</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{tag.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-4">{tag.description}</p>
+                  <Link to="/store" className="inline-flex items-center gap-1.5 text-violet-600 font-bold text-sm hover:text-violet-700 group-hover:translate-x-1 transition-transform">
+                    Get this tag <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -116,6 +274,7 @@ export default function LandingPage() {
       <section className="py-20 md:py-28 bg-white w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-14">
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Why TagLink</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Everything you need</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">All the tools to manage your tags digitally so you never lose what matters most.</p>
           </div>
@@ -133,10 +292,35 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Big CTA Banner ────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-violet-600 via-violet-700 to-indigo-800 w-full relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+        </div>
+        <div className="relative z-10 text-center w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 max-w-3xl mx-auto leading-tight">
+            Ready to protect what matters most?
+          </h2>
+          <p className="text-violet-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            Join thousands of pet owners, hosts, and families who trust TagLink to keep their world connected and safe.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/login" className="btn bg-white text-violet-700 hover:bg-violet-50 px-8 py-4 text-base font-bold shadow-xl shadow-violet-900/30 w-full sm:w-auto">
+              Create Your Free Tag →
+            </Link>
+            <Link to="/store" className="btn border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 text-base font-bold w-full sm:w-auto">
+              Browse Store
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── Pricing ──────────────────────────────────── */}
       <section id="pricing" className="py-20 md:py-28 bg-slate-50 border-t border-slate-200 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-14">
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Pricing</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Simple, transparent pricing</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Digital is free forever. Only pay for premium physical tags.</p>
           </div>

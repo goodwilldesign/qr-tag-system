@@ -197,9 +197,10 @@ export default function ChatWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 bg-slate-900 text-white rounded-full shadow-2xl hover:scale-105 transition-all z-50 ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-6 right-6 p-4 bg-emerald-500 text-white rounded-full shadow-2xl shadow-emerald-500/40 hover:bg-emerald-400 hover:scale-110 transition-all z-50 ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
       >
-        <MessageCircle size={28} />
+        <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-30"></span>
+        <MessageCircle size={28} className="relative z-10" />
       </button>
 
       {/* Chat Window */}
