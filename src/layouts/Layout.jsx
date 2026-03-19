@@ -7,6 +7,7 @@ import ChatWidget from '../components/support/ChatWidget';
 export default function Layout() {
   const [session, setSession] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,6 +26,15 @@ export default function Layout() {
       if (!s) setIsAdmin(false);
     });
     return () => subscription.unsubscribe();
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Scroll listener for seamless header
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // check initial state
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = async () => {
@@ -32,12 +42,13 @@ export default function Layout() {
     navigate('/login');
   };
 
-  // Pages that handle their own padding (like landing, blog)
+  // Pages that handle their own padding
+  const isLandingPage = location.pathname === '/';
   const isFullWidthPage = ['/', '/blog'].includes(location.pathname);
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <nav className="navbar">
+      <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
@@ -45,10 +56,6 @@ export default function Layout() {
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <Link to="/blog" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
-              <BookOpen size={16} />
-              <span className="hidden sm:inline">Blog</span>
-            </Link>
             {session ? (
               <>
                 <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
@@ -74,13 +81,13 @@ export default function Layout() {
                 </button>
               </>
             ) : (
-              <Link to="/login" className="btn btn-primary px-5 py-2 text-sm">Log In</Link>
+              <Link to="/login" className="btn btn-primary px-6 py-2.5 text-sm rounded-full shadow-lg shadow-violet-200">Log In</Link>
             )}
           </div>
         </div>
       </nav>
 
-      <main className={`w-full flex-1 mt-16 ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
+      <main className={`w-full flex-1 ${isLandingPage ? '' : 'mt-16'} ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
         <Outlet />
       </main>
 
