@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden w-full m-0 p-0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-slate-900;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white border border-slate-200 rounded-2xl shadow-sm;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 rounded-xl cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-violet-600 hover:bg-violet-700 active:bg-violet-800 text-white shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-300 shadow-sm;
+  }
+
+  .btn-danger {
+    @apply bg-red-50 hover:bg-red-100 text-red-600 border border-red-200;
+  }
+
+  .form-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-slate-700;
+  }
+
+  .form-input {
+    @apply bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-800 outline-none 
+           focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all 
+           placeholder:text-slate-400 w-full;
+  }
+
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600;
+  }
+
+  .navbar {
+    @apply fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm;
+  }
+
+  .nav-brand {
+    @apply text-xl font-black flex items-center gap-2 tracking-tight text-slate-900;
+  }
+}
+
+@layer utilities {
+  .mt-lg {
+    @apply mt-20;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track  { background: #f1f5f9; }
+::-webkit-scrollbar-thumb  { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
