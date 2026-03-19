@@ -29,11 +29,11 @@ export default function ParticleCanvas() {
       y: Math.random() * height,
       originX: 0,
       originY: 0,
-      size: Math.random() * 5 + 2,
+      size: Math.random() * 6 + 3, // slightly larger
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      opacity: Math.random() * 0.5 + 0.15,
-      speedX: (Math.random() - 0.5) * 0.3,
-      speedY: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.6 + 0.3, // more visible
+      speedX: (Math.random() - 0.5) * 0.6, // twice as fast base drift
+      speedY: (Math.random() - 0.5) * 0.6,
       rotation: Math.random() * Math.PI * 2,
       rotationSpeed: (Math.random() - 0.5) * 0.02,
       shape,
@@ -41,7 +41,7 @@ export default function ParticleCanvas() {
   }, []);
 
   const initParticles = useCallback((width, height) => {
-    const count = Math.min(Math.floor((width * height) / 4000), 120);
+    const count = Math.min(Math.floor((width * height) / 2500), 200); // more particles
     const particles = [];
     for (let i = 0; i < count; i++) {
       const p = createParticle(width, height);
@@ -130,7 +130,7 @@ export default function ParticleCanvas() {
 
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
-      const influence = 150; // mouse influence radius
+      const influence = 250; // larger mouse influence radius
 
       for (const p of particlesRef.current) {
         // Mouse repulsion
@@ -141,9 +141,9 @@ export default function ParticleCanvas() {
         if (dist < influence && dist > 0) {
           const force = (influence - dist) / influence;
           const angle = Math.atan2(dy, dx);
-          p.x += Math.cos(angle) * force * 4;
-          p.y += Math.sin(angle) * force * 4;
-          p.opacity = Math.min(p.opacity + 0.02, 0.8);
+          p.x += Math.cos(angle) * force * 8; // stronger push
+          p.y += Math.sin(angle) * force * 8;
+          p.opacity = Math.min(p.opacity + 0.05, 0.9);
           p.rotationSpeed = (Math.random() - 0.5) * 0.08;
         } else {
           // Drift back to origin slowly

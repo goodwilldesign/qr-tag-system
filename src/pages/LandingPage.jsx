@@ -166,14 +166,9 @@ export default function LandingPage() {
     <div className="flex flex-col w-full overflow-x-hidden bg-slate-50">
 
       {/* ── Hero ─────────────────────────────────────── */}
-      <section className="relative pt-24 md:pt-36 pb-20 md:pb-28 w-full overflow-hidden bg-white">
+      <section className="relative min-h-[90vh] md:min-h-screen w-full flex flex-col justify-center overflow-hidden bg-white">
         {/* Interactive Particle Background */}
         <ParticleCanvas />
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-violet-100 rounded-full blur-3xl opacity-60 animate-float"></div>
-          <div className="absolute -bottom-12 -right-24 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-50 rounded-full blur-3xl opacity-40"></div>
-        </div>
 
         <div className="relative z-10 text-center w-full px-4 sm:px-6 lg:px-12 xl:px-20">
           <div className="mx-auto inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200 mb-6 md:mb-8 animate-fade-in">
