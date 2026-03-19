@@ -174,10 +174,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────── */}
-      <footer className="py-8 border-t border-slate-200 bg-white text-center text-slate-400 text-sm w-full">
-        <p>© 2026 TagLink · All rights reserved.</p>
-      </footer>
     </div>
   );
 }

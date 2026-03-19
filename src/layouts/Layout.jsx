@@ -1,5 +1,5 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { QrCode, User, LogOut, LayoutDashboard, ShoppingBag, Shield } from 'lucide-react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { QrCode, User, LogOut, LayoutDashboard, ShoppingBag, Shield, BookOpen, Mail, MapPin, Phone } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useEffect, useState } from 'react';
 import ChatWidget from '../components/support/ChatWidget';
@@ -8,6 +8,7 @@ export default function Layout() {
   const [session, setSession] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const init = async () => {
@@ -26,14 +27,16 @@ export default function Layout() {
     return () => subscription.unsubscribe();
   }, []);
 
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
   };
 
+  // Pages that handle their own padding (like landing, blog)
+  const isFullWidthPage = ['/', '/blog'].includes(location.pathname);
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen w-full">
       <nav className="navbar">
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
@@ -43,6 +46,7 @@ export default function Layout() {
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link to="/blog" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <BookOpen size={16} />
               <span className="hidden sm:inline">Blog</span>
             </Link>
             <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
@@ -76,12 +80,91 @@ export default function Layout() {
         </div>
       </nav>
 
-      <main className="w-full px-4 sm:px-6 lg:px-8 mx-auto mt-lg pb-12">
+      <main className={`w-full flex-1 mt-16 ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
         <Outlet />
       </main>
 
+      {/* ── Beautiful Footer ──────────────────────────── */}
+      <footer className="bg-slate-900 text-slate-300 w-full">
+        {/* Main Footer Grid */}
+        <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+
+            {/* Brand Column */}
+            <div className="lg:col-span-1 space-y-5">
+              <Link to="/" className="flex items-center gap-2.5 group">
+                <div className="p-2 bg-violet-600 rounded-xl group-hover:bg-violet-500 transition-colors">
+                  <QrCode className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-extrabold text-white tracking-tight">TagLink</span>
+              </Link>
+              <p className="text-sm leading-relaxed text-slate-400 max-w-xs">
+                Smart QR tags that connect the physical world to digital safety. Protect what matters most — pets, kids, vehicles, and property.
+              </p>
+              <div className="flex items-center gap-3 pt-2">
+                <a href="mailto:support@taglink.com" className="flex items-center gap-2 text-sm text-slate-400 hover:text-violet-400 transition-colors">
+                  <Mail size={14} /> support@taglink.com
+                </a>
+              </div>
+            </div>
+
+            {/* Products Column */}
+            <div className="space-y-5">
+              <h4 className="text-sm font-bold text-white uppercase tracking-widest">Products</h4>
+              <ul className="space-y-3 text-sm">
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">🐶 Pet Tags</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">👶 Child Safety Tags</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">🚗 Vehicle / Parking Tags</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">🔔 Doorbell Tags</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">🏠 House Rental Tags</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">🏨 Hotel Tags</Link></li>
+              </ul>
+            </div>
+
+            {/* Resources Column */}
+            <div className="space-y-5">
+              <h4 className="text-sm font-bold text-white uppercase tracking-widest">Resources</h4>
+              <ul className="space-y-3 text-sm">
+                <li><Link to="/blog" className="hover:text-violet-400 transition-colors">Blog</Link></li>
+                <li><Link to="/#pricing" className="hover:text-violet-400 transition-colors">Pricing</Link></li>
+                <li><Link to="/store" className="hover:text-violet-400 transition-colors">Store</Link></li>
+                <li><Link to="/login" className="hover:text-violet-400 transition-colors">Create Free Tag</Link></li>
+              </ul>
+            </div>
+
+            {/* CTA Column */}
+            <div className="space-y-5">
+              <h4 className="text-sm font-bold text-white uppercase tracking-widest">Get Started</h4>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Create your first digital QR tag completely free. No credit card required.
+              </p>
+              <Link to="/login" className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm shadow-lg shadow-violet-900/30">
+                Create Your Free Tag →
+              </Link>
+              <div className="flex items-start gap-2 text-xs text-slate-500 pt-2">
+                <MapPin size={14} className="shrink-0 mt-0.5" />
+                <span>Available worldwide · Free shipping on physical tags</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-slate-800">
+          <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-slate-500">
+              © {new Date().getFullYear()} TagLink · All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-xs text-slate-500">
+              <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-slate-300 transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-slate-300 transition-colors">Refund Policy</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
       <ChatWidget />
-    </>
+    </div>
   );
 }
-
