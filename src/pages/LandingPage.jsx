@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import ParticleCanvas from '../components/ParticleCanvas';
 
 export default function LandingPage() {
   const features = [
@@ -166,6 +167,8 @@ export default function LandingPage() {
 
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-24 md:pt-36 pb-20 md:pb-28 w-full overflow-hidden bg-white">
+        {/* Interactive Particle Background */}
+        <ParticleCanvas />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-violet-100 rounded-full blur-3xl opacity-60 animate-float"></div>
           <div className="absolute -bottom-12 -right-24 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '2s' }}></div>
