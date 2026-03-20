@@ -27,6 +27,7 @@ import AdminBlog from './pages/admin/AdminBlog';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminSupport from './pages/admin/AdminSupport';
+import AdminTemplates from './pages/admin/AdminTemplates';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -77,6 +78,7 @@ function App() {
           <Route path="blog" element={<AdminBlog />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="support" element={<AdminSupport />} />
+          <Route path="templates" element={<AdminTemplates />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Routes>

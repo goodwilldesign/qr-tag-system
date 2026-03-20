@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
 import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import TagPrintModal from '../components/TagPrintModal';
 
 const TAG_TYPES = [
   { id: 'dog',      label: 'Pet Tag',   icon: <Tag size={18} /> },
@@ -32,6 +33,7 @@ export default function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [deleteError, setDeleteError] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, title }
+  const [printTag, setPrintTag] = useState(null);
   const [recentScans, setRecentScans] = useState([]);
 
   useEffect(() => {
@@ -170,24 +172,8 @@ export default function Dashboard() {
     }
   };
 
-  const handleDownload = (tagId, title) => {
-    const svg = document.getElementById(`qr-${tagId}`);
-    if (!svg) return;
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.onload = () => {
-      canvas.width = img.width; canvas.height = img.height;
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-      const a = document.createElement('a');
-      a.download = `${title.replace(/\s+/g, '_')}_QR.png`;
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-    };
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+  const handleDownload = (tag) => {
+    setPrintTag(tag);
   };
 
   const getTagUrl = (id) => `${window.location.origin}/tag/${id}`;
@@ -346,7 +332,7 @@ export default function Dashboard() {
                             </div>}
                             <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></Link>
                             <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View"><Eye size={15} /></a>
-                            <button onClick={() => handleDownload(tag.id, tag.title)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Download QR"><Download size={15} /></button>
+                            <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Print & Download"><Download size={15} /></button>
                             <button onClick={() => setDeleteTarget({ id: tag.id, title: tag.title })} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
                           </div>
                         </div>
@@ -476,6 +462,14 @@ export default function Dashboard() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* NEW PRINT MODAL */}
+      {printTag && (
+        <TagPrintModal
+          tag={printTag}
+          onClose={() => setPrintTag(null)}
+        />
       )}
     </div>
   );
