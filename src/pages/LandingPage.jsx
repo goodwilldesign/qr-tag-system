@@ -141,12 +141,12 @@ export default function LandingPage() {
             <span className="text-xs sm:text-sm font-semibold text-violet-700 tracking-wide">TagLink · Now Live</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight mb-6 leading-tight text-slate-900 max-w-5xl mx-auto">
+          <h1 className="hero-title text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight mb-6 leading-tight text-slate-900 max-w-5xl mx-auto">
             One QR Code.{' '}
             <span className="text-gradient">Endless Connections.</span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="hero-subtitle text-base sm:text-lg md:text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
             Create smart QR tags for your pets, bags, home, or business. When scanned, anyone can instantly reach you on WhatsApp — completely free.
           </p>
 

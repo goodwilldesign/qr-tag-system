@@ -57,6 +57,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={!session ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
           <Route path="login" element={!session ? <Login /> : <Navigate to="/dashboard" replace />} />
+          <Route path="signup" element={!session ? <Login /> : <Navigate to="/dashboard" replace />} />
 
           {/* Public Routes */}
           <Route path="tag/:id" element={<TagView />} />

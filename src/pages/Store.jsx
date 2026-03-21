@@ -546,7 +546,7 @@ export default function Store() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center py-8">
         <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 px-3 py-1 rounded-full uppercase tracking-widest">TagLink Store</span>
@@ -555,7 +555,7 @@ export default function Store() {
       </div>
 
       {/* Trust Badges */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 md:px-0">
         {[
           { icon: Truck, label: 'Free Delivery', sub: 'Pan India', color: 'emerald' },
           { icon: Shield, label: 'Secure Payments', sub: 'Powered by Razorpay', color: 'blue' },

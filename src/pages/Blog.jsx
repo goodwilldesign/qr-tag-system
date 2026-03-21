@@ -253,7 +253,7 @@ export default function Blog() {
 
   // Grid / Main View
   return (
-    <div className="max-w-7xl mx-auto space-y-12 pb-16">
+    <div className="max-w-7xl mx-auto space-y-12 pb-16 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
       <div className="text-center space-y-4 py-12 md:py-20 bg-gradient-to-b from-violet-50/50 to-transparent rounded-[3rem] mt-6">
         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight">

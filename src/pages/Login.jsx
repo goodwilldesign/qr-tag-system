@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { QrCode, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const location = useLocation();
+  const [isSignUp, setIsSignUp] = useState(location.pathname === '/signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -12,6 +13,10 @@ export default function Login() {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsSignUp(location.pathname === '/signup');
+  }, [location.pathname]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

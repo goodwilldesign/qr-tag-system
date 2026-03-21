@@ -29,6 +29,13 @@
     @apply bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-300 shadow-sm;
   }
 
+  /* Responsive fixes */
+  @media (max-width: 640px) {
+    .btn-secondary {
+      @apply border-slate-400; /* Darker border for better contrast on mobile */
+    }
+  }
+
   .btn-danger {
     @apply bg-red-50 hover:bg-red-100 text-red-600 border border-red-200;
   }
@@ -77,6 +84,16 @@
 @layer utilities {
   .mt-lg {
     @apply mt-20;
+  }
+  
+  /* Mobile Spacing Tweak */
+  @media (max-width: 480px) {
+    .hero-title {
+      @apply leading-[1.1] mb-4 text-[2.5rem];
+    }
+    .hero-subtitle {
+      @apply mb-6;
+    }
   }
 
   .animate-fade-in {

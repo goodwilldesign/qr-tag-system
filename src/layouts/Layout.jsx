@@ -46,9 +46,14 @@ export default function Layout() {
   const isLandingPage = location.pathname === '/';
   const isFullWidthPage = ['/', '/blog'].includes(location.pathname);
 
+  // Hide footer on task-focused pages
+  const hideFooter = [
+    '/dashboard', '/login', '/profile', '/checkout'
+  ].includes(location.pathname) || location.pathname.startsWith('/tag/edit/');
+
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+      <nav className={`navbar ${(scrolled || !isLandingPage) ? 'navbar-scrolled' : ''}`}>
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
@@ -81,7 +86,9 @@ export default function Layout() {
                 </button>
               </>
             ) : (
-              <Link to="/login" className="btn btn-primary px-6 py-2.5 text-sm rounded-full shadow-lg shadow-violet-200">Log In</Link>
+              !['/login', '/signup'].includes(location.pathname) && (
+                <Link to="/login" className="btn btn-primary px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm rounded-full shadow-lg shadow-violet-200">Log In</Link>
+              )
             )}
           </div>
         </div>
@@ -92,7 +99,8 @@ export default function Layout() {
       </main>
 
       {/* ── Beautiful Footer ──────────────────────────── */}
-      <footer className="bg-slate-900 text-slate-300 w-full">
+      {!hideFooter && (
+        <footer className="bg-slate-900 text-slate-300 w-full">
         {/* Main Footer Grid */}
         <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-16 md:py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -170,6 +178,7 @@ export default function Layout() {
           </div>
         </div>
       </footer>
+      )}
 
       <ChatWidget />
     </div>
