@@ -152,7 +152,8 @@ export default function Dashboard() {
       return { label: isDnd ? 'Do Not Disturb' : 'Available', active: isDnd, activeColor: 'bg-violet-500', inactiveColor: 'bg-slate-300' };
     }
     if (tag.type === 'rental') {
-      const isAvailable = tag.data?.rental_status === 'Available';
+      const status = tag.data?.rental_status || 'Available';
+      const isAvailable = status === 'Available';
       return { label: isAvailable ? 'Available' : 'Booked', active: isAvailable, activeColor: 'bg-emerald-500', inactiveColor: 'bg-red-400' };
     }
     return null;
@@ -309,7 +310,11 @@ export default function Dashboard() {
                                 <h3 className="font-bold text-slate-900 truncate flex items-center gap-1.5 text-sm">
                                   {tag.title}
                                 {tag.type === 'doorbell' && tag.data?.dnd_mode && <span className="text-[9px] font-black uppercase tracking-wider text-violet-600 bg-violet-100 px-1.5 py-0.5 rounded-md">DND</span>}
-                                {tag.type === 'rental' && <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${tag.data?.rental_status === 'Available' ? 'text-emerald-600 bg-emerald-100' : 'text-red-600 bg-red-100'}`}>{tag.data?.rental_status || 'Booked'}</span>}
+                                {tag.type === 'rental' && (
+                                  <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${ (tag.data?.rental_status || 'Available') === 'Available' ? 'text-emerald-600 bg-emerald-100' : 'text-red-600 bg-red-100'}`}>
+                                    {tag.data?.rental_status || 'Available'}
+                                  </span>
+                                )}
                               </h3>
                               <p className="text-xs text-slate-400 uppercase tracking-widest">{typeInfo.label}</p>
                             </div>
@@ -332,13 +337,15 @@ export default function Dashboard() {
                                   </button>
                                </div>
                              </div>}
-                            <button 
-                              onClick={() => handleToggleLost(tag)}
-                              className={`p-2 rounded-lg transition-colors ${tag.is_lost ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
-                              title={tag.is_lost ? 'Deactivate Lost Mode' : 'Activate Lost Mode'}
-                            >
-                              <AlertTriangle size={15} fill={tag.is_lost ? 'currentColor' : 'none'} />
-                            </button>
+                            {tag.type !== 'rental' && (
+                              <button 
+                                onClick={() => handleToggleLost(tag)}
+                                className={`p-2 rounded-lg transition-colors ${tag.is_lost ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
+                                title={tag.is_lost ? 'Deactivate Lost Mode' : 'Activate Lost Mode'}
+                              >
+                                <AlertTriangle size={15} fill={tag.is_lost ? 'currentColor' : 'none'} />
+                              </button>
+                            )}
                             <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></Link>
                             <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View"><Eye size={15} /></a>
                             <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Print & Download"><Download size={15} /></button>

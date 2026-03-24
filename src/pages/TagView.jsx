@@ -290,7 +290,7 @@ export default function TagView() {
   );
 
   const schema = PUBLIC_SCHEMAS[tag.type] || null;
-  const isLost = false; // User requested to remove the lost alert functionality
+  const isLost = tag.type === 'rental' ? false : !!tag.is_lost;
   
   const clr = schema ? (COLOR_MAP[schema.color] || COLOR_MAP.violet) : COLOR_MAP.violet;
   const emoji = schema?.emoji || '🏷️';
@@ -300,7 +300,8 @@ export default function TagView() {
 
   const renderRentalHeader = () => {
     const images = tagData.image_urls ? tagData.image_urls.split(',').map(u => u.trim()).filter(Boolean) : [];
-    const isAvailable = tagData.rental_status === 'Available';
+    const status = tagData.rental_status || 'Available';
+    const isAvailable = status === 'Available';
 
     return (
       <div className="glass-card overflow-hidden shadow-md mb-4 bg-white relative">
