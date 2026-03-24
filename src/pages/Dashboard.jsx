@@ -338,13 +338,17 @@ export default function Dashboard() {
                                </div>
                              </div>}
                             {tag.type !== 'rental' && (
-                              <button 
-                                onClick={() => handleToggleLost(tag)}
-                                className={`p-2 rounded-lg transition-colors ${tag.is_lost ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
-                                title={tag.is_lost ? 'Deactivate Lost Mode' : 'Activate Lost Mode'}
-                              >
-                                <AlertTriangle size={15} fill={tag.is_lost ? 'currentColor' : 'none'} />
-                              </button>
+                              <div className="hidden sm:flex items-center gap-2 mr-1 border-r border-slate-200 pr-2">
+                                <div className="flex flex-col items-end">
+                                  <span className={`text-[9px] font-bold uppercase leading-none mb-0.5 ${tag.is_lost ? 'text-red-600' : 'text-slate-400'}`}>
+                                    {tag.is_lost ? 'Lost' : 'Safe'}
+                                  </span>
+                                  <button onClick={() => handleToggleLost(tag)}
+                                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${tag.is_lost ? 'bg-red-500' : 'bg-slate-300'}`}>
+                                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${tag.is_lost ? 'translate-x-4' : 'translate-x-1'}`} />
+                                  </button>
+                                </div>
+                              </div>
                             )}
                             <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></Link>
                             <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View"><Eye size={15} /></a>
@@ -353,14 +357,27 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* Row 2 (mobile only): Toggle switch */}
-                        {toggleCfg && (
-                          <div className="sm:hidden flex items-center justify-between px-1 pt-2 border-t border-slate-100">
-                            <span className="text-xs text-slate-500 font-medium">{toggleCfg.label === toggleCfg.label && `Status: `}<strong className="text-slate-700">{toggleCfg.label}</strong></span>
-                            <button onClick={() => handleTagToggle(tag)}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${toggleCfg.active ? toggleCfg.activeColor : toggleCfg.inactiveColor}`}>
-                              <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${toggleCfg.active ? 'translate-x-6' : 'translate-x-1'}`} />
-                            </button>
+                        {/* Row 2 (mobile only): Status/Lost Toggles */}
+                        {(toggleCfg || tag.type !== 'rental') && (
+                          <div className="sm:hidden flex flex-col gap-2 pt-2 border-t border-slate-100">
+                            {toggleCfg && (
+                              <div className="flex items-center justify-between px-1">
+                                <span className="text-xs text-slate-500 font-medium">Status: <strong className="text-slate-700">{toggleCfg.label}</strong></span>
+                                <button onClick={() => handleTagToggle(tag)}
+                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${toggleCfg.active ? toggleCfg.activeColor : toggleCfg.inactiveColor}`}>
+                                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${toggleCfg.active ? 'translate-x-6' : 'translate-x-1'}`} />
+                                </button>
+                              </div>
+                            )}
+                            {tag.type !== 'rental' && (
+                              <div className="flex items-center justify-between px-1">
+                                <span className="text-xs text-slate-500 font-medium">Lost Mode: <strong className={tag.is_lost ? 'text-red-600' : 'text-slate-700'}>{tag.is_lost ? 'Active' : 'Off'}</strong></span>
+                                <button onClick={() => handleToggleLost(tag)}
+                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${tag.is_lost ? 'bg-red-500' : 'bg-slate-300'}`}>
+                                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${tag.is_lost ? 'translate-x-6' : 'translate-x-1'}`} />
+                                </button>
+                              </div>
+                            )}
                           </div>
                         )}
 
