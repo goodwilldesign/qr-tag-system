@@ -8,8 +8,12 @@ export default function Layout() {
   const [session, setSession] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+  const isLoginPage = ['/login', '/signup'].includes(location.pathname);
 
   useEffect(() => {
     const init = async () => {
@@ -32,9 +36,15 @@ export default function Layout() {
   // Scroll listener for seamless header
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // check initial state
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    handleScroll();
+    handleResize();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -46,14 +56,12 @@ export default function Layout() {
   const isLandingPage = location.pathname === '/';
   const isFullWidthPage = ['/', '/blog'].includes(location.pathname);
 
-  // Hide footer on task-focused pages
-  const hideFooter = [
-    '/dashboard', '/login', '/profile', '/checkout'
-  ].includes(location.pathname) || location.pathname.startsWith('/tag/edit/');
+  // Mobile/PWA specific visibility
+  const hideNavbar = isLoginPage && (isPWA || isMobile);
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <nav className={`navbar ${(scrolled || !isLandingPage) ? 'navbar-scrolled' : ''}`}>
+      <nav className={`navbar ${(scrolled || !isLandingPage) ? 'navbar-scrolled' : ''} ${hideNavbar ? 'hidden' : ''}`}>
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
@@ -94,7 +102,7 @@ export default function Layout() {
         </div>
       </nav>
 
-      <main className={`w-full flex-1 ${isLandingPage ? '' : 'mt-16'} ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
+      <main className={`w-full flex-1 ${isLandingPage || hideNavbar ? '' : 'mt-16'} ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
         <Outlet />
       </main>
 
