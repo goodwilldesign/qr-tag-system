@@ -5,7 +5,8 @@ import {
   ArrowLeft, Save, CheckCircle, AlertCircle,
   Tag, Baby, KeySquare, Bell, CarFront, Hotel,
   Dog, Stethoscope, Home, Wifi, Clock,
-  Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud
+  Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
+  Smartphone, Calendar
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -42,6 +43,12 @@ const SCHEMAS = {
           { key: 'owner_name',   label: 'Owner Name',  type: 'text', placeholder: 'Jane Doe', icon: User },
           { key: 'reward',       label: 'Reward Offer', type: 'text', placeholder: 'Reward offered if found!', icon: Info },
         ]
+      },
+      {
+        title: 'Security',
+        fields: [
+          { key: 'is_lost', label: 'Lost Mode (Alert Finder)', type: 'toggle', icon: AlertCircle },
+        ]
       }
     ]
   },
@@ -65,6 +72,12 @@ const SCHEMAS = {
           { key: 'parent_name',  label: 'Parent / Guardian Name', type: 'text', placeholder: 'Ahmad bin Ali', icon: User, required: true },
           { key: 'phone2',       label: 'Second Contact Phone',  type: 'phone', placeholder: '9876543210' },
           { key: 'notes',        label: 'Special Instructions',  type: 'textarea', placeholder: 'Has nut allergy. Speaks English and Malay.', icon: Info },
+        ]
+      },
+      {
+        title: 'Security',
+        fields: [
+          { key: 'is_lost', label: 'Lost Mode (Alert Finder)', type: 'toggle', icon: AlertCircle },
         ]
       }
     ]
@@ -181,6 +194,29 @@ const SCHEMAS = {
         ]
       }
     ]
+  },
+  electronics: {
+    label: 'Gadget',
+    emoji: '📱',
+    color: 'indigo',
+    sections: [
+      {
+        title: 'Device Information',
+        fields: [
+          { key: 'category', label: 'Category', type: 'select', options: ['Laptop', 'Mobile', 'Desktop', 'Other accessories'], icon: Smartphone, required: true },
+          { key: 'accessory_type', label: 'Accessory Type', type: 'text', placeholder: 'e.g. Headphones, Smartwatch', icon: Tag, showIf: (d) => d.category === 'Other accessories' },
+          { key: 'model', label: 'Product Model', type: 'text', placeholder: 'iPhone 15 Pro, MacBook Air M2', icon: Info, required: true },
+          { key: 'billing_date', label: 'Billing Date', type: 'date', icon: Calendar },
+        ]
+      },
+      {
+        title: 'Security & Visibility',
+        fields: [
+          { key: 'is_lost', label: 'Lost Mode (Alert Finder)', type: 'toggle', icon: AlertCircle },
+          { key: 'gps_enabled', label: 'Enable GPS Location Tracking', type: 'toggle', icon: MapPin },
+        ]
+      }
+    ]
   }
 };
 
@@ -191,6 +227,7 @@ const COLOR_MAP = {
   violet:  { bg: 'bg-violet-50',  border: 'border-violet-200', text: 'text-violet-700',  ring: 'ring-violet-400', badge: 'bg-violet-100 text-violet-800' },
   emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200',text: 'text-emerald-700', ring: 'ring-emerald-400',badge: 'bg-emerald-100 text-emerald-800' },
   rose:    { bg: 'bg-rose-50',    border: 'border-rose-200',   text: 'text-rose-700',    ring: 'ring-rose-400',   badge: 'bg-rose-100 text-rose-800' },
+  indigo:  { bg: 'bg-indigo-50',  border: 'border-indigo-200', text: 'text-indigo-700',  ring: 'ring-indigo-400', badge: 'bg-indigo-100 text-indigo-800' },
 };
 
 /* ─── Image Uploader Component ────────────────────────────────────────────── */
@@ -307,6 +344,37 @@ function FieldInput({ field, value, onChange }) {
       </div>
     );
   }
+
+  if (field.type === 'date') {
+    return (
+      <div className="relative">
+        {Icon && <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 shrink-0 pointer-events-none" />}
+        <input
+          type="date"
+          className={`${base} ${Icon ? 'pl-10' : ''}`}
+          value={value || ''}
+          onChange={(e) => onChange(field.key, e.target.value)}
+          required={field.required}
+        />
+      </div>
+    );
+  }
+
+  if (field.type === 'toggle') {
+    const isActive = value === true;
+    return (
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => onChange(field.key, !isActive)}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isActive ? 'bg-indigo-600' : 'bg-slate-200'}`}
+        >
+          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isActive ? 'translate-x-6' : 'translate-x-1'}`} />
+        </button>
+        <span className="text-sm font-medium text-slate-600">{field.label}</span>
+      </div>
+    );
+  }
   
   return (
     <div className="relative">
@@ -345,7 +413,7 @@ export default function TagEditor() {
 
       if (error || !data) { navigate('/dashboard'); return; }
       setTag(data);
-      setFormData(data.data || {});
+      setFormData({ ...data.data, is_lost: data.is_lost } || {});
       setLoading(false);
     };
     load();
@@ -359,9 +427,14 @@ export default function TagEditor() {
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true); setError('');
+    const { is_lost, ...dataWithoutLost } = formData;
     const { error } = await supabase
       .from('tags')
-      .update({ data: formData, updated_at: new Date().toISOString() })
+      .update({ 
+        data: dataWithoutLost, 
+        is_lost: !!is_lost,
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', id);
 
     if (error) {
@@ -421,15 +494,22 @@ export default function TagEditor() {
               {section.title}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {section.fields.map((field) => (
-                <div key={field.key} className={`form-group ${field.type === 'textarea' ? 'sm:col-span-2' : ''}`}>
-                  <label className="form-label">
-                    {field.label}
-                    {field.required && <span className="text-red-400 ml-0.5">*</span>}
-                  </label>
-                  <FieldInput field={field} value={formData[field.key]} onChange={handleChange} />
-                </div>
-              ))}
+              {section.fields.map((field) => {
+                // Conditional visibility logic
+                if (field.showIf && !field.showIf(formData)) return null;
+
+                return (
+                  <div key={field.key} className={`form-group ${field.type === 'textarea' || field.type === 'image_upload' ? 'sm:col-span-2' : ''}`}>
+                    {field.type !== 'toggle' && (
+                      <label className="form-label">
+                        {field.label}
+                        {field.required && <span className="text-red-400 ml-0.5">*</span>}
+                      </label>
+                    )}
+                    <FieldInput field={field} value={formData[field.key]} onChange={handleChange} />
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}

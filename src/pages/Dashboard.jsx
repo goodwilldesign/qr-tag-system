@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -12,6 +12,7 @@ const TAG_TYPES = [
   { id: 'doorbell', label: 'Doorbell',  icon: <Bell size={18} /> },
   { id: 'parking',  label: 'Parking',   icon: <CarFront size={18} /> },
   { id: 'hotel',    label: 'Hotel',     icon: <Hotel size={18} /> },
+  { id: 'electronics', label: 'Gadget',  icon: <Smartphone size={18} /> },
 ];
 
 const TYPE_COLORS = {
@@ -21,6 +22,7 @@ const TYPE_COLORS = {
   doorbell: 'bg-violet-50 text-violet-700 border-violet-200',
   parking:  'bg-emerald-50 text-emerald-700 border-emerald-200',
   hotel:    'bg-rose-50 text-rose-700 border-rose-200',
+  electronics: 'bg-indigo-50 text-indigo-700 border-indigo-200',
 };
 
 export default function Dashboard() {
@@ -329,7 +331,14 @@ export default function Dashboard() {
                                     <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${toggleCfg.active ? 'translate-x-4' : 'translate-x-1'}`} />
                                   </button>
                                </div>
-                            </div>}
+                             </div>}
+                            <button 
+                              onClick={() => handleToggleLost(tag)}
+                              className={`p-2 rounded-lg transition-colors ${tag.is_lost ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
+                              title={tag.is_lost ? 'Deactivate Lost Mode' : 'Activate Lost Mode'}
+                            >
+                              <AlertTriangle size={15} fill={tag.is_lost ? 'currentColor' : 'none'} />
+                            </button>
                             <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></Link>
                             <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View"><Eye size={15} /></a>
                             <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Print & Download"><Download size={15} /></button>

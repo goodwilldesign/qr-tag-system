@@ -136,6 +136,21 @@ const PUBLIC_SCHEMAS = {
       }
     ]
   },
+  electronics: {
+    label: 'Gadget', emoji: '📱', color: 'indigo',
+    greeting: (d) => `Hi! I found your ${d.category || 'gadget'}${d.model ? ` (${d.model})` : ''}.`,
+    sections: [
+      {
+        title: 'Device Details',
+        rows: [
+          { key: 'category', label: 'Category' },
+          { key: 'accessory_type', label: 'Type' },
+          { key: 'model', label: 'Model' },
+          { key: 'billing_date', label: 'Billing Date' },
+        ]
+      }
+    ]
+  },
 };
 
 const COLOR_MAP = {
@@ -145,6 +160,7 @@ const COLOR_MAP = {
   violet:  { badge: 'bg-violet-100 text-violet-800 border-violet-200', header: 'bg-violet-50', border: 'border-violet-200', label: 'text-violet-700' },
   emerald: { badge: 'bg-emerald-100 text-emerald-800 border-emerald-200', header: 'bg-emerald-50', border: 'border-emerald-200', label: 'text-emerald-700' },
   rose:    { badge: 'bg-rose-100 text-rose-800 border-rose-200',     header: 'bg-rose-50',    border: 'border-rose-200',  label: 'text-rose-700' },
+  indigo:  { badge: 'bg-indigo-100 text-indigo-800 border-indigo-200', header: 'bg-indigo-50', border: 'border-indigo-200', label: 'text-indigo-700' },
 };
 
 function DetailRow({ label, value, type }) {
@@ -421,16 +437,16 @@ export default function TagView() {
         )}
 
         {/* GPS Prompt */}
-        {isLost && !locationShared && (
+        {(isLost || tagData.gps_enabled === true) && !locationShared && (
           <div className="glass-card p-5 border-2 border-red-200 shadow-xl bg-white relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 bg-red-500 h-full"></div>
             <div className="flex gap-4 items-start">
               <div className="bg-red-100 p-2.5 rounded-full shrink-0">
-                <AlertCircle className="h-6 w-6 text-red-600" />
+                <MapPin className="h-6 w-6 text-red-600" />
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 leading-tight mb-1">Share Location?</h3>
-                <p className="text-sm text-slate-500 mb-3">Help the owner locate this tag by sharing where you scanned it.</p>
+                <p className="text-sm text-slate-500 mb-3">Help the owner locate this {tag.type === 'electronics' ? 'gadget' : 'tag'} by sharing where you scanned it.</p>
                 <button 
                   onClick={handleShareLocation} disabled={locationLoading}
                   className="w-full bg-red-50 hover:bg-red-100 text-red-700 font-bold py-2.5 px-4 rounded-xl text-sm transition-colors border border-red-200 disabled:opacity-50">
