@@ -39,6 +39,9 @@ export default defineConfig({
             purpose: 'maskable'
           }
         ]
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ],
