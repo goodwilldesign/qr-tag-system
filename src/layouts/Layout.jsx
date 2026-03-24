@@ -30,7 +30,6 @@ export default function Layout() {
       if (!s) setIsAdmin(false);
     });
     return () => subscription.unsubscribe();
-    return () => subscription.unsubscribe();
   }, []);
 
   // Scroll listener for seamless header
@@ -55,6 +54,11 @@ export default function Layout() {
   // Pages that handle their own padding
   const isLandingPage = location.pathname === '/';
   const isFullWidthPage = ['/', '/blog'].includes(location.pathname);
+
+  // Hide footer on task-focused pages
+  const hideFooter = [
+    '/dashboard', '/login', '/profile', '/checkout'
+  ].includes(location.pathname) || location.pathname.startsWith('/tag/edit/');
 
   // Mobile/PWA specific visibility
   const hideNavbar = isLoginPage && (isPWA || isMobile);
