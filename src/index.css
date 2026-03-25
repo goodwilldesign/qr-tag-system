@@ -101,7 +101,7 @@
 
   /* Floating Action Button */
   .fab {
-    @apply fixed bottom-20 right-5 w-14 h-14 bg-violet-600 text-white rounded-full 
+    @apply fixed bottom-24 right-4 w-14 h-14 bg-violet-600 text-white rounded-full 
            flex items-center justify-center shadow-lg shadow-violet-200 z-50 
            active:scale-95 transition-transform sm:hidden;
   }
