@@ -9,10 +9,10 @@ export default function Layout() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPWA, setIsPWA] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isPWA = window.matchMedia('(display-mode: standalone)').matches;
   const isLoginPage = ['/login', '/signup'].includes(location.pathname);
 
   useEffect(() => {
@@ -36,10 +36,12 @@ export default function Layout() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const handlePWA = () => setIsPWA(window.matchMedia('(display-mode: standalone)').matches);
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
     handleScroll();
     handleResize();
+    handlePWA();
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
