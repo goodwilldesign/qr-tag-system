@@ -208,10 +208,15 @@ export default function Dashboard() {
           <h1 className="text-3xl font-extrabold text-slate-900">Dashboard</h1>
           <p className="text-slate-500 mt-1">Manage your active QR tags and view scan activity.</p>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="btn btn-primary px-5 py-2.5 shadow-sm shrink-0">
+        <button onClick={() => setIsModalOpen(true)} className="hidden sm:flex btn btn-primary px-5 py-2.5 shadow-sm shrink-0">
           <Plus size={18} /> Create New Tag
         </button>
       </div>
+
+      {/* Floating Action Button (Mobile) */}
+      <button onClick={() => setIsModalOpen(true)} className="fab" aria-label="Create New Tag">
+        <Plus size={28} />
+      </button>
 
       {/* Delete Error Banner */}
       {deleteError && (
@@ -227,7 +232,7 @@ export default function Dashboard() {
       )}
 
       {/* Summary Metrics Row */}
-      <div className="grid sm:grid-cols-3 gap-6">
+      <div className="hidden sm:grid sm:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
             <Tag size={24} />
@@ -299,87 +304,71 @@ export default function Dashboard() {
                         (tag.type === 'rental' && tag.data?.rental_status === 'Available') ? 'border-emerald-200 bg-emerald-50/30' :
                         'border-slate-100 bg-white hover:border-slate-200'}`}>
 
-                        {/* Row 1: Info + Actions */}
+                        {/* Row 1: Info + Lost Mode Toggle (Mobile) / Scans (Desktop) */}
                         <div className="flex items-center justify-between gap-2 min-w-0">
-                          {/* Tag Info */}
+                          {/* Left: Icon + Text */}
                           <div className="flex items-center gap-3 min-w-0">
                             <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 text-base ${colorClass}`}>
                               {typeInfo.icon}
                             </div>
                             <div className="min-w-0">
-                                <h3 className="font-bold text-slate-900 truncate flex items-center gap-1.5 text-sm">
-                                  {tag.title}
-                                {tag.type === 'doorbell' && tag.data?.dnd_mode && <span className="text-[9px] font-black uppercase tracking-wider text-violet-600 bg-violet-100 px-1.5 py-0.5 rounded-md">DND</span>}
-                                {tag.type === 'rental' && (
-                                  <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${ (tag.data?.rental_status || 'Available') === 'Available' ? 'text-emerald-600 bg-emerald-100' : 'text-red-600 bg-red-100'}`}>
-                                    {tag.data?.rental_status || 'Available'}
-                                  </span>
-                                )}
+                              <h3 className="font-bold text-slate-900 truncate flex items-center gap-1.5 text-sm">
+                                {tag.title}
                               </h3>
-                              <p className="text-xs text-slate-400 uppercase tracking-widest">{typeInfo.label}</p>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-none mt-0.5">{typeInfo.label}</p>
                             </div>
                           </div>
 
-                          {/* Actions */}
-                          <div className="flex items-center gap-1 shrink-0">
-                            {/* Scans count */}
-                            <div className="text-center w-10 mr-1 pr-2 border-r border-slate-200 cursor-help" title="Total Scans">
-                              <p className="text-sm font-bold text-slate-700 leading-none">{tag.scanCount || 0}</p>
-                              <p className="text-[9px] text-slate-400 font-semibold uppercase">Scans</p>
+                          {/* Right: Lost Mode Toggle (Mobile) / Scans (Desktop) */}
+                          <div className="flex items-center gap-4">
+                            <div className="hidden sm:block text-center pr-4 border-r border-slate-200">
+                               <p className="text-sm font-bold text-slate-700 leading-none">{tag.scanCount || 0}</p>
+                               <p className="text-[9px] text-slate-400 font-semibold uppercase">Scans</p>
                             </div>
-                            {/* Desktop toggle in action bar */}
-                            {toggleCfg && <div className="hidden sm:flex items-center gap-2 mr-1 border-r border-slate-200 pr-2">
-                               <div className="flex flex-col items-end">
-                                  <span className={`text-[9px] font-bold uppercase leading-none mb-0.5 ${toggleCfg.active ? 'text-slate-700' : 'text-slate-400'}`}>{toggleCfg.label}</span>
-                                  <button onClick={() => handleTagToggle(tag)}
-                                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${toggleCfg.active ? toggleCfg.activeColor : toggleCfg.inactiveColor}`}>
-                                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${toggleCfg.active ? 'translate-x-4' : 'translate-x-1'}`} />
-                                  </button>
-                               </div>
-                             </div>}
-                            {tag.type !== 'rental' && (
-                              <div className="hidden sm:flex items-center gap-2 mr-1 border-r border-slate-200 pr-2">
+
+                            {/* Mobile Toggle / Action Group */}
+                            <div className="flex items-center gap-2">
+                              {tag.type !== 'rental' && (
                                 <div className="flex flex-col items-end">
-                                  <span className={`text-[9px] font-bold uppercase leading-none mb-0.5 ${tag.is_lost ? 'text-red-600' : 'text-slate-400'}`}>
-                                    {tag.is_lost ? 'Lost' : 'Safe'}
-                                  </span>
                                   <button onClick={() => handleToggleLost(tag)}
                                     className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${tag.is_lost ? 'bg-red-500' : 'bg-slate-300'}`}>
-                                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${tag.is_lost ? 'translate-x-4' : 'translate-x-1'}`} />
+                                    <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${tag.is_lost ? 'translate-x-[1.1rem]' : 'translate-x-1'}`} />
                                   </button>
+                                  <span className={`text-[8px] font-black uppercase mt-0.5 ${tag.is_lost ? 'text-red-600' : 'text-slate-400'}`}>
+                                    {tag.is_lost ? 'Lost' : 'Safe'}
+                                  </span>
                                 </div>
-                              </div>
-                            )}
-                            <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors" title="Edit"><Pencil size={15} /></Link>
-                            <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View"><Eye size={15} /></a>
-                            <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Print & Download"><Download size={15} /></button>
-                            <button onClick={() => setDeleteTarget({ id: tag.id, title: tag.title })} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={15} /></button>
+                              )}
+                              
+                              {toggleCfg && (
+                                <div className="flex flex-col items-end">
+                                  <button onClick={() => handleTagToggle(tag)}
+                                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${toggleCfg.active ? toggleCfg.activeColor : toggleCfg.inactiveColor}`}>
+                                    <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${toggleCfg.active ? 'translate-x-[1.1rem]' : 'translate-x-1'}`} />
+                                  </button>
+                                  <span className={`text-[8px] font-black uppercase mt-0.5 ${toggleCfg.active ? 'text-slate-700' : 'text-slate-400'}`}>
+                                    {toggleCfg.label}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
-                        {/* Row 2 (mobile only): Status/Lost Toggles */}
-                        {(toggleCfg || tag.type !== 'rental') && (
-                          <div className="sm:hidden flex flex-col gap-2 pt-2 border-t border-slate-100">
-                            {toggleCfg && (
-                              <div className="flex items-center justify-between px-1">
-                                <span className="text-xs text-slate-500 font-medium">Status: <strong className="text-slate-700">{toggleCfg.label}</strong></span>
-                                <button onClick={() => handleTagToggle(tag)}
-                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${toggleCfg.active ? toggleCfg.activeColor : toggleCfg.inactiveColor}`}>
-                                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${toggleCfg.active ? 'translate-x-6' : 'translate-x-1'}`} />
-                                </button>
-                              </div>
-                            )}
-                            {tag.type !== 'rental' && (
-                              <div className="flex items-center justify-between px-1">
-                                <span className="text-xs text-slate-500 font-medium">Lost Mode: <strong className={tag.is_lost ? 'text-red-600' : 'text-slate-700'}>{tag.is_lost ? 'Active' : 'Off'}</strong></span>
-                                <button onClick={() => handleToggleLost(tag)}
-                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${tag.is_lost ? 'bg-red-500' : 'bg-slate-300'}`}>
-                                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${tag.is_lost ? 'translate-x-6' : 'translate-x-1'}`} />
-                                </button>
-                              </div>
-                            )}
+                        {/* Row 2: Action Buttons (Mobile: Horizontal Bar) */}
+                        <div className="flex items-center justify-between mt-1 pt-3 border-t border-slate-50">
+                          <div className="flex items-center gap-1">
+                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mr-2">
+                               {tag.scanCount || 0} Scans
+                             </p>
                           </div>
-                        )}
+                          <div className="flex items-center gap-0.5">
+                            <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors"><Pencil size={16} /></Link>
+                            <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Eye size={16} /></a>
+                            <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><Download size={16} /></button>
+                            <button onClick={() => setDeleteTarget({ id: tag.id, title: tag.title })} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                          </div>
+                        </div>
 
                         {/* Hidden QR for download */}
                         <div className="absolute -top-[9999px] left-0 pointer-events-none" aria-hidden="true">

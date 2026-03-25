@@ -64,6 +64,7 @@ export default function Layout() {
 
   // Mobile/PWA specific visibility
   const hideNavbar = isLoginPage && (isPWA || isMobile);
+  const showBottomNav = session && !isLoginPage;
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -71,32 +72,35 @@ export default function Layout() {
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
-            <span>TagLink</span>
+            <span className={session ? 'hidden xs:inline' : ''}>TagLink</span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {session ? (
               <>
-                <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
-                  <ShoppingBag size={16} />
-                  <span className="hidden sm:inline">Store</span>
-                </Link>
-                {isAdmin && (
-                  <Link to="/admin" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm border-violet-400 text-violet-600 hover:bg-violet-50">
-                    <Shield size={16} />
-                    <span className="hidden sm:inline">Admin</span>
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link to="/store" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                    <ShoppingBag size={16} />
+                    <span className="hidden sm:inline">Store</span>
                   </Link>
-                )}
-                <Link to="/dashboard" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
-                  <LayoutDashboard size={16} />
-                  <span className="hidden sm:inline">Dashboard</span>
-                </Link>
-                <Link to="/profile" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
-                  <User size={16} />
-                  <span className="hidden sm:inline">Profile</span>
-                </Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm border-violet-400 text-violet-600 hover:bg-violet-50">
+                      <Shield size={16} />
+                      <span className="hidden sm:inline">Admin</span>
+                    </Link>
+                  )}
+                  <Link to="/dashboard" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                    <LayoutDashboard size={16} />
+                    <span className="hidden sm:inline">Dashboard</span>
+                  </Link>
+                  <Link to="/profile" className="btn btn-secondary px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                    <User size={16} />
+                    <span className="hidden sm:inline">Profile</span>
+                  </Link>
+                </div>
                 <button onClick={handleLogout} className="btn btn-danger p-2 sm:px-3 sm:py-2">
                   <LogOut size={16} />
+                  <span className="hidden sm:inline">Logout</span>
                 </button>
               </>
             ) : (
@@ -108,9 +112,33 @@ export default function Layout() {
         </div>
       </nav>
 
-      <main className={`w-full flex-1 ${isLandingPage || hideNavbar ? '' : 'mt-16'} ${isFullWidthPage ? '' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12'}`}>
+      <main className={`w-full flex-1 ${isLandingPage || hideNavbar ? '' : 'mt-16'} ${isFullWidthPage ? '' : (showBottomNav ? 'px-4 sm:px-6 lg:px-8 pt-4 pb-24' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12')}`}>
         <Outlet />
       </main>
+
+      {/* ── Mobile Bottom Navigation ────────────────── */}
+      {showBottomNav && (
+        <div className="bottom-nav">
+          <Link to="/dashboard" className={`bottom-nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+            <LayoutDashboard size={20} />
+            <span>Dashboard</span>
+          </Link>
+          <Link to="/store" className={`bottom-nav-item ${location.pathname === '/store' ? 'active' : ''}`}>
+            <ShoppingBag size={20} />
+            <span>Store</span>
+          </Link>
+          <Link to="/profile" className={`bottom-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
+            <User size={20} />
+            <span>Profile</span>
+          </Link>
+          {isAdmin && (
+            <Link to="/admin" className={`bottom-nav-item ${location.pathname.startsWith('/admin') ? 'active' : ''}`}>
+              <Shield size={20} />
+              <span>Admin</span>
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* ── Beautiful Footer ──────────────────────────── */}
       {!hideFooter && (

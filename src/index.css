@@ -79,6 +79,32 @@
   .nav-brand {
     @apply text-xl font-black flex items-center gap-2 tracking-tight text-slate-900;
   }
+
+  /* Bottom Navigation Bar for Mobile */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 
+           flex items-center justify-around px-2 z-40 sm:hidden;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .bottom-nav-item {
+    @apply flex flex-col items-center justify-center gap-1 text-slate-500 transition-colors w-16 h-full;
+  }
+
+  .bottom-nav-item.active {
+    @apply text-violet-600 font-bold;
+  }
+
+  .bottom-nav-item span {
+    @apply text-[10px] uppercase tracking-tighter;
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed bottom-20 right-5 w-14 h-14 bg-violet-600 text-white rounded-full 
+           flex items-center justify-center shadow-lg shadow-violet-200 z-50 
+           active:scale-95 transition-transform sm:hidden;
+  }
 }
 
 @layer utilities {
