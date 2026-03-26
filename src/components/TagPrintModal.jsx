@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeCanvas } from 'qrcode.react';
 import { X, Download, AlertCircle, Image as ImageIcon } from 'lucide-react';
@@ -92,8 +93,8 @@ export default function TagPrintModal({ tag, onClose }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       {/* Hidden QR Code Canvas for extraction */}
       <div ref={qrCanvasRef} style={{ display: 'none' }}>
         <QRCodeCanvas value={qrUrl} size={1024} level="H" includeMargin={false} />
@@ -213,6 +214,7 @@ export default function TagPrintModal({ tag, onClose }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
