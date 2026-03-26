@@ -422,7 +422,7 @@ export default function Dashboard() {
 
       {/* Delete Confirm Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
           <div className="bg-white rounded-2xl w-full max-w-sm p-8 shadow-2xl">
             <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Trash2 className="h-6 w-6 text-red-500" />
@@ -445,7 +445,7 @@ export default function Dashboard() {
 
       {/* Create Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
           <div className="bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl relative">
             <button onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>

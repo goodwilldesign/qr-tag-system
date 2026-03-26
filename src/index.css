@@ -60,7 +60,7 @@
 
   /* Seamless header - transparent by default */
   .navbar {
-    @apply fixed top-0 w-full z-50 py-4 transition-all duration-300;
+    @apply fixed top-0 w-full z-40 py-4 transition-all duration-300;
     background: transparent;
     border-bottom: 1px solid transparent;
     box-shadow: none;
@@ -132,8 +132,8 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes float {
