@@ -10,6 +10,7 @@ export default function Layout() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isPWA, setIsPWA] = useState(false);
+  const [siteLogo, setSiteLogo] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,6 +24,14 @@ export default function Layout() {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', s.user.id).single();
         setIsAdmin(profile?.role === 'admin');
       }
+
+      // Fetch site logo
+      const { data: logoSetting } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'site_logo')
+        .single();
+      if (logoSetting?.value) setSiteLogo(logoSetting.value);
     };
     init();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
@@ -71,7 +80,11 @@ export default function Layout() {
       <nav className={`navbar ${(scrolled || !isLandingPage) ? 'navbar-scrolled' : ''} ${hideNavbar ? 'hidden' : ''}`}>
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
-            <QrCode className="h-6 w-6 text-violet-600" />
+            {siteLogo ? (
+              <img src={siteLogo} alt="Logo" className="h-8 w-auto object-contain" />
+            ) : (
+              <QrCode className="h-6 w-6 text-violet-600" />
+            )}
             <span className={session ? 'hidden sm:inline' : ''}>GetURQR</span>
           </Link>
 
@@ -151,7 +164,11 @@ export default function Layout() {
             <div className="lg:col-span-1 space-y-5">
               <Link to="/" className="flex items-center gap-2.5 group">
                 <div className="p-2 bg-violet-600 rounded-xl group-hover:bg-violet-500 transition-colors">
-                  <QrCode className="h-5 w-5 text-white" />
+                  {siteLogo ? (
+                    <img src={siteLogo} alt="Logo" className="h-5 w-auto invert brightness-0" />
+                  ) : (
+                    <QrCode className="h-5 w-5 text-white" />
+                  )}
                 </div>
                 <span className="text-xl font-extrabold text-white tracking-tight">GetURQR</span>
               </Link>

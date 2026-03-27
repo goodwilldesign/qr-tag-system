@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Settings, Save, Check, AlertCircle } from 'lucide-react';
+import { Settings, Save, Check, AlertCircle, Image as ImageIcon, Upload } from 'lucide-react';
 
 const SETTINGS_SCHEMA = [
+  { key: 'site_logo', label: 'Site Logo', type: 'image' },
   { key: 'site_name', label: 'Site Name', placeholder: 'GetURQR', type: 'text' },
   { key: 'site_tagline', label: 'Site Tagline', placeholder: 'Smart QR Tags for Everything', type: 'text' },
   { key: 'contact_email', label: 'Contact Email', placeholder: 'hello@geturqr.com', type: 'email' },
@@ -50,6 +51,42 @@ export default function AdminSettings() {
     }
   };
 
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file.');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError('');
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `logo-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `site/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-assets')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('site-assets')
+        .getPublicUrl(filePath);
+
+      setSettings(prev => ({ ...prev, site_logo: publicUrl }));
+    } catch (err) {
+      setError(`Upload failed: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-4 max-w-2xl">
@@ -80,6 +117,26 @@ export default function AdminSettings() {
                 className={`relative w-12 h-6 rounded-full transition-colors shrink-0 ${settings[key] === 'true' ? 'bg-violet-600' : 'bg-slate-200'}`}>
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${settings[key] === 'true' ? 'translate-x-6' : 'translate-x-0'}`} />
               </button>
+            ) : type === 'image' ? (
+              <div className="flex items-center gap-4">
+                {settings[key] ? (
+                  <div className="relative group">
+                    <img src={settings[key]} alt="Logo Preview" className="h-10 w-auto rounded border border-slate-200 object-contain bg-slate-50 p-1" />
+                    <button onClick={() => setSettings(s => ({ ...s, [key]: '' }))}
+                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 rounded border border-dashed border-slate-200 flex items-center justify-center text-slate-300">
+                    <ImageIcon size={20} />
+                  </div>
+                )}
+                <label className="cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl px-4 py-2 text-xs font-bold transition-colors flex items-center gap-2">
+                  <Upload size={14} /> Change Logo
+                  <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                </label>
+              </div>
             ) : (
               <input type={type} value={settings[key] || ''} placeholder={placeholder}
                 onChange={e => setSettings(s => ({ ...s, [key]: e.target.value }))}
