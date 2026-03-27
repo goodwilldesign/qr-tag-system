@@ -45,7 +45,7 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-black text-slate-900 mb-2">
-            <QrCode className="h-7 w-7 text-violet-600" />TagLink
+            <QrCode className="h-7 w-7 text-violet-600" />GetURQR
           </Link>
           <h1 className="text-2xl font-bold text-slate-900 mt-4">
             {isSignUp ? 'Create your account' : 'Welcome back'}

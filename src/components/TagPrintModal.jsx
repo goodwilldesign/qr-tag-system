@@ -81,7 +81,7 @@ export default function TagPrintModal({ tag, onClose }) {
       // 7. Trigger download
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
-      link.download = `TagLink_${tag.title.replace(/\s+/g, '_')}_Print.png`;
+      link.download = `GetURQR_${tag.title.replace(/\s+/g, '_')}_Print.png`;
       link.href = dataUrl;
       link.click();
 

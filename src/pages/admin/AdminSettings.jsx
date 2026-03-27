@@ -3,9 +3,9 @@ import { supabase } from '../../lib/supabase';
 import { Settings, Save, Check, AlertCircle } from 'lucide-react';
 
 const SETTINGS_SCHEMA = [
-  { key: 'site_name', label: 'Site Name', placeholder: 'TagLink', type: 'text' },
+  { key: 'site_name', label: 'Site Name', placeholder: 'GetURQR', type: 'text' },
   { key: 'site_tagline', label: 'Site Tagline', placeholder: 'Smart QR Tags for Everything', type: 'text' },
-  { key: 'contact_email', label: 'Contact Email', placeholder: 'hello@taglink.app', type: 'email' },
+  { key: 'contact_email', label: 'Contact Email', placeholder: 'hello@geturqr.com', type: 'email' },
   { key: 'support_phone', label: 'Support Phone', placeholder: '+91 9876543210', type: 'tel' },
   { key: 'store_cod_enabled', label: 'COD (Cash on Delivery)', type: 'toggle' },
   { key: 'razorpay_enabled', label: 'Razorpay Payments Enabled', type: 'toggle' },
@@ -65,7 +65,7 @@ export default function AdminSettings() {
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
           <Settings size={22} className="text-violet-500" /> Site Settings
         </h1>
-        <p className="text-slate-500 text-sm mt-0.5">Configure your TagLink site globally.</p>
+        <p className="text-slate-500 text-sm mt-0.5">Configure your GetURQR site globally.</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100">

@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
       manifest: {
-        name: 'QR Tag System',
-        short_name: 'TagLink',
+        name: 'GetURQR Tag System',
+        short_name: 'GetURQR',
         description: 'Lost & Found QR Tag Management System',
         theme_color: '#ffffff',
         background_color: '#ffffff',

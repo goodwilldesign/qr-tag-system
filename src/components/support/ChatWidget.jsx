@@ -213,7 +213,7 @@ export default function ChatWidget() {
               <Bot size={18} className="text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-white leading-none">TagLink Support</h3>
+              <h3 className="font-bold text-white text-base">GetURQR Assistant</h3>
               <p className="text-violet-200 text-xs mt-0.5">AI Assistant &amp; Ticketing</p>
             </div>
           </div>
@@ -319,7 +319,9 @@ export default function ChatWidget() {
                 <Clock size={16} />
               </div>
               <div className="bg-amber-50 border border-amber-200 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-amber-800 max-w-[80%]">
-                <p className="font-bold mb-2">👋 Are you still there?</p>
+                <div className="bg-slate-100 text-slate-800 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-sm font-medium border border-slate-200">
+                  Welcome to GetURQR! How can we help you today?
+                </div>
                 <p className="text-xs text-amber-600 mb-3">Chat will close in <strong>{countdown}s</strong> due to inactivity.</p>
                 <div className="flex gap-2">
                   <button

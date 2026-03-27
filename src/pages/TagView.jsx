@@ -7,7 +7,7 @@ import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye } from 'lu
 const PUBLIC_SCHEMAS = {
   dog: {
     label: 'Pet Tag', emoji: '🐶', color: 'amber',
-    greeting: (d) => `Hi! I found ${d.pet_name || 'this pet'}. Contacting you via TagLink.`,
+    greeting: (d) => `Hi! I found ${d.pet_name || 'this pet'}. Contacting you via GetURQR.`,
     sections: [
       {
         title: 'About This Pet',
@@ -39,7 +39,7 @@ const PUBLIC_SCHEMAS = {
   },
   kids: {
     label: 'Child Tag', emoji: '👶', color: 'pink',
-    greeting: (d) => `Hi! I found ${d.child_name || 'a child'}. Please contact me via TagLink.`,
+    greeting: (d) => `Hi! I found ${d.child_name || 'a child'}. Please contact me via GetURQR.`,
     sections: [
       {
         title: "Child's Information",
@@ -268,7 +268,7 @@ export default function TagView() {
     const num = profile.whatsapp_number.replace(/[^0-9]/g, '');
     const schema = PUBLIC_SCHEMAS[tag?.type];
     const tagData = tag?.data || {};
-    const msg = schema?.greeting ? schema.greeting(tagData) : `Hi! I found your TagLink tag: "${tag?.title}".`;
+    const msg = schema?.greeting ? schema.greeting(tagData) : `Hi! I found your GetURQR tag: "${tag?.title}".`;
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -284,7 +284,7 @@ export default function TagView() {
         <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
         <h2 className="text-xl font-bold text-slate-900 mb-2">Tag Unavailable</h2>
         <p className="text-slate-500 mb-6 text-sm">{error}</p>
-        <Link to="/" className="btn btn-secondary px-6 py-2">Go to TagLink</Link>
+        <Link to="/" className="btn btn-secondary px-6 py-2">Go to GetURQR</Link>
       </div>
     </div>
   );
@@ -489,7 +489,7 @@ export default function TagView() {
 
               {!hasDetails && !isLost && (
                 <p className="mt-4 text-slate-500 text-sm leading-relaxed">
-                  Scan this TagLink to instantly reach the owner on WhatsApp.
+                  Scan this GetURQR to instantly reach the owner on WhatsApp.
                 </p>
               )}
             </div>
@@ -541,7 +541,7 @@ export default function TagView() {
         {/* Footer */}
         <div className="text-center py-2">
           <Link to="/" className="text-xs text-slate-400 hover:text-violet-600 inline-flex items-center gap-1 transition-colors">
-            <QrCode size={11} /> Powered by TagLink
+            <QrCode size={11} /> Powered by GetURQR
           </Link>
         </div>
       </div>

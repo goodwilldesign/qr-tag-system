@@ -116,7 +116,7 @@ export default function AdminLayout() {
               <QrCode size={16} className="text-white" />
             </div>
             <div>
-              <p className="font-extrabold text-slate-900 text-sm leading-none">TagLink</p>
+              <p className="font-extrabold text-slate-900 text-sm leading-none">GetURQR</p>
               <div className="flex items-center gap-1 mt-0.5">
                 <Shield size={9} className="text-violet-500" />
                 <p className="text-[9px] text-violet-500 font-bold uppercase tracking-widest">Admin Panel</p>

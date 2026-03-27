@@ -92,7 +92,7 @@ export default function LandingPage() {
 
   const faqs = [
     {
-      q: 'Is TagLink really free?',
+      q: 'Is GetURQR really free?',
       a: 'Yes! Digital QR tags are 100% free forever. You can create unlimited tags, customize them, and print them at home. We only charge for premium physical tags (laser-engraved metal or weatherproof stickers) if you choose to order one.'
     },
     {
@@ -105,24 +105,24 @@ export default function LandingPage() {
     },
     {
       q: 'What types of tags can I create?',
-      a: 'TagLink supports 6 tag types: Pet Tags (for dogs, cats, etc.), Child Safety Tags, Vehicle/Parking Tags, Doorbell Tags, House Rental Tags (Airbnb-style), and Hotel Tags. Each type has custom fields designed for that specific use case.'
+      a: 'GetURQR supports 6 tag types: Pet Tags (for dogs, cats, etc.), Child Safety Tags, Vehicle/Parking Tags, Doorbell Tags, House Rental Tags (Airbnb-style), and Hotel Tags. Each type has custom fields designed for that specific use case.'
     },
     {
       q: 'How do physical tags work?',
-      a: 'Physical tags are premium, laser-engraved metal or weatherproof sticker tags that we ship worldwide for free. Each physical tag has a unique QR code pre-linked to your TagLink account. Just scan, set up, and attach it.'
+      a: 'Physical tags are premium, laser-engraved metal or weatherproof sticker tags that we ship worldwide for free. Each physical tag has a unique QR code pre-linked to your GetURQR account. Just scan, set up, and attach it.'
     },
     {
       q: 'Is my personal information safe?',
       a: 'Privacy is our top priority. You control exactly what information is displayed when someone scans your tag. Sensitive data like your full address or phone number can be hidden — scanners communicate through WhatsApp without ever seeing your number directly.'
     },
     {
-      q: 'Do I need an app to use TagLink?',
-      a: 'No app needed! TagLink is entirely web-based. You manage your tags from any browser, and people who scan your QR code see a mobile-friendly web page — no downloads required for either party.'
+      q: 'Do I need an app to use GetURQR?',
+      a: 'No app needed! GetURQR is entirely web-based. You manage your tags from any browser, and people who scan your QR code see a mobile-friendly web page — no downloads required for either party.'
     },
     {
-      q: 'Can I use TagLink internationally?',
-      a: 'Yes, TagLink works worldwide. Our digital tags have no geographic restrictions, and we offer free international shipping on all physical tag orders.'
-    }
+      q: 'Can I use GetURQR internationally?',
+      a: 'Yes, GetURQR works worldwide. Our digital tags have no geographic restrictions, and we offer free international shipping on all physical tag orders.'
+    },
   ];
 
   const [openFaq, setOpenFaq] = useState(null);
@@ -138,7 +138,7 @@ export default function LandingPage() {
         <div className="relative z-10 text-center w-full px-4 sm:px-6 lg:px-12 xl:px-20">
           <div className="mx-auto inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200 mb-6 md:mb-8 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 text-violet-500" />
-            <span className="text-xs sm:text-sm font-semibold text-violet-700 tracking-wide">TagLink · Now Live</span>
+            <span className="text-xs sm:text-sm font-semibold text-violet-700 tracking-wide">GetURQR · Now Live</span>
           </div>
 
           <h1 className="hero-title text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight mb-6 leading-tight text-slate-900 max-w-5xl mx-auto">
@@ -207,7 +207,7 @@ export default function LandingPage() {
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Latest Insights</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">From the TagLink Blog</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">From the GetURQR Blog</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Discover modern ways to use QR tech to secure what matters.</p>
           </div>
 
@@ -270,7 +270,7 @@ export default function LandingPage() {
       <section className="py-20 md:py-28 bg-white w-full">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto">
           <div className="text-center mb-14">
-            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Why TagLink</p>
+            <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">Why GetURQR</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Everything you need</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">All the tools to manage your tags digitally so you never lose what matters most.</p>
           </div>
@@ -299,7 +299,7 @@ export default function LandingPage() {
             Ready to protect what matters most?
           </h2>
           <p className="text-violet-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Join thousands of pet owners, hosts, and families who trust TagLink to keep their world connected and safe.
+            Join thousands of pet owners, hosts, and families who trust GetURQR to keep their world connected and safe.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/login" className="btn bg-white text-violet-700 hover:bg-violet-50 px-8 py-4 text-base font-bold shadow-xl shadow-violet-900/30 w-full sm:w-auto">
@@ -360,7 +360,7 @@ export default function LandingPage() {
           <div className="text-center mb-14">
             <p className="text-sm font-bold text-violet-600 uppercase tracking-widest mb-3">FAQ</p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-slate-900">Frequently Asked Questions</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Everything you need to know about TagLink and how it works.</p>
+            <p className="text-slate-500 max-w-xl mx-auto text-base sm:text-lg">Everything you need to know about GetURQR and how it works.</p>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-3">

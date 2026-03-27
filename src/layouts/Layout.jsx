@@ -72,7 +72,7 @@ export default function Layout() {
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
-            <span className={session ? 'hidden xs:inline' : ''}>TagLink</span>
+            <span className={session ? 'hidden xs:inline' : ''}>GetURQR</span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -153,14 +153,14 @@ export default function Layout() {
                 <div className="p-2 bg-violet-600 rounded-xl group-hover:bg-violet-500 transition-colors">
                   <QrCode className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xl font-extrabold text-white tracking-tight">TagLink</span>
+                <span className="text-xl font-extrabold text-white tracking-tight">GetURQR</span>
               </Link>
               <p className="text-sm leading-relaxed text-slate-400 max-w-xs">
                 Smart QR tags that connect the physical world to digital safety. Protect what matters most — pets, kids, vehicles, and property.
               </p>
               <div className="flex items-center gap-3 pt-2">
-                <a href="mailto:support@taglink.com" className="flex items-center gap-2 text-sm text-slate-400 hover:text-violet-400 transition-colors">
-                  <Mail size={14} /> support@taglink.com
+                <a href="mailto:support@geturqr.com" className="flex items-center gap-2 text-sm text-slate-400 hover:text-violet-400 transition-colors">
+                  <Mail size={14} /> support@geturqr.com
                 </a>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function Layout() {
         <div className="border-t border-slate-800">
           <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} TagLink · All rights reserved.
+              © {new Date().getFullYear()} GetURQR · All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-xs text-slate-500">
               <a href="#" className="hover:text-slate-300 transition-colors">Privacy Policy</a>

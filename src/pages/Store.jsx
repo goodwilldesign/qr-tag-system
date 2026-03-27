@@ -39,7 +39,7 @@ const PRODUCTS = [
   },
   {
     id: 'tshirt',
-    name: 'TagLink Classic T-Shirt',
+    name: 'GetURQR Classic T-Shirt',
     category: 'Apparel',
     emoji: '👕',
     description: 'Premium 100% cotton T-shirt with a scannable QR code printed on the sleeve. Great for kids and outdoor enthusiasts.',
@@ -50,7 +50,7 @@ const PRODUCTS = [
   },
   {
     id: 'cap',
-    name: 'TagLink Smart Cap',
+    name: 'GetURQR Smart Cap',
     category: 'Apparel',
     emoji: '🧢',
     description: 'Adjustable cap with a discreet QR tag patch on the side. Stylish and functional for everyday use.',
@@ -60,7 +60,7 @@ const PRODUCTS = [
   },
   {
     id: 'wristband',
-    name: 'TagLink Silicone Wristband',
+    name: 'GetURQR Silicone Wristband',
     category: 'Accessories',
     emoji: '💪',
     description: 'Soft, medical-grade silicone wristband with embedded QR code. Perfect for kids, elderly or medical use cases.',
@@ -81,7 +81,7 @@ const PRODUCTS = [
   },
   {
     id: 'premium-kit',
-    name: 'TagLink Starter Kit',
+    name: 'GetURQR Starter Kit',
     category: 'Bundles',
     emoji: '🎁',
     description: 'Everything you need to get started: 1 metal tag + 1 luggage tag + 5 stickers. Best value bundle.',
@@ -204,7 +204,7 @@ function CheckoutModal({ item, onClose }) {
         key: razorpayOrder.key_id,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: 'TagLink Store',
+        name: 'GetURQR Store',
         description: item.name,
         order_id: razorpayOrder.order_id,
         prefill: { name: form.name, contact: form.phone, email: session?.user?.email || '' },
@@ -462,13 +462,13 @@ export default function Store() {
   // ── SEO: inject JSON-LD schema + meta tags ───────────────
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = 'TagLink Store — Premium QR Tags, Stickers & Accessories India';
+    document.title = 'GetURQR Store — Premium QR Tags, Stickers & Accessories India';
 
     // Meta description
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) { metaDesc = document.createElement('meta'); metaDesc.name = 'description'; document.head.appendChild(metaDesc); }
     const prevDesc = metaDesc.content;
-    metaDesc.content = 'Buy premium QR tags, stickers, T-shirts, wristbands and luggage tags from TagLink. Free delivery across India. Secure Razorpay payments. Starting at ₹199.';
+    metaDesc.content = 'Buy premium QR tags, stickers, T-shirts, wristbands and luggage tags from GetURQR. Free delivery across India. Secure Razorpay payments. Starting at ₹199.';
 
     // JSON-LD Schema
     const schema = {
@@ -477,14 +477,14 @@ export default function Store() {
         {
           '@type': 'Organization',
           '@id': 'https://taglink.app/#organization',
-          name: 'TagLink',
-          url: 'https://taglink.app',
-          logo: 'https://taglink.app/logo.png',
-          contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: 'store@taglink.app', areaServed: 'IN' },
+          name: 'GetURQR',
+          url: 'https://geturqr.com',
+          logo: 'https://geturqr.com/logo.png',
+          contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: 'store@geturqr.com', areaServed: 'IN' },
         },
         {
           '@type': 'ItemList',
-          name: 'TagLink Store — Premium QR Accessories',
+          name: 'GetURQR Store — Premium QR Accessories',
           description: 'Premium QR-enabled tags, stickers, apparel and accessories. Free delivery across India.',
           numberOfItems: PRODUCTS.length,
           itemListElement: PRODUCTS.map((product, index) => ({
@@ -495,7 +495,7 @@ export default function Store() {
               name: product.name,
               description: product.description,
               image: `https://taglink.app/products/${product.id}.jpg`,
-              brand: { '@type': 'Brand', name: 'TagLink' },
+              brand: { '@type': 'Brand', name: 'GetURQR' },
               offers: {
                 '@type': 'Offer',
                 priceCurrency: 'INR',
@@ -503,7 +503,7 @@ export default function Store() {
                 priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
                 availability: 'https://schema.org/InStock',
                 itemCondition: 'https://schema.org/NewCondition',
-                seller: { '@type': 'Organization', name: 'TagLink' },
+                seller: { '@type': 'Organization', name: 'GetURQR' },
                 shippingDetails: {
                   '@type': 'OfferShippingDetails',
                   shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'INR' },
@@ -517,15 +517,15 @@ export default function Store() {
         },
         {
           '@type': 'WebPage',
-          '@id': 'https://taglink.app/store',
-          url: 'https://taglink.app/store',
-          name: 'TagLink Store — Premium QR Tags & Accessories',
-          isPartOf: { '@id': 'https://taglink.app/#organization' },
+          '@id': 'https://geturqr.com/store',
+          url: 'https://geturqr.com/store',
+          name: 'GetURQR Store — Premium QR Tags & Accessories',
+          isPartOf: { '@id': 'https://geturqr.com/#organization' },
           breadcrumb: {
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://taglink.app' },
-              { '@type': 'ListItem', position: 2, name: 'Store', item: 'https://taglink.app/store' },
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://geturqr.com' },
+              { '@type': 'ListItem', position: 2, name: 'Store', item: 'https://geturqr.com/store' },
             ],
           },
         },
@@ -549,8 +549,8 @@ export default function Store() {
     <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center py-8">
-        <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 px-3 py-1 rounded-full uppercase tracking-widest">TagLink Store</span>
-        <h1 className="text-4xl font-extrabold text-slate-900 mt-3 mb-2">Official TagLink Shop 🇮🇳</h1>
+        <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 px-3 py-1 rounded-full uppercase tracking-widest">GetURQR Store</span>
+        <h1 className="text-4xl font-extrabold text-slate-900 mt-3 mb-2">Official GetURQR Shop 🇮🇳</h1>
         <p className="text-slate-500 max-w-xl mx-auto">Premium QR accessories to protect what matters most. Free delivery across India. Pay securely via Razorpay.</p>
       </div>
 
@@ -611,7 +611,7 @@ export default function Store() {
       <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl p-8 text-center text-white">
         <p className="text-xl font-black mb-1">Need a Custom Bulk Order? 🏢</p>
         <p className="text-violet-200 text-sm mb-4">Hotels, schools, and businesses can get bulk QR tags at special prices.</p>
-        <a href="mailto:store@taglink.app" className="inline-flex items-center gap-2 bg-white text-violet-700 font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-violet-50 transition-colors">
+        <a href="mailto:store@geturqr.com" className="inline-flex items-center gap-2 bg-white text-violet-700 font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-violet-50 transition-colors">
           <Package size={16} /> Contact for Bulk Orders
         </a>
       </div>

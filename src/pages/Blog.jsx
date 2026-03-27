@@ -256,9 +256,7 @@ export default function Blog() {
     <div className="max-w-7xl mx-auto space-y-12 pb-16 px-4 sm:px-6 lg:px-8">
       {/* Header Section */}
       <div className="text-center space-y-4 py-12 md:py-20 bg-gradient-to-b from-violet-50/50 to-transparent rounded-[3rem] mt-6">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight">
-          The TagLink <span className="text-violet-600">Blog</span>
-        </h1>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">The GetURQR Blog</h1>
         <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto px-4">
           Discover how digital QR tags are completely revolutionizing safety, convenience, and privacy for families, hosts, and travelers.
         </p>
