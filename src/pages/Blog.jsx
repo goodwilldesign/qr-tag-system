@@ -15,8 +15,8 @@ export const BLOG_POSTS = [
     content: (
       <>
         <p>If your pet wanders off, you want them back fast. Microchips are essential, but they rely on a kind stranger catching your dog and driving them to a vet with a specialized scanner during business hours. That takes time—time you spend worrying.</p>
-        <p className="font-bold text-slate-900 mt-8 text-2xl">Enter the TagLink QR Pet Tag.</p>
-        <p>With TagLink, anyone with a smartphone becomes an instant rescuer.</p>
+        <p className="font-bold text-slate-900 mt-8 text-2xl">Enter the GetURQR QR Pet Tag.</p>
+        <p>With GetURQR, anyone with a smartphone becomes an instant rescuer.</p>
         <ul className="list-disc ml-6 mt-6 space-y-4">
           <li><strong>Instant Information:</strong> One scan opens a secure page showing your pet’s name, essential medical notes (like severe allergies or daily medications), and the vet's contact number.</li>
           <li><strong>Instant GPS Routing:</strong> With our "Lost Mode," the finder sees a glowing red banner prompting them to share their precise GPS location with you at the tap of a button.</li>
@@ -38,7 +38,7 @@ export const BLOG_POSTS = [
     excerpt: "Ditch the messy printed binders and complicated welcome PDFs. Discover how scanning a single stylish QR code gives your guests a 5-star digital arrival.",
     content: (
       <>
-        <p>Running an Airbnb, homestay, or rental property? Ditch the messy printed binders and complicated welcome PDFs. All you need is a single TagLink QR House Rental Tag placed on your kitchen counter or entryway.</p>
+        <p>Running an Airbnb, homestay, or rental property? Ditch the messy printed binders and complicated welcome PDFs. All you need is a single GetURQR QR House Rental Tag placed on your kitchen counter or entryway.</p>
         <p className="font-bold text-slate-900 mt-8 text-2xl">When your guests scan the custom tag, they instantly see:</p>
         <ul className="list-disc ml-6 mt-6 space-y-4">
           <li><strong>Stunning Photo Galleries:</strong> Beautifully formatted property images.</li>
@@ -64,7 +64,7 @@ export const BLOG_POSTS = [
     content: (
       <>
         <p>We've all been there: The baby is finally asleep, or you’re in the middle of a vitally important Zoom meeting, and <em>DING DONG!</em> The delivery driver rings that loud, obnoxious analog doorbell at the worst possible time.</p>
-        <p className="font-bold text-slate-900 mt-8 text-2xl">Enter the TagLink Doorbell Tag.</p>
+        <p className="font-bold text-slate-900 mt-8 text-2xl">Enter the GetURQR Doorbell Tag.</p>
         <p className="mt-4">It’s incredibly simple, yet completely revolutionizes how you receive your daily visitors.</p>
         <p className="mt-4">Place the tag securely near your door instead of (or over) your old doorbell. When a visitor, neighbor, or frequent delivery driver scans it with any smartphone camera, they will instantly see your specific real-time instructions: <em>"Please leave packages on the doormat. DO NOT KNOCK! Baby is sleeping."</em></p>
         <p className="mt-4">Even better, they can hit a prominent button that securely sends a silent "Ding Dong!" digital notification straight to your own phone screen. It preserves your hard-earned peace, reliably keeps your family privacy protected, and ensures your packages are safely left exactly where they need to be.</p>
@@ -84,14 +84,14 @@ export const BLOG_POSTS = [
     content: (
       <>
         <p>Navigating shared commercial parking lots, exceptionally tight apartment building bays, or accidentally double-parking slightly blocking someone in can be a major daily headache. Often, the only way someone can urgently contact you is by honking aggressively and continuously, simply hoping you hear them eventually.</p>
-        <p className="font-bold text-slate-900 mt-8 text-2xl">The TagLink Parking Tag fixes this permanently.</p>
+        <p className="font-bold text-slate-900 mt-8 text-2xl">The GetURQR Parking Tag fixes this permanently.</p>
         <p className="mt-4">Placed visibly and neatly on your vehicle dashboard or corner windshield, it instantly allows absolutely anyone to reach you anonymously via a secure WhatsApp conversation or a masked Phone Call, without ever explicitly exposing your sensitive personal cell number to the open world.</p>
         <ul className="list-disc ml-6 mt-6 space-y-4">
           <li><strong>Emergency Situations:</strong> Is your car blocking someone in?</li>
           <li><strong>Good Samaritan Alerts:</strong> Did you accidentally leave your headlights beaming on or a side window deeply cracked during an approaching rainstorm?</li>
           <li><strong>Clear Identification:</strong> A quick scan brings up 1-tap "Quick Alerts", allowing passing good Samaritans to proactively notify you instantly. Plus, the page displays a beautiful custom hero image of your vehicle so people undeniably know they have scanned the right vehicle owner.</li>
         </ul>
-        <p className="mt-8 font-bold text-xl text-slate-800">Be a significantly more polite Parker—get a protective TagLink Vehicle Tag today.</p>
+        <p className="mt-8 font-bold text-xl text-slate-800">Be a significantly more polite Parker—get a protective GetURQR Vehicle Tag today.</p>
       </>
     )
   },
@@ -104,16 +104,16 @@ export const BLOG_POSTS = [
     icon: <MapPin size={22} className="text-pink-500" />,
     color: "bg-pink-100 text-pink-700",
     featuredImage: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=1200",
-    excerpt: "Whether tracking energetic kids at theme parks or expensive bags on carousels, secure them both digitally with TagLink.",
+    excerpt: "Whether tracking energetic kids at theme parks or expensive bags on carousels, secure them both digitally with GetURQR.",
     content: (
       <>
         <p>Traveling is inherently stressful at baseline. Whether you’re desperately trying to actively keep an eye on your highly energetic small kids at a densely crowded theme park, or anxiously trying to ensure your expensive checked luggage ultimately doesn't end up circling on the definitively wrong baggage carousel, you absolutely need a modern backup plan.</p>
-        <p className="font-bold text-slate-900 mt-8 text-2xl">TagLink's Child and Luggage Tags are the ultimate travel companions.</p>
+        <p className="font-bold text-slate-900 mt-8 text-2xl">GetURQR's Child and Luggage Tags are the ultimate travel companions.</p>
         <ul className="list-disc ml-6 mt-6 space-y-5">
           <li><strong>For Kids:</strong> Securely attach a highly durable PVC tag tightly to their backpack straps, shoelaces, or belt loop. If they ever unfortunately wander off to explore, any nearby adult can quickly scan it to instantly bring up their designated emergency contact info, vital allergy/medication needs, and an impossibly easy button to WhatsApp you immediately right there on the spot.</li>
           <li><strong>For Luggage:</strong> Flimsy traditional paper airline tags easily get randomly ripped off on conveyor belts, and writing your exact home address/phone number in sharpie marker is a massive glaring privacy risk while sitting in airports. TagLink expertly keeps your private information totally secure behind a sophisticated dynamic QR code layer. If your beloved bag is tragically lost in transit by the airline, engaging "Lost Mode" securely lets helpful baggage handlers immediately ping you their exact precise GPS location coordinate.</li>
         </ul>
-        <p className="mt-8 text-xl text-slate-800 font-medium">Travel objectively isn't supposed to be strictly about frantically worrying over bags and kids. It's really about making beautiful lasting memories. Let TagLink expertly handle the hard security logic, so you can thoroughly enjoy the relaxing trip.</p>
+        <p className="mt-8 text-xl text-slate-800 font-medium">Travel objectively isn't supposed to be strictly about frantically worrying over bags and kids. It's really about making beautiful lasting memories. Let GetURQR expertly handle the hard security logic, so you can thoroughly enjoy the relaxing trip.</p>
       </>
     )
   }
@@ -125,8 +125,8 @@ export default function Blog() {
   // SEO Injection
   useEffect(() => {
     document.title = activePostId 
-      ? `${BLOG_POSTS.find(p => p.id === activePostId)?.title} - TagLink Blog` 
-      : "TagLink Blog - Modern QR Safety Insights";
+      ? `${BLOG_POSTS.find(p => p.id === activePostId)?.title} - GetURQR Blog` 
+      : "GetURQR Blog - Modern QR Safety Insights";
     
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
@@ -136,7 +136,7 @@ export default function Blog() {
     }
     metaDesc.content = activePostId 
       ? BLOG_POSTS.find(p => p.id === activePostId)?.excerpt 
-      : "Read the latest guides and feature updates about securing your family, property, and luggage using TagLink's smart QR ecosystem.";
+      : "Read the latest guides and feature updates about securing your family, property, and luggage using GetURQR's smart QR ecosystem.";
 
     const scriptId = 'blog-schema-jsonld';
     let schemaScript = document.getElementById(scriptId);
@@ -155,11 +155,11 @@ export default function Blog() {
       "image": BLOG_POSTS.find(p => p.id === activePostId)?.featuredImage,
       "datePublished": BLOG_POSTS.find(p => p.id === activePostId)?.datePublishedIso,
       "description": BLOG_POSTS.find(p => p.id === activePostId)?.excerpt,
-      "author": { "@type": "Organization", "name": "TagLink" }
+      "author": { "@type": "Organization", "name": "GetURQR" }
     } : {
       "@context": "https://schema.org",
       "@type": "Blog",
-      "name": "TagLink Knowledge Base",
+      "name": "GetURQR Knowledge Base",
       "blogPost": BLOG_POSTS.map(post => ({
         "@type": "BlogPosting",
         "headline": post.title,

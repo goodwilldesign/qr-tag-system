@@ -72,7 +72,7 @@ export default function Layout() {
         <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto flex flex-row justify-between items-center">
           <Link to="/" className="nav-brand shrink-0">
             <QrCode className="h-6 w-6 text-violet-600" />
-            <span className={session ? 'hidden xs:inline' : ''}>GetURQR</span>
+            <span className={session ? 'hidden sm:inline' : ''}>GetURQR</span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">

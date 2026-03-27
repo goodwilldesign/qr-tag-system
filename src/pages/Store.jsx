@@ -476,7 +476,7 @@ export default function Store() {
       '@graph': [
         {
           '@type': 'Organization',
-          '@id': 'https://taglink.app/#organization',
+          '@id': 'https://geturqr.com/#organization',
           name: 'GetURQR',
           url: 'https://geturqr.com',
           logo: 'https://geturqr.com/logo.png',
@@ -494,7 +494,7 @@ export default function Store() {
               '@type': 'Product',
               name: product.name,
               description: product.description,
-              image: `https://taglink.app/products/${product.id}.jpg`,
+              image: `https://geturqr.com/products/${product.id}.jpg`,
               brand: { '@type': 'Brand', name: 'GetURQR' },
               offers: {
                 '@type': 'Offer',

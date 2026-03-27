@@ -51,7 +51,7 @@ export default function ChatWidget() {
   const [visitorInfo, setVisitorInfo] = useState({ name: '', email: '', whatsapp: '' });
   const [guestForm, setGuestForm]     = useState({ name: '', email: '', whatsapp: '' });
   const [messages, setMessages]       = useState([
-    { role: 'assistant', content: "Hi! I'm TagLink's AI Assistant. How can I help you today?" }
+    { role: 'assistant', content: "Hi! I'm GetURQR's AI Assistant. How can I help you today?" }
   ]);
   const [input, setInput]             = useState('');
   const [loading, setLoading]         = useState(false);
@@ -99,7 +99,7 @@ export default function ChatWidget() {
     setIdleState('closed');
     setIsOpen(false);
     setTimeout(() => {
-      setMessages([{ role: 'assistant', content: "Hi! I'm TagLink's AI Assistant. How can I help you today?" }]);
+      setMessages([{ role: 'assistant', content: "Hi! I'm GetURQR's AI Assistant. How can I help you today?" }]);
       setTicketCreated(false);
       setIdleState('active');
       setCountdown(IDLE_CLOSE_MS / 1000);
@@ -180,7 +180,7 @@ export default function ChatWidget() {
     await upsertTranscript(sessionIdRef.current, messagesRef.current, visitorInfoRef.current.email, visitorInfoRef.current.name);
     setIsOpen(false);
     setTimeout(() => {
-      setMessages([{ role: 'assistant', content: "Hi! I'm TagLink's AI Assistant. How can I help you today?" }]);
+      setMessages([{ role: 'assistant', content: "Hi! I'm GetURQR's AI Assistant. How can I help you today?" }]);
       setTicketCreated(false);
       setIdleState('active');
       setCountdown(IDLE_CLOSE_MS / 1000);
