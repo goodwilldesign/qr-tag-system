@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { FileText, Sparkles, Globe, Edit, Trash2, X, Check, Lightbulb, RefreshCw } from 'lucide-react';
+import { FileText, Sparkles, Globe, Edit, Trash2, X, Check, Lightbulb, RefreshCw, Save, Image as ImageIcon } from 'lucide-react';
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -237,10 +237,113 @@ function AIModal({ onClose, onCreated }) {
   );
 }
 
+/* ── Edit Modal ─────────────────────────────────────────── */
+function EditModal({ post, onClose, onSaved }) {
+  const [form, setForm] = useState({
+    title: post.title || '',
+    excerpt: post.excerpt || '',
+    content: post.content || '',
+    cover_image_url: post.cover_image_url || '',
+    seo_title: post.seo_title || '',
+    seo_description: post.seo_description || '',
+    seo_keywords: post.seo_keywords || '',
+    status: post.status || 'draft',
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSave = async () => {
+    if (!form.title.trim()) { setError('Title is required.'); return; }
+    setSaving(true);
+    setError('');
+    const { error: dbErr } = await supabase
+      .from('blog_posts')
+      .update({ ...form, slug: form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') })
+      .eq('id', post.id);
+    setSaving(false);
+    if (dbErr) { setError(dbErr.message); return; }
+    onSaved();
+    onClose();
+  };
+
+  const field = (label, key, type = 'text', rows = null, hint = '') => (
+    <div>
+      <label className="text-xs font-bold text-slate-500 block mb-1">{label}{hint && <span className="text-slate-400 font-normal ml-1">{hint}</span>}</label>
+      {rows
+        ? <textarea value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} rows={rows}
+            className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-violet-400 resize-none font-mono text-xs" />
+        : <input type={type} value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+            className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-violet-400" />
+      }
+    </div>
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-2xl shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
+          <div className="flex items-center gap-2">
+            <Edit size={18} className="text-violet-500" />
+            <h3 className="font-bold text-slate-900">Edit Post</h3>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
+        </div>
+
+        <div className="p-6 space-y-4 max-h-[78vh] overflow-y-auto">
+          {form.cover_image_url && (
+            <img src={form.cover_image_url} alt="cover" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
+          )}
+
+          {field('Title', 'title')}
+          {field('Excerpt / Summary', 'excerpt')}
+          {field('Cover Image URL', 'cover_image_url', 'url')}
+          {field('Content (Markdown)', 'content', 'text', 12)}
+
+          {/* SEO */}
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
+            <p className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2">
+              <Globe size={13} /> SEO Metadata
+            </p>
+            {field('SEO Title', 'seo_title', 'text', null, '(max 60 chars)')}
+            {field('Meta Description', 'seo_description', 'text', null, '(max 160 chars)')}
+            {field('Focus Keywords', 'seo_keywords', 'text', null, '(comma separated)')}
+          </div>
+
+          {/* Status */}
+          <div className="flex items-center gap-4">
+            <label className="text-xs font-bold text-slate-500">Status</label>
+            <div className="flex gap-2">
+              {['draft', 'published'].map(s => (
+                <button key={s} onClick={() => setForm(f => ({ ...f, status: s }))}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                    form.status === s ? (s === 'published' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-white') : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  }`}>
+                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl p-3">{error}</p>}
+
+          <div className="flex gap-3">
+            <button onClick={onClose} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-sm transition-all">Cancel</button>
+            <button onClick={handleSave} disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-sm transition-all disabled:opacity-50">
+              {saving ? 'Saving…' : <><Save size={14} /> Save Changes</>}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminBlog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAI, setShowAI] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
@@ -365,6 +468,10 @@ export default function AdminBlog() {
                     </span>
                   </div>
                   <div className="flex items-center gap-3 mt-3">
+                    <button onClick={() => setEditingPost(post)}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-violet-500 hover:text-violet-700 transition-colors">
+                      <Edit size={12} /> Edit
+                    </button>
                     <button onClick={() => toggleStatus(post)}
                       className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-violet-600 transition-colors">
                       {post.status === 'published' ? <><Check size={12} /> Unpublish</> : <><Globe size={12} /> Publish</>}
@@ -383,6 +490,7 @@ export default function AdminBlog() {
       )}
 
       {showAI && <AIModal onClose={() => setShowAI(false)} onCreated={fetchPosts} />}
+      {editingPost && <EditModal post={editingPost} onClose={() => setEditingPost(null)} onSaved={fetchPosts} />}
     </div>
   );
 }
