@@ -339,10 +339,170 @@ function EditModal({ post, onClose, onSaved }) {
   );
 }
 
+/* ── Manual Post Modal ───────────────────────────────────── */
+function ManualModal({ onClose, onCreated }) {
+  const EMPTY = { title: '', excerpt: '', content: '', cover_image_url: '', seo_title: '', seo_description: '', seo_keywords: '', status: 'draft' };
+  const [form, setForm] = useState(EMPTY);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
+  const [preview, setPreview] = useState(false);
+
+  const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError('Please upload an image file.'); return; }
+    setUploading(true); setError('');
+    const ext = file.name.split('.').pop();
+    const path = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error: upErr } = await supabase.storage.from('site-assets').upload(path, file);
+    if (upErr) { setError('Upload failed: ' + upErr.message); setUploading(false); return; }
+    const { data: { publicUrl } } = supabase.storage.from('site-assets').getPublicUrl(path);
+    set('cover_image_url', publicUrl);
+    setUploading(false);
+  };
+
+  const handleSave = async () => {
+    if (!form.title.trim()) { setError('Title is required.'); return; }
+    if (!form.content.trim()) { setError('Content is required.'); return; }
+    setSaving(true); setError('');
+    const { data: { session } } = await supabase.auth.getSession();
+    const { error: dbErr } = await supabase.from('blog_posts').insert([{
+      ...form,
+      slug: slugify(form.title),
+      author_id: session?.user?.id,
+    }]);
+    setSaving(false);
+    if (dbErr) { setError(dbErr.message); return; }
+    onCreated(); onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-2xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
+          <div className="flex items-center gap-2">
+            <FileText size={18} className="text-violet-500" />
+            <h3 className="font-bold text-slate-900">Write Post Manually</h3>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
+        </div>
+
+        <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+
+          {/* Cover image */}
+          <div>
+            <label className="text-xs font-bold text-slate-500 block mb-2">Featured / Cover Image</label>
+            {form.cover_image_url && (
+              <div className="relative group mb-3">
+                <img src={form.cover_image_url} alt="cover" className="w-full h-40 object-cover rounded-xl border border-slate-200" />
+                <button onClick={() => set('cover_image_url', '')} className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+              </div>
+            )}
+            <div className="flex gap-2">
+              <label className="cursor-pointer flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl px-4 py-2 text-xs font-bold transition-colors">
+                <ImageIcon size={14} /> {uploading ? 'Uploading…' : 'Upload Image'}
+                <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
+              </label>
+              <span className="text-slate-400 text-xs self-center">or paste URL:</span>
+              <input value={form.cover_image_url} onChange={e => set('cover_image_url', e.target.value)}
+                placeholder="https://…"
+                className="flex-1 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-violet-400" />
+            </div>
+          </div>
+
+          {/* Title */}
+          <div>
+            <label className="text-xs font-bold text-slate-500 block mb-1">Title <span className="text-red-400">*</span></label>
+            <input value={form.title} onChange={e => set('title', e.target.value)}
+              placeholder="Enter post title…"
+              className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-violet-400" />
+          </div>
+
+          {/* Excerpt */}
+          <div>
+            <label className="text-xs font-bold text-slate-500 block mb-1">Excerpt / Summary</label>
+            <textarea value={form.excerpt} onChange={e => set('excerpt', e.target.value)} rows={2}
+              placeholder="A short description shown on the blog listing page…"
+              className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-violet-400 resize-none" />
+          </div>
+
+          {/* Content */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-bold text-slate-500">Content (Markdown) <span className="text-red-400">*</span></label>
+              <span className="text-xs text-slate-400">{form.content.split(' ').filter(Boolean).length} words</span>
+            </div>
+            <textarea value={form.content} onChange={e => set('content', e.target.value)} rows={14}
+              placeholder={`## Introduction\n\nWrite your post here using Markdown.\n\n## Section 2\n\n- Bullet point 1\n- Bullet point 2\n\n## Conclusion\n\nEnd with a call to action.`}
+              className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-400 resize-none font-mono text-xs leading-relaxed" />
+          </div>
+
+          {/* SEO */}
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
+            <p className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2">
+              <Globe size={13} /> SEO Schema
+            </p>
+            <div>
+              <label className="text-xs text-emerald-700 font-semibold block mb-1">SEO Title <span className="text-emerald-400 font-normal">(max 60 chars — {form.seo_title.length}/60)</span></label>
+              <input value={form.seo_title} onChange={e => set('seo_title', e.target.value)}
+                placeholder="Short, keyword-rich title for Google…"
+                maxLength={60}
+                className="w-full border border-emerald-300 bg-white text-slate-900 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500" />
+            </div>
+            <div>
+              <label className="text-xs text-emerald-700 font-semibold block mb-1">Meta Description <span className="text-emerald-400 font-normal">(max 160 chars — {form.seo_description.length}/160)</span></label>
+              <textarea value={form.seo_description} onChange={e => set('seo_description', e.target.value)} rows={2}
+                placeholder="What this post is about, shown in Google search results…"
+                maxLength={160}
+                className="w-full border border-emerald-300 bg-white text-slate-900 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500 resize-none" />
+            </div>
+            <div>
+              <label className="text-xs text-emerald-700 font-semibold block mb-1">Focus Keywords <span className="text-emerald-400 font-normal">(comma separated)</span></label>
+              <input value={form.seo_keywords} onChange={e => set('seo_keywords', e.target.value)}
+                placeholder="QR tag, GetURQR, smart tag India…"
+                className="w-full border border-emerald-300 bg-white text-slate-900 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500" />
+            </div>
+          </div>
+
+          {/* Status */}
+          <div className="flex items-center gap-4">
+            <label className="text-xs font-bold text-slate-500">Status</label>
+            <div className="flex gap-2">
+              {['draft', 'published'].map(s => (
+                <button key={s} onClick={() => set('status', s)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                    form.status === s ? (s === 'published' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-white') : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  }`}>
+                  {s === 'published' ? '🌍 Publish Now' : '📝 Save as Draft'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl p-3">{error}</p>}
+
+          <div className="flex gap-3 pt-2">
+            <button onClick={onClose} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-sm transition-all">Cancel</button>
+            <button onClick={handleSave} disabled={saving || uploading}
+              className="flex-1 flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 rounded-xl text-sm transition-all disabled:opacity-50">
+              {saving ? 'Saving…' : <><Save size={14} /> Create Post</>}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminBlog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAI, setShowAI] = useState(false);
+  const [showManual, setShowManual] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [selected, setSelected] = useState(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
@@ -396,10 +556,18 @@ export default function AdminBlog() {
           </h1>
           <p className="text-slate-500 text-sm mt-0.5">{posts.length} posts · GPT-4 + DALL-E 3 + SEO Optimized</p>
         </div>
-        <button onClick={() => setShowAI(true)}
-          className="flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm">
-          <Sparkles size={15} /> Generate with AI
-        </button>
+        <div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowManual(true)}
+              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm">
+              <FileText size={15} /> Write Manually
+            </button>
+            <button onClick={() => setShowAI(true)}
+              className="flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm">
+              <Sparkles size={15} /> Generate with AI
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Bulk Action Bar */}
@@ -490,6 +658,7 @@ export default function AdminBlog() {
       )}
 
       {showAI && <AIModal onClose={() => setShowAI(false)} onCreated={fetchPosts} />}
+      {showManual && <ManualModal onClose={() => setShowManual(false)} onCreated={fetchPosts} />}
       {editingPost && <EditModal post={editingPost} onClose={() => setEditingPost(null)} onSaved={fetchPosts} />}
     </div>
   );
