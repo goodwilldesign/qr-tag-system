@@ -4,13 +4,22 @@ import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
+import Color from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style';
 import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   Heading1, Heading2, Heading3,
   List, ListOrdered, Quote, Minus, Link as LinkIcon,
   AlignLeft, AlignCenter, AlignRight,
-  Undo, Redo, Code, Code2,
+  Undo, Redo, Code, Code2, Palette, X as XIcon,
 } from 'lucide-react';
+
+const PRESET_COLORS = [
+  '#111827', '#374151', '#6B7280', '#D1D5DB',
+  '#EF4444', '#F97316', '#EAB308', '#22C55E',
+  '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6',
+  '#1D4ED8', '#7C3AED', '#BE123C', '#065F46',
+];
 
 const ToolbarBtn = ({ onClick, active, title, children, disabled }) => (
   <button
@@ -35,6 +44,8 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Write y
     extensions: [
       StarterKit,
       Underline,
+      TextStyle,
+      Color,
       Link.configure({ openOnClick: false, autolink: true }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Placeholder.configure({ placeholder }),
@@ -106,6 +117,32 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Write y
 
         {/* Horizontal Rule */}
         {btn(<Minus size={14} />, 'Divider', () => editor.chain().focus().setHorizontalRule().run(), false)}
+        <Divider />
+
+        {/* Text Color */}
+        <div className="relative flex items-center gap-0.5">
+          <Palette size={13} className="text-slate-400" />
+          {PRESET_COLORS.map(color => (
+            <button
+              key={color}
+              type="button"
+              title={color}
+              onMouseDown={e => { e.preventDefault(); editor.chain().focus().setColor(color).run(); }}
+              className="w-4 h-4 rounded-sm border border-white/50 hover:scale-125 transition-transform shadow-sm"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+          {/* Custom color picker */}
+          <label title="Custom color" className="w-5 h-5 rounded-sm border border-slate-300 overflow-hidden cursor-pointer hover:scale-125 transition-transform" style={{ background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)' }}>
+            <input type="color" className="opacity-0 w-0 h-0"
+              onChange={e => editor.chain().focus().setColor(e.target.value).run()} />
+          </label>
+          {/* Reset color */}
+          <button type="button" title="Reset color" onMouseDown={e => { e.preventDefault(); editor.chain().focus().unsetColor().run(); }}
+            className="ml-0.5 p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+            <XIcon size={10} />
+          </button>
+        </div>
 
         {/* Word count */}
         <span className="ml-auto text-[10px] text-slate-400 pr-1">
