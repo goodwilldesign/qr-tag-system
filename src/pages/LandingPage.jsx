@@ -4,6 +4,37 @@ import { useState } from 'react';
 import ParticleCanvas from '../components/ParticleCanvas';
 import { BLOG_POSTS } from './Blog';
 
+const LANDING_BLOG_PREVIEW = [
+  {
+    id: 1,
+    title: "Don't Lose Your Best Friend: Why GPS QR Pet Tags Are Better Than Microchips",
+    date: 'March 15, 2026',
+    readTime: '3 min read',
+    cover_image_url: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800',
+    excerpt: 'If your pet wanders off, you want them back fast. Learn why QR tags are completely revolutionizing pet safety.',
+    color: 'bg-amber-100 text-amber-700',
+  },
+  {
+    id: 2,
+    title: 'Upgrade Your Airbnb: Redefining the Check-In Experience',
+    date: 'March 18, 2026',
+    readTime: '4 min read',
+    cover_image_url: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=800',
+    excerpt: 'Ditch the messy printed binders. One QR code gives your guests a 5-star digital arrival.',
+    color: 'bg-blue-100 text-blue-700',
+  },
+  {
+    id: 3,
+    title: 'Smart Parking Tags: The Ultimate Solution to Car Troubles',
+    date: 'March 19, 2026',
+    readTime: '3 min read',
+    cover_image_url: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=800',
+    excerpt: 'Let people notify you about your car without putting your phone number on display.',
+    color: 'bg-emerald-100 text-emerald-700',
+  },
+];
+
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const features = [
@@ -212,30 +243,24 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {BLOG_POSTS.slice(0, 3).map((post) => (
-              <article 
-                key={post.id} 
-                onClick={() => {
-                  window.scrollTo(0, 0);
-                  navigate('/blog');
-                }}
+            {LANDING_BLOG_PREVIEW.map((post) => (
+              <article
+                key={post.id}
+                onClick={() => { window.scrollTo(0, 0); navigate('/blog'); }}
                 className="flex flex-col bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer group"
               >
-                {/* Image Banner */}
                 <div className="w-full h-56 relative overflow-hidden bg-slate-100">
-                  <img 
-                    src={post.featuredImage} 
-                    alt={post.title} 
+                  <img
+                    src={post.cover_image_url}
+                    alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className={`absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs shadow-sm bg-white/95 backdrop-blur-sm ${post.color}`}>
-                    {post.icon}
                     {post.readTime.toUpperCase()}
                   </div>
                 </div>
 
-                {/* Content Details */}
                 <div className="p-6 md:p-8 flex flex-col flex-1">
                   <div className="flex items-center gap-2 text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">
                     <BookOpen size={14} />
@@ -246,7 +271,7 @@ export default function LandingPage() {
                     {post.title}
                   </h2>
 
-                  <p className="text-slate-500 text-base leading-relaxed mix-blend-multiply line-clamp-3 mb-6 flex-1">
+                  <p className="text-slate-500 text-base leading-relaxed line-clamp-3 mb-6 flex-1">
                     {post.excerpt}
                   </p>
 
