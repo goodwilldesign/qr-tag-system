@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { FileText, Sparkles, Globe, Edit, Trash2, X, Check, Lightbulb, RefreshCw, Save, Image as ImageIcon } from 'lucide-react';
+import RichTextEditor from '../../components/RichTextEditor';
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -297,7 +298,16 @@ function EditModal({ post, onClose, onSaved }) {
           {field('Title', 'title')}
           {field('Excerpt / Summary', 'excerpt')}
           {field('Cover Image URL', 'cover_image_url', 'url')}
-          {field('Content (Markdown)', 'content', 'text', 12)}
+
+          <div>
+            <label className="text-xs font-bold text-slate-500 block mb-1">Content</label>
+            <RichTextEditor
+              value={form.content}
+              onChange={val => setForm(f => ({ ...f, content: val }))}
+              placeholder="Edit your post content here…"
+            />
+          </div>
+
 
           {/* SEO */}
           <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
@@ -432,13 +442,12 @@ function ManualModal({ onClose, onCreated }) {
 
           {/* Content */}
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-bold text-slate-500">Content (Markdown) <span className="text-red-400">*</span></label>
-              <span className="text-xs text-slate-400">{form.content.split(' ').filter(Boolean).length} words</span>
-            </div>
-            <textarea value={form.content} onChange={e => set('content', e.target.value)} rows={14}
-              placeholder={`## Introduction\n\nWrite your post here using Markdown.\n\n## Section 2\n\n- Bullet point 1\n- Bullet point 2\n\n## Conclusion\n\nEnd with a call to action.`}
-              className="w-full border border-slate-200 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-400 resize-none font-mono text-xs leading-relaxed" />
+            <label className="text-xs font-bold text-slate-500 block mb-1">Content <span className="text-red-400">*</span></label>
+            <RichTextEditor
+              value={form.content}
+              onChange={val => set('content', val)}
+              placeholder="Write your post content here… Use the toolbar to format text, add headings, lists, and more."
+            />
           </div>
 
           {/* SEO */}

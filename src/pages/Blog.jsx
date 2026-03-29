@@ -2,29 +2,23 @@ import { useState, useEffect } from 'react';
 import { BookOpen, ArrowLeft, Share2, Clock, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
-// Render markdown-like content to basic HTML (for DB posts)
-function renderContent(content) {
-  if (!content) return null;
-  return content.split('\n\n').map((block, i) => {
-    if (block.startsWith('## ')) {
-      return <h2 key={i} className="font-bold text-slate-900 mt-8 text-2xl">{block.slice(3)}</h2>;
-    }
-    if (block.startsWith('- ')) {
-      const items = block.split('\n').filter(l => l.startsWith('- '));
-      return (
-        <ul key={i} className="list-disc ml-6 mt-4 space-y-3">
-          {items.map((item, j) => {
-            const text = item.slice(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            return <li key={j} dangerouslySetInnerHTML={{ __html: text }} />;
-          })}
-        </ul>
-      );
-    }
-    if (block.startsWith('**') && block.endsWith('**')) {
-      return <p key={i} className="mt-4 font-bold text-slate-800 text-xl">{block.slice(2, -2)}</p>;
-    }
-    return <p key={i} className="mt-4 text-slate-600 leading-relaxed">{block.replace(/\*(.*?)\*/g, '$1')}</p>;
-  });
+// Render HTML content from TipTap editor
+function PostContent({ html }) {
+  if (!html) return null;
+  return (
+    <div
+      className="prose prose-slate prose-lg max-w-none
+        prose-headings:text-slate-900 prose-headings:font-bold
+        prose-p:text-slate-600 prose-p:leading-relaxed
+        prose-li:text-slate-600 prose-li:my-1
+        prose-strong:text-slate-800
+        prose-a:text-violet-600 prose-a:no-underline hover:prose-a:underline
+        prose-blockquote:border-violet-400 prose-blockquote:text-slate-500
+        prose-code:bg-slate-100 prose-code:text-violet-700 prose-code:px-1 prose-code:rounded
+        prose-pre:bg-slate-900 prose-pre:text-slate-100"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
 }
 
 export default function Blog() {
@@ -112,8 +106,8 @@ export default function Blog() {
           </div>
         )}
 
-        <div className="prose prose-slate prose-lg md:prose-xl max-w-3xl mx-auto prose-p:text-slate-600 prose-li:text-slate-600">
-          {renderContent(activePost.content)}
+        <div className="max-w-3xl mx-auto">
+          <PostContent html={activePost.content} />
         </div>
 
         <div className="max-w-3xl mx-auto border-t border-b border-slate-100 py-8 flex justify-between items-center">
