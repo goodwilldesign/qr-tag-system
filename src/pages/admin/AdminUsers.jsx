@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Users, Search, Shield, ShieldOff, Tag, ShoppingBag } from 'lucide-react';
+import { Users, Search, Shield, ShieldOff, Tag, ShoppingBag, Mail } from 'lucide-react';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -12,8 +12,8 @@ export default function AdminUsers() {
     const fetchUsers = async () => {
       setLoading(true);
       const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, full_name, role, created_at, whatsapp_number')
+        .from('admin_users_view')
+        .select('id, full_name, role, created_at, whatsapp_number, email')
         .order('created_at', { ascending: false });
 
       if (!profiles) { setLoading(false); return; }
@@ -46,7 +46,8 @@ export default function AdminUsers() {
   const filtered = users.filter(u =>
     !search ||
     u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-    u.whatsapp_number?.includes(search)
+    u.whatsapp_number?.includes(search) ||
+    u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -89,6 +90,9 @@ export default function AdminUsers() {
                         </div>
                         <div>
                           <p className="text-slate-900 font-semibold">{user.full_name || 'No name'}</p>
+                          <p className="text-slate-500 text-xs flex items-center gap-1">
+                            <Mail size={10} className="text-slate-400" />{user.email}
+                          </p>
                           <p className="text-slate-400 text-xs">{user.whatsapp_number || 'No WhatsApp added'}</p>
                         </div>
                       </div>

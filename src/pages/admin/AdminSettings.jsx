@@ -10,7 +10,8 @@ const SETTINGS_SCHEMA = [
   { key: 'support_phone', label: 'Support Phone', placeholder: '+91 9876543210', type: 'tel' },
   { key: 'store_cod_enabled', label: 'COD (Cash on Delivery)', type: 'toggle' },
   { key: 'razorpay_enabled', label: 'Razorpay Payments Enabled', type: 'toggle' },
-  { key: 'maintenance_mode', label: 'Maintenance Mode', type: 'toggle' },
+  { key: 'store_maintenance_mode', label: 'Store Maintenance Mode', type: 'toggle' },
+  { key: 'maintenance_mode', label: 'Site Maintenance Mode', type: 'toggle' },
   { key: 'announcement_banner', label: 'Announcement Banner Text', placeholder: 'e.g. Free delivery this week!', type: 'text' },
 ];
 

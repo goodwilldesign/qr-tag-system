@@ -62,7 +62,7 @@ serve(async (req) => {
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; padding: 24px; border-radius: 16px;">
         <div style="background: ${isLost ? '#ef4444' : '#7c3aed'}; border-radius: 12px; padding: 24px; color: white; text-align: center; margin-bottom: 24px;">
           <h1 style="margin: 0; font-size: 22px;">${isLost ? '🚨 Lost Tag Scanned!' : '📦 Tag Scanned!'}</h1>
-          <p style="margin: 8px 0 0; opacity: 0.9">Your TagLink QR code is in use.</p>
+          <p style="margin: 8px 0 0; opacity: 0.9">Your GetURQR QR code is in use.</p>
         </div>
         
         <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
@@ -78,7 +78,7 @@ serve(async (req) => {
         </div>
         ` : ''}
 
-        <p style="text-align: center; color: #94a3b8; font-size: 12px;">Sent by <strong>TagLink</strong> · You can disable scan notifications in your tag settings.</p>
+        <p style="text-align: center; color: #94a3b8; font-size: 12px;">Sent by <strong>GetURQR</strong> · You can disable scan notifications in your tag settings.</p>
       </div>
     `
 
@@ -96,7 +96,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'TagLink Alerts <alerts@notifications.taglink.app>',
+        from: 'GetURQR Alerts <alerts@geturqr.com>',
         to: [ownerEmail],
         subject,
         html: htmlBody,

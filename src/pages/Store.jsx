@@ -435,6 +435,19 @@ export default function Store() {
   const [buyingProduct, setBuyingProduct] = useState(null);
   const [dbProducts, setDbProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+
+  // Check maintenance mode from site_settings
+  useEffect(() => {
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'store_maintenance_mode')
+      .single()
+      .then(({ data }) => {
+        if (data?.value === 'true') setMaintenanceMode(true);
+      });
+  }, []);
 
   // Load live products from Supabase (admin-managed)
   useEffect(() => {
@@ -451,6 +464,27 @@ export default function Store() {
     };
     fetchProducts();
   }, []);
+
+  // ── Maintenance screen ────────────────────────────────────
+  if (maintenanceMode) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="text-7xl mb-6">🛠️</div>
+          <h1 className="text-3xl font-black text-slate-900 mb-3">Store Under Maintenance</h1>
+          <p className="text-slate-500 text-base leading-relaxed mb-6">
+            We're working hard to bring you an even better shopping experience.
+            The store will be back shortly — check back in a little while!
+          </p>
+          <div className="inline-flex items-center gap-2 bg-violet-50 border border-violet-200 text-violet-700 px-5 py-2.5 rounded-full text-sm font-semibold">
+            <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+            Coming Back Soon
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   const filtered = activeCategory === 'All'
     ? dbProducts
