@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import ParticleCanvas from '../components/ParticleCanvas';
-import { BLOG_POSTS } from './Blog';
+
 
 const LANDING_BLOG_PREVIEW = [
   {
