@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -38,6 +38,11 @@ export default function Dashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, title }
   const [printTag, setPrintTag] = useState(null);
   const [recentScans, setRecentScans] = useState([]);
+  
+  // Messages Modal state
+  const [messagesTarget, setMessagesTarget] = useState(null);
+  const [tagMessages, setTagMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -45,6 +50,25 @@ export default function Dashboard() {
       if (session) fetchTags(session.user.id);
     });
   }, []);
+
+  useEffect(() => {
+    if (messagesTarget) {
+      setLoadingMessages(true);
+      supabase.from('tag_messages').select('*').eq('tag_id', messagesTarget.id).order('created_at', { ascending: false })
+        .then(({ data }) => {
+          setTagMessages(data || []);
+          const unreadIds = (data || []).filter(m => !m.is_read).map(m => m.id);
+          if (unreadIds.length > 0) {
+            supabase.from('tag_messages').update({ is_read: true }).in('id', unreadIds).then(() => {
+               setTags(prev => prev.map(t => t.id === messagesTarget.id ? { ...t, unreadCount: 0 } : t));
+            });
+          }
+          setLoadingMessages(false);
+        });
+    } else {
+      setTagMessages([]);
+    }
+  }, [messagesTarget]);
 
   const fetchTags = async (userId) => {
     try {
@@ -70,13 +94,20 @@ export default function Dashboard() {
 
       if (scansErr) throw scansErr;
 
-      // Group scans by tag
+      // 3. Fetch messages
+      const { data: msgsData } = await supabase
+        .from('tag_messages').select('tag_id, is_read')
+        .in('tag_id', tagIds);
+
+      // Group scans & messages by tag
       const enrichedTags = tagsData.map(tag => {
         const myScans = (scansData || []).filter(s => s.tag_id === tag.id);
+        const myMsgs = (msgsData || []).filter(m => m.tag_id === tag.id && !m.is_read);
         const latestLoc = myScans.find(s => s.latitude && s.longitude);
         return {
           ...tag,
           scanCount: myScans.length,
+          unreadCount: myMsgs.length,
           lastLocation: latestLoc ? { lat: latestLoc.latitude, lng: latestLoc.longitude, time: latestLoc.scanned_at } : null
         };
       });
@@ -364,6 +395,10 @@ export default function Dashboard() {
                              </p>
                           </div>
                           <div className="flex items-center gap-0.5">
+                            <button onClick={() => setMessagesTarget(tag)} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors relative">
+                              <MessageSquare size={16} />
+                              {tag.unreadCount > 0 && <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />}
+                            </button>
                             <Link to={`/tag/edit/${tag.id}`} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors"><Pencil size={16} /></Link>
                             <a href={tagUrl} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Eye size={16} /></a>
                             <button onClick={() => handleDownload(tag)} className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><Download size={16} /></button>
@@ -439,6 +474,54 @@ export default function Dashboard() {
               <button onClick={handleDelete} className="btn flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white">
                 <Trash2 size={16} /> Delete
               </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Messages Modal */}
+      {messagesTarget && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl w-full max-w-lg flex flex-col max-h-[85vh] shadow-2xl overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-violet-100 text-violet-600 rounded-xl flex items-center justify-center">
+                  <MessageSquare size={20} />
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-slate-900 border-none leading-none">Messages</h2>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">{messagesTarget.title}</p>
+                </div>
+              </div>
+              <button onClick={() => setMessagesTarget(null)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 bg-white min-h-[300px]">
+              {loadingMessages ? (
+                <div className="text-center py-10 text-slate-400 font-medium">Loading messages...</div>
+              ) : tagMessages.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                    <MessageSquare size={24} />
+                  </div>
+                  <h3 className="text-slate-800 font-bold mb-1">No messages yet</h3>
+                  <p className="text-slate-500 text-sm">When someone leaves a message for this tag, you'll see it here.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {tagMessages.map(msg => (
+                    <div key={msg.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 relative">
+                      {!msg.is_read && <div className="absolute top-4 right-4 text-[10px] font-black uppercase text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">New</div>}
+                      <p className="font-bold text-slate-900 mb-0.5">{msg.sender_name}</p>
+                      {msg.sender_contact && <p className="text-xs text-blue-600 font-medium mb-3">{msg.sender_contact}</p>}
+                      <div className="text-sm text-slate-700 whitespace-pre-wrap bg-white p-3 border border-slate-100 rounded-lg">{msg.message}</div>
+                      <p className="text-[10px] font-bold uppercase text-slate-400 mt-3">{timeAgo(msg.created_at)}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye } from 'lucide-react';
+import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye, Send, CheckCircle2 } from 'lucide-react';
 
 /* ── Display schemas: which fields to show on the public page ─────── */
 const PUBLIC_SCHEMAS = {
@@ -199,6 +199,13 @@ export default function TagView() {
   const [locationShared, setLocationShared] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
 
+  // Message Form State
+  const [msgName, setMsgName] = useState('');
+  const [msgContact, setMsgContact] = useState('');
+  const [msgContent, setMsgContent] = useState('');
+  const [msgSending, setMsgSending] = useState(false);
+  const [msgSent, setMsgSent] = useState(false);
+
   useEffect(() => {
     const fetchTag = async () => {
       try {
@@ -261,6 +268,27 @@ export default function TagView() {
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!msgName.trim() || !msgContent.trim()) return;
+    setMsgSending(true);
+    try {
+      const { error } = await supabase.from('tag_messages').insert([{
+        tag_id: tag.id,
+        sender_name: msgName.trim(),
+        sender_contact: msgContact.trim(),
+        message: msgContent.trim()
+      }]);
+      if (error) throw error;
+      setMsgSent(true);
+      setMsgContent('');
+    } catch (err) {
+      alert("Failed to send message: " + err.message);
+    } finally {
+      setMsgSending(false);
+    }
   };
 
   const handleWhatsApp = () => {
@@ -514,29 +542,78 @@ export default function TagView() {
           );
         })}
 
-        {/* Contact Buttons */}
-        <div className={`glass-card p-5 shadow-sm space-y-3 ${isLost ? 'border-2 border-red-500 ring-4 ring-red-500/20' : ''}`}>
-          <p className={`text-xs font-bold uppercase tracking-widest text-center mb-1 ${isLost ? 'text-red-500' : 'text-slate-400'}`}>
-            {isLost ? 'Contact Owner Immediately' : 'Contact Owner'}
-          </p>
-          {!profile?.whatsapp_number ? (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center text-sm text-amber-700">
-              <AlertCircle className="h-5 w-5 mx-auto mb-1 text-amber-400" />
-              Owner hasn't set a contact number yet.
+        {/* Contact Options */}
+        {(() => {
+          const pref = tag.contact_preference || 'whatsapp';
+          const showWhatsApp = pref === 'whatsapp' || pref === 'both';
+          const showChat = pref === 'chat' || pref === 'both';
+
+          return (
+            <div className={`glass-card p-5 shadow-sm space-y-4 ${isLost ? 'border-2 border-red-500 ring-4 ring-red-500/20' : ''}`}>
+              <p className={`text-xs font-bold uppercase tracking-widest text-center mb-1 ${isLost ? 'text-red-500' : 'text-slate-400'}`}>
+                {isLost ? 'Contact Owner Immediately' : 'Contact Owner'}
+              </p>
+
+              {/* WhatsApp Option */}
+              {showWhatsApp && (
+                <div className="space-y-3">
+                  {!profile?.whatsapp_number ? (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center text-sm text-amber-700">
+                      <AlertCircle className="h-5 w-5 mx-auto mb-1 text-amber-400" />
+                      Owner hasn't set a contact number yet.
+                    </div>
+                  ) : (
+                    <>
+                      <button onClick={handleWhatsApp}
+                        className={`w-full flex items-center justify-center gap-3 text-white font-bold py-4 px-6 rounded-xl transition-all hover:-translate-y-0.5 ${isLost ? 'bg-red-600 hover:bg-red-700 shadow-red-500/30 shadow-lg animate-pulse hover:animate-none' : 'bg-[#25D366] hover:bg-[#1ebe5d] shadow-[0_4px_14px_rgba(37,211,102,0.3)]'}`}>
+                        <MessageSquare size={20} fill="currentColor" /> Chat on WhatsApp
+                      </button>
+                      <a href={`tel:+${profile.whatsapp_number.replace(/[^0-9]/g, '')}`}
+                        className={`btn w-full py-3 justify-center ${isLost ? 'bg-white text-red-600 border border-red-200 hover:bg-red-50' : 'btn-secondary'}`}>
+                        <Phone size={16} /> Call Directly
+                      </a>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Internal Chat Option */}
+              {showChat && (
+                <div className={`${showWhatsApp ? 'pt-4 border-t border-slate-100' : ''}`}>
+                  {showWhatsApp && (
+                    <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Or Send a Message</p>
+                  )}
+                  {msgSent ? (
+                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-6 rounded-2xl text-center">
+                      <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                      <h3 className="font-bold text-lg mb-1">Message Sent!</h3>
+                      <p className="text-sm opacity-90">The owner will receive an email notification shortly.</p>
+                      <button type="button" onClick={() => setMsgSent(false)} className="mt-4 text-emerald-600 text-sm font-semibold hover:underline">
+                        Send another message
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSendMessage} className="space-y-3">
+                      <div>
+                        <input type="text" placeholder="Your Name *" value={msgName} onChange={e => setMsgName(e.target.value)} required className="form-input bg-slate-50 border-slate-200 text-sm" />
+                      </div>
+                      <div>
+                        <input type="text" placeholder="Your Number or Email (Optional)" value={msgContact} onChange={e => setMsgContact(e.target.value)} className="form-input bg-slate-50 border-slate-200 text-sm mb-1" />
+                        <p className="text-[10px] text-slate-400 px-1">Leave this if you want the owner to reply to you.</p>
+                      </div>
+                      <div>
+                        <textarea placeholder="Message *" value={msgContent} onChange={e => setMsgContent(e.target.value)} required className="form-input bg-slate-50 border-slate-200 text-sm min-h-[80px] resize-y" />
+                      </div>
+                      <button type="submit" disabled={msgSending || !msgName.trim() || !msgContent.trim()} className="w-full btn btn-primary py-3 justify-center text-sm disabled:opacity-50">
+                        {msgSending ? 'Sending...' : <><Send size={16} /> Send Message Alert</>}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              )}
             </div>
-          ) : (
-            <>
-              <button onClick={handleWhatsApp}
-                className={`w-full flex items-center justify-center gap-3 text-white font-bold py-4 px-6 rounded-xl transition-all hover:-translate-y-0.5 ${isLost ? 'bg-red-600 hover:bg-red-700 shadow-red-500/30 shadow-lg animate-pulse hover:animate-none' : 'bg-[#25D366] hover:bg-[#1ebe5d] shadow-[0_4px_14px_rgba(37,211,102,0.3)]'}`}>
-                <MessageSquare size={20} fill="currentColor" /> Chat on WhatsApp
-              </button>
-              <a href={`tel:+${profile.whatsapp_number.replace(/[^0-9]/g, '')}`}
-                className={`btn w-full py-3 justify-center ${isLost ? 'bg-white text-red-600 border border-red-200 hover:bg-red-50' : 'btn-secondary'}`}>
-                <Phone size={16} /> Call Directly
-              </a>
-            </>
-          )}
-        </div>
+          );
+        })()}
 
         {/* Footer */}
         <div className="text-center py-2">

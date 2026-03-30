@@ -6,7 +6,7 @@ import {
   Tag, Baby, KeySquare, Bell, CarFront, Hotel,
   Dog, Stethoscope, Home, Wifi, Clock,
   Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
-  Smartphone, Calendar
+  Smartphone, Calendar, MessageSquare
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -413,7 +413,7 @@ export default function TagEditor() {
 
       if (error || !data) { navigate('/dashboard'); return; }
       setTag(data);
-      setFormData({ ...data.data, is_lost: data.is_lost } || {});
+      setFormData({ ...data.data, is_lost: data.is_lost, contact_preference: data.contact_preference || 'whatsapp' } || {});
       setLoading(false);
     };
     load();
@@ -427,12 +427,13 @@ export default function TagEditor() {
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true); setError('');
-    const { is_lost, ...dataWithoutLost } = formData;
+    const { is_lost, contact_preference, ...dataWithoutLost } = formData;
     const { error } = await supabase
       .from('tags')
       .update({ 
         data: dataWithoutLost, 
         is_lost: !!is_lost,
+        contact_preference: contact_preference || 'whatsapp',
         updated_at: new Date().toISOString() 
       })
       .eq('id', id);
@@ -513,6 +514,51 @@ export default function TagEditor() {
             </div>
           </div>
         ))}
+        {/* Contact Preference */}
+        <div className="glass-card p-6 border-l-4 border-violet-500">
+          <div className="flex items-center gap-2 mb-2">
+            <MessageSquare size={18} className="text-violet-600" />
+            <h2 className="text-sm font-bold uppercase tracking-widest text-violet-800">Contact Preference</h2>
+          </div>
+          <p className="text-sm text-slate-500 mb-5">How do you want finders to contact you when this tag is scanned?</p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { id: 'whatsapp', label: 'WhatsApp Only', desc: 'Finders are redirected to chat on WhatsApp.', icon: '💬' },
+              { id: 'chat', label: 'Message Form', desc: 'Finders leave an async message. Keeps number private.', icon: '📩' },
+              { id: 'both', label: 'Allow Both', desc: 'Finders can choose to WhatsApp or leave a message.', icon: '🤝' }
+            ].map(opt => (
+              <label 
+                key={opt.id} 
+                className={`relative flex flex-col p-4 cursor-pointer rounded-xl border-2 transition-all ${
+                  formData.contact_preference === opt.id 
+                    ? 'border-violet-500 bg-violet-50 shadow-sm' 
+                    : 'border-slate-200 bg-white hover:border-violet-300'
+                }`}
+              >
+                <input 
+                  type="radio" 
+                  name="contact_preference" 
+                  value={opt.id} 
+                  checked={formData.contact_preference === opt.id}
+                  onChange={(e) => handleChange('contact_preference', e.target.value)}
+                  className="sr-only" 
+                />
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xl">{opt.icon}</span>
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.contact_preference === opt.id ? 'border-violet-500' : 'border-slate-300'}`}>
+                    {formData.contact_preference === opt.id && <div className="w-2 h-2 rounded-full bg-violet-500" />}
+                  </div>
+                </div>
+                <span className={`font-bold text-sm ${formData.contact_preference === opt.id ? 'text-violet-900' : 'text-slate-700'}`}>
+                  {opt.label}
+                </span>
+                <span className="text-xs text-slate-500 mt-1 leading-snug">{opt.desc}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
 
         {/* Save Bar */}
         <div className="sticky bottom-4 z-10">
