@@ -137,16 +137,74 @@ const PUBLIC_SCHEMAS = {
     ]
   },
   electronics: {
-    label: 'Gadget', emoji: '📱', color: 'indigo',
-    greeting: (d) => `Hi! I found your ${d.category || 'gadget'}${d.model ? ` (${d.model})` : ''}.`,
+    label: 'Asset/Equipment', emoji: '💻', color: 'indigo',
+    greeting: (d) => `Hi! I found your asset: ${d.model || d.category || 'equipment'}.`,
     sections: [
       {
-        title: 'Device Details',
+        title: 'Asset Details',
         rows: [
           { key: 'category', label: 'Category' },
-          { key: 'accessory_type', label: 'Type' },
+          { key: 'asset_id', label: 'Asset ID' },
           { key: 'model', label: 'Model' },
-          { key: 'billing_date', label: 'Billing Date' },
+          { key: 'assigned_to', label: 'Assigned To' },
+        ]
+      }
+    ]
+  },
+  business: {
+    label: 'Digital Card', emoji: '📇', color: 'fuchsia',
+    greeting: (d) => `Hi ${d.full_name?.split(' ')[0] || ''}, I scanned your business card!`,
+    sections: [
+      {
+        title: 'Professional Info',
+        rows: [
+          { key: 'full_name',  label: 'Name' },
+          { key: 'job_title',  label: 'Title' },
+          { key: 'company',    label: 'Company' },
+        ]
+      },
+      {
+        title: 'Contact',
+        rows: [
+          { key: 'email',      label: 'Email' },
+          { key: 'phone',      label: 'Phone', type: 'phone' },
+          { key: 'linkedin',   label: 'LinkedIn' },
+          { key: 'portfolio',  label: 'Website' },
+        ]
+      }
+    ]
+  },
+  plant: {
+    label: 'Plant Care', emoji: '🪴', color: 'green',
+    greeting: (d) => `Plant care log for ${d.plant_name || 'this plant'}.`,
+    sections: [
+      {
+        title: 'Plant Details',
+        rows: [
+          { key: 'plant_name',   label: 'Common Name' },
+          { key: 'scientific',   label: 'Scientific' },
+        ]
+      },
+      {
+        title: 'Care Instructions',
+        rows: [
+          { key: 'watering',     label: 'Watering' },
+          { key: 'sunlight',     label: 'Sunlight' },
+          { key: 'notes',        label: 'Notes' },
+        ]
+      }
+    ]
+  },
+  keychain: {
+    label: 'Keychain', emoji: '🔑', color: 'slate',
+    greeting: (d) => `Hi! I found your ${d.item_name || 'item'}.`,
+    sections: [
+      {
+        title: 'Item Info',
+        rows: [
+          { key: 'item_name',  label: 'Item' },
+          { key: 'owner_name', label: 'Owner' },
+          { key: 'reward',     label: 'Reward' },
         ]
       }
     ]
@@ -161,6 +219,9 @@ const COLOR_MAP = {
   emerald: { badge: 'bg-emerald-100 text-emerald-800 border-emerald-200', header: 'bg-emerald-50', border: 'border-emerald-200', label: 'text-emerald-700' },
   rose:    { badge: 'bg-rose-100 text-rose-800 border-rose-200',     header: 'bg-rose-50',    border: 'border-rose-200',  label: 'text-rose-700' },
   indigo:  { badge: 'bg-indigo-100 text-indigo-800 border-indigo-200', header: 'bg-indigo-50', border: 'border-indigo-200', label: 'text-indigo-700' },
+  fuchsia: { badge: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200', header: 'bg-fuchsia-50', border: 'border-fuchsia-200', label: 'text-fuchsia-700' },
+  green:   { badge: 'bg-green-100 text-green-800 border-green-200', header: 'bg-green-50', border: 'border-green-200', label: 'text-green-700' },
+  slate:   { badge: 'bg-slate-100 text-slate-800 border-slate-300', header: 'bg-slate-50', border: 'border-slate-300', label: 'text-slate-700' },
 };
 
 function DetailRow({ label, value, type }) {
@@ -475,7 +536,7 @@ export default function TagView() {
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 leading-tight mb-1">Share Location?</h3>
-                <p className="text-sm text-slate-500 mb-3">Help the owner locate this {tag.type === 'electronics' ? 'gadget' : 'tag'} by sharing where you scanned it.</p>
+                <p className="text-sm text-slate-500 mb-3">Help the owner locate this {tag.type === 'dog' ? 'pet' : tag.type === 'kids' ? 'child' : 'item'} by sharing where you scanned it.</p>
                 <button 
                   onClick={handleShareLocation} disabled={locationLoading}
                   className="w-full bg-red-50 hover:bg-red-100 text-red-700 font-bold py-2.5 px-4 rounded-xl text-sm transition-colors border border-red-200 disabled:opacity-50">

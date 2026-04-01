@@ -6,7 +6,7 @@ import {
   Tag, Baby, KeySquare, Bell, CarFront, Hotel,
   Dog, Stethoscope, Home, Wifi, Clock,
   Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
-  Smartphone, Calendar, MessageSquare
+  Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -196,16 +196,18 @@ const SCHEMAS = {
     ]
   },
   electronics: {
-    label: 'Gadget',
-    emoji: '📱',
+    label: 'Asset/Equipment',
+    emoji: '💻',
     color: 'indigo',
     sections: [
       {
-        title: 'Device Information',
+        title: 'Asset Information',
         fields: [
-          { key: 'category', label: 'Category', type: 'select', options: ['Laptop', 'Mobile', 'Desktop', 'Other accessories'], icon: Smartphone, required: true },
-          { key: 'accessory_type', label: 'Accessory Type', type: 'text', placeholder: 'e.g. Headphones, Smartwatch', icon: Tag, showIf: (d) => d.category === 'Other accessories' },
-          { key: 'model', label: 'Product Model', type: 'text', placeholder: 'iPhone 15 Pro, MacBook Air M2', icon: Info, required: true },
+          { key: 'category', label: 'Category', type: 'select', options: ['Laptop', 'Mobile', 'Desktop', 'Power Tool', 'Camera', 'Other'], icon: Smartphone, required: true },
+          { key: 'asset_id', label: 'Asset ID / Serial', type: 'text', placeholder: 'INV-2026-001', icon: Hash },
+          { key: 'model', label: 'Product Model', type: 'text', placeholder: 'MacBook Air M2, DeWalt Drill...', icon: Info, required: true },
+          { key: 'assigned_to', label: 'Assigned To', type: 'text', placeholder: 'John Doe', icon: User },
+
           { key: 'billing_date', label: 'Billing Date', type: 'date', icon: Calendar },
         ]
       },
@@ -214,6 +216,73 @@ const SCHEMAS = {
         fields: [
           { key: 'is_lost', label: 'Lost Mode (Alert Finder)', type: 'toggle', icon: AlertCircle },
           { key: 'gps_enabled', label: 'Enable GPS Location Tracking', type: 'toggle', icon: MapPin },
+        ]
+      }
+    ]
+  },
+  business: {
+    label: 'Digital Card',
+    emoji: '📇',
+    color: 'fuchsia',
+    sections: [
+      {
+        title: 'Professional Info',
+        fields: [
+          { key: 'full_name',  label: 'Full Name', type: 'text', placeholder: 'Alex Chen', icon: User, required: true },
+          { key: 'job_title',  label: 'Job Title', type: 'text', placeholder: 'Senior Designer', icon: Briefcase },
+          { key: 'company',    label: 'Company',   type: 'text', placeholder: 'Acme Corp', icon: Building2 },
+        ]
+      },
+      {
+        title: 'Contact & Links',
+        fields: [
+          { key: 'email',      label: 'Email Address', type: 'text', placeholder: 'alex@example.com', icon: MessageSquare },
+          { key: 'phone',      label: 'Phone Number',  type: 'phone', placeholder: '9876543210' },
+          { key: 'linkedin',   label: 'LinkedIn URL',  type: 'text', placeholder: 'linkedin.com/in/alexchen', icon: Info },
+          { key: 'portfolio',  label: 'Portfolio/Website', type: 'text', placeholder: 'www.alexchen.design', icon: MapPin },
+        ]
+      }
+    ]
+  },
+  plant: {
+    label: 'Plant Care',
+    emoji: '🪴',
+    color: 'green',
+    sections: [
+      {
+        title: 'Plant Details',
+        fields: [
+          { key: 'plant_name',   label: 'Common Name', type: 'text', placeholder: 'Monstera Deliciosa', icon: Leaf, required: true },
+          { key: 'scientific',   label: 'Scientific Name', type: 'text', placeholder: 'Monstera deliciosa Lieb.', icon: Info },
+        ]
+      },
+      {
+        title: 'Care Instructions',
+        fields: [
+          { key: 'watering',     label: 'Watering Schedule', type: 'select', options: ['Daily', 'Every 2-3 Days', 'Weekly', 'Every 2 Weeks', 'Monthly'], icon: Clock, required: true },
+          { key: 'sunlight',     label: 'Sunlight Info',     type: 'select', options: ['Direct Sun', 'Bright Indirect', 'Medium Light', 'Low Light'], icon: Info },
+          { key: 'notes',        label: 'Care Notes / Soil', type: 'textarea', placeholder: 'Use well-draining soil. Toxic to cats!', icon: AlertCircle },
+        ]
+      }
+    ]
+  },
+  keychain: {
+    label: 'Keychain',
+    emoji: '🔑',
+    color: 'slate',
+    sections: [
+      {
+        title: 'Item Details',
+        fields: [
+          { key: 'item_name',  label: 'Item Name', type: 'text', placeholder: 'House Keys, Car FOB, Wallet...', icon: Key, required: true },
+          { key: 'owner_name', label: 'Your Name', type: 'text', placeholder: 'Jane', icon: User },
+        ]
+      },
+      {
+        title: 'Return Info',
+        fields: [
+          { key: 'reward',     label: 'Reward Offer', type: 'text', placeholder: 'Coffee on me!', icon: Info },
+          { key: 'is_lost',    label: 'Item is currently lost', type: 'toggle', icon: AlertCircle },
         ]
       }
     ]
@@ -228,6 +297,9 @@ const COLOR_MAP = {
   emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200',text: 'text-emerald-700', ring: 'ring-emerald-400',badge: 'bg-emerald-100 text-emerald-800' },
   rose:    { bg: 'bg-rose-50',    border: 'border-rose-200',   text: 'text-rose-700',    ring: 'ring-rose-400',   badge: 'bg-rose-100 text-rose-800' },
   indigo:  { bg: 'bg-indigo-50',  border: 'border-indigo-200', text: 'text-indigo-700',  ring: 'ring-indigo-400', badge: 'bg-indigo-100 text-indigo-800' },
+  fuchsia: { bg: 'bg-fuchsia-50', border: 'border-fuchsia-200', text: 'text-fuchsia-700', ring: 'ring-fuchsia-400', badge: 'bg-fuchsia-100 text-fuchsia-800' },
+  green:   { bg: 'bg-green-50',   border: 'border-green-200',  text: 'text-green-700',   ring: 'ring-green-400',  badge: 'bg-green-100 text-green-800' },
+  slate:   { bg: 'bg-slate-100',  border: 'border-slate-300',  text: 'text-slate-700',   ring: 'ring-slate-400',  badge: 'bg-slate-200 text-slate-800' },
 };
 
 /* ─── Image Uploader Component ────────────────────────────────────────────── */

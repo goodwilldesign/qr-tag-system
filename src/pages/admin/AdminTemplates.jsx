@@ -10,6 +10,10 @@ const TAG_TYPES = [
   { id: 'doorbell', label: 'Doorbell' },
   { id: 'parking',  label: 'Parking' },
   { id: 'hotel',    label: 'Hotel' },
+  { id: 'electronics', label: 'Asset/Equipment' },
+  { id: 'business',    label: 'Digital Card' },
+  { id: 'plant',       label: 'Plant Care' },
+  { id: 'keychain',    label: 'Keychain' },
 ];
 
 export default function AdminTemplates() {

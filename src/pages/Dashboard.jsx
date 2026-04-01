@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -13,7 +13,10 @@ const TAG_TYPES = [
   { id: 'doorbell', label: 'Doorbell',  icon: <Bell size={18} /> },
   { id: 'parking',  label: 'Parking',   icon: <CarFront size={18} /> },
   { id: 'hotel',    label: 'Hotel',     icon: <Hotel size={18} /> },
-  { id: 'electronics', label: 'Gadget',  icon: <Smartphone size={18} /> },
+  { id: 'electronics', label: 'Asset',  icon: <Smartphone size={18} /> },
+  { id: 'business',    label: 'Digital Card', icon: <Briefcase size={18} /> },
+  { id: 'plant',       label: 'Plant Care',   icon: <Leaf size={18} /> },
+  { id: 'keychain',    label: 'Keychain',     icon: <Wallet size={18} /> },
 ];
 
 const TYPE_COLORS = {
@@ -24,6 +27,9 @@ const TYPE_COLORS = {
   parking:  'bg-emerald-50 text-emerald-700 border-emerald-200',
   hotel:    'bg-rose-50 text-rose-700 border-rose-200',
   electronics: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  business:    'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200',
+  plant:       'bg-green-50 text-green-700 border-green-200',
+  keychain:    'bg-slate-100 text-slate-700 border-slate-300',
 };
 
 export default function Dashboard() {
