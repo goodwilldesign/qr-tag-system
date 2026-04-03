@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -49,6 +49,11 @@ export default function Dashboard() {
   const [messagesTarget, setMessagesTarget] = useState(null);
   const [tagMessages, setTagMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  // Analytics Modal state  
+  const [statsTarget, setStatsTarget] = useState(null);
+  const [statsData, setStatsData] = useState([]);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [lostAlertSent, setLostAlertSent] = useState(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -177,7 +182,22 @@ export default function Dashboard() {
     const { error } = await supabase.from('tags').update({ is_lost: newStatus }).eq('id', tag.id);
     if (!error) {
       setTags(prev => prev.map(t => t.id === tag.id ? { ...t, is_lost: newStatus } : t));
-    } else {
+      // If activating lost mode & emergency contacts exist → call edge function
+      if (newStatus && tag.emergency_contacts?.length > 0) {
+        try {
+          const { data: { session: s } } = await supabase.auth.getSession();
+          const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lost-mode-alert`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s?.access_token}` },
+            body: JSON.stringify({ tag_id: tag.id }),
+          });
+          if (res.ok) {
+            setLostAlertSent(tag.id);
+            setTimeout(() => setLostAlertSent(null), 5000);
+          }
+        } catch (_) { /* silent */ }
+      }
+    } else if (error) {
       alert("Failed to update Lost Mode. Make sure you ran the SQL migration.");
     }
   };
@@ -218,6 +238,20 @@ export default function Dashboard() {
   };
 
   const getTagUrl = (id) => `${window.location.origin}/tag/${id}`;
+
+  const openStats = async (tag) => {
+    setStatsTarget(tag);
+    setStatsLoading(true);
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const { data } = await supabase
+      .from('tag_scans')
+      .select('scanned_at, latitude, longitude')
+      .eq('tag_id', tag.id)
+      .gte('scanned_at', thirtyDaysAgo)
+      .order('scanned_at', { ascending: false });
+    setStatsData(data || []);
+    setStatsLoading(false);
+  };
 
   const totalTags = tags.length;
   const activeTags = tags.filter(t => t.is_active !== false).length;
@@ -395,12 +429,21 @@ export default function Dashboard() {
 
                         {/* Row 2: Action Buttons (Mobile: Horizontal Bar) */}
                         <div className="flex items-center justify-between mt-1 pt-3 border-t border-slate-50">
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1" >
                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mr-2">
                                {tag.scanCount || 0} Scans
                              </p>
+                             {tag.expires_at && (() => {
+                               const expired = new Date(tag.expires_at) < new Date();
+                               return (
+                                 <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${expired ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-700'}`}>
+                                   {expired ? '🔴 Expired' : `⏳ ${new Date(tag.expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`}
+                                 </span>
+                               );
+                             })()}
                           </div>
                           <div className="flex items-center gap-0.5">
+                            <button onClick={() => openStats(tag)} title="View Analytics" className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><BarChart2 size={16} /></button>
                             <button onClick={() => setMessagesTarget(tag)} className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors relative">
                               <MessageSquare size={16} />
                               {tag.unreadCount > 0 && <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />}
@@ -412,9 +455,16 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* Hidden QR for download */}
+                        {/* Hidden QR for download — now with custom colors */}
                         <div className="absolute -top-[9999px] left-0 pointer-events-none" aria-hidden="true">
-                          <QRCodeSVG id={`qr-${tag.id}`} value={tagUrl} size={512} />
+                          <QRCodeSVG
+                            id={`qr-${tag.id}`}
+                            value={tagUrl}
+                            size={512}
+                            fgColor={tag.qr_color || '#000000'}
+                            bgColor={tag.qr_bg_color || '#ffffff'}
+                            imageSettings={tag.qr_logo_url ? { src: tag.qr_logo_url, height: 80, width: 80, excavate: true } : undefined}
+                          />
                         </div>
                       </div>
                     );
@@ -535,6 +585,113 @@ export default function Dashboard() {
       )}
 
       {/* Create Modal */}
+
+      {/* Lost Mode Alert Toast */}
+      {lostAlertSent && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-red-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-sm font-bold animate-fade-in">
+          🚨 Emergency alert sent to your contacts!
+        </div>
+      )}
+
+      {/* Analytics Modal */}
+      {statsTarget && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl w-full max-w-lg flex flex-col max-h-[90vh] shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                  <BarChart2 size={20} />
+                </div>
+                <div>
+                  <h2 className="font-extrabold text-slate-900 leading-none">Tag Analytics</h2>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">{statsTarget.title}</p>
+                </div>
+              </div>
+              <button onClick={() => { setStatsTarget(null); setStatsData([]); }} className="p-2 rounded-xl text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {statsLoading ? (
+                <div className="text-center py-10 text-slate-400">Loading analytics…</div>
+              ) : (
+                <>
+                  {/* Total scans + since */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center">
+                      <p className="text-4xl font-black text-blue-700">{statsTarget.scanCount || 0}</p>
+                      <p className="text-xs font-bold text-blue-500 uppercase mt-1">Total Scans (All Time)</p>
+                    </div>
+                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center">
+                      <p className="text-4xl font-black text-slate-700">{statsData.length}</p>
+                      <p className="text-xs font-bold text-slate-400 uppercase mt-1">Last 30 Days</p>
+                    </div>
+                  </div>
+
+                  {/* 30-day bar chart */}
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">Scans — Last 30 Days</h3>
+                    {(() => {
+                      const days = Array.from({ length: 30 }, (_, i) => {
+                        const d = new Date(); d.setDate(d.getDate() - (29 - i)); d.setHours(0,0,0,0);
+                        return { date: d, label: d.getDate(), count: 0 };
+                      });
+                      statsData.forEach(s => {
+                        const d = new Date(s.scanned_at); d.setHours(0,0,0,0);
+                        const idx = days.findIndex(day => day.date.toDateString() === d.toDateString());
+                        if (idx >= 0) days[idx].count++;
+                      });
+                      const maxCount = Math.max(...days.map(d => d.count), 1);
+                      return (
+                        <div className="flex items-end gap-0.5 h-24 w-full">
+                          {days.map((day, i) => (
+                            <div key={i} className="flex-1 flex flex-col items-center group relative">
+                              <div
+                                className="w-full rounded-t-sm bg-blue-200 group-hover:bg-blue-500 transition-colors cursor-default"
+                                style={{ height: `${(day.count / maxCount) * 100}%`, minHeight: day.count > 0 ? '4px' : '1px' }}
+                              />
+                              {day.count > 0 && (
+                                <span className="absolute -top-5 text-[9px] font-bold text-blue-600 hidden group-hover:block bg-white px-1 rounded shadow">{day.count}</span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                    <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                      <span>30 days ago</span><span>Today</span>
+                    </div>
+                  </div>
+
+                  {/* Scan locations */}
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">Scan Locations</h3>
+                    {statsData.filter(s => s.latitude).length === 0 ? (
+                      <p className="text-slate-400 text-sm">No location data captured yet.</p>
+                    ) : (
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {statsData.filter(s => s.latitude).map((s, i) => (
+                          <div key={i} className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                            <MapPin size={14} className="text-red-400 shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-slate-700 text-xs font-mono">{Number(s.latitude).toFixed(4)}, {Number(s.longitude).toFixed(4)}</p>
+                            </div>
+                            <p className="text-[10px] text-slate-400 shrink-0">{new Date(s.scanned_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+
       {isModalOpen && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
           <div className="bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl relative">

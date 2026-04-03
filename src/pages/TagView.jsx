@@ -274,6 +274,10 @@ export default function TagView() {
           .from('tags').select('*').eq('id', id).single();
         if (e || !tagData) throw new Error('Tag not found.');
         if (tagData.is_active === false) throw new Error('This tag has been deactivated.');
+        // Self-destruct expiry check
+        if (tagData.expires_at && new Date(tagData.expires_at) < new Date()) {
+          throw new Error(`expired::${tagData.expires_at}`);
+        }
         setTag(tagData);
         const { data: profileData } = await supabase
           .from('profiles').select('full_name, whatsapp_number').eq('id', tagData.user_id).single();
@@ -367,16 +371,36 @@ export default function TagView() {
     </div>
   );
 
-  if (error) return (
-    <div className="flex items-center justify-center min-h-[60vh] px-4">
-      <div className="glass-card text-center max-w-sm w-full p-10 border-red-200 border-2">
-        <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Tag Unavailable</h2>
-        <p className="text-slate-500 mb-6 text-sm">{error}</p>
-        <Link to="/" className="btn btn-secondary px-6 py-2">Go to GetURQR</Link>
+  if (error) {
+    const isExpired = error.startsWith('expired::');
+    const expiryDate = isExpired ? error.split('::')[1] : null;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh] px-4">
+        <div className={`glass-card text-center max-w-sm w-full p-10 ${isExpired ? 'border-amber-200 border-2' : 'border-red-200 border-2'}`}>
+          {isExpired ? (
+            <>
+              <div className="text-5xl mb-4">⏳</div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">This Tag Has Expired</h2>
+              <p className="text-slate-500 mb-2 text-sm">This QR tag was set to automatically go offline.</p>
+              {expiryDate && (
+                <p className="text-xs text-amber-600 font-semibold mb-6 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                  Expired on {new Date(expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Tag Unavailable</h2>
+              <p className="text-slate-500 mb-6 text-sm">{error}</p>
+            </>
+          )}
+          <Link to="/" className="btn btn-secondary px-6 py-2">Go to GetURQR</Link>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
 
   const schema = PUBLIC_SCHEMAS[tag.type] || null;
   const isLost = tag.type === 'rental' ? false : !!tag.is_lost;

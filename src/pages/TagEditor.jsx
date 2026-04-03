@@ -6,7 +6,8 @@ import {
   Tag, Baby, KeySquare, Bell, CarFront, Hotel,
   Dog, Stethoscope, Home, Wifi, Clock,
   Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
-  Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key
+  Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key,
+  Plus, Trash2, Lock, Sparkles, Crown
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -473,6 +474,16 @@ export default function TagEditor() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [isPremium, setIsPremium] = useState(false);
+  // Feature: Expiry
+  const [expiresAt, setExpiresAt] = useState('');
+  // Feature: Custom QR
+  const [qrColor, setQrColor]     = useState('#000000');
+  const [qrBgColor, setQrBgColor] = useState('#ffffff');
+  const [qrLogoUrl, setQrLogoUrl] = useState('');
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  // Feature: Emergency Contacts
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     const load = async () => {
@@ -486,6 +497,15 @@ export default function TagEditor() {
       if (error || !data) { navigate('/dashboard'); return; }
       setTag(data);
       setFormData({ ...data.data, is_lost: data.is_lost, contact_preference: data.contact_preference || 'whatsapp' } || {});
+      // Load extra fields
+      setExpiresAt(data.expires_at ? data.expires_at.split('T')[0] : '');
+      setQrColor(data.qr_color || '#000000');
+      setQrBgColor(data.qr_bg_color || '#ffffff');
+      setQrLogoUrl(data.qr_logo_url || '');
+      setContacts(data.emergency_contacts || []);
+      // Check premium
+      const { data: profile } = await supabase.from('profiles').select('is_premium').eq('id', session.user.id).single();
+      setIsPremium(profile?.is_premium || false);
       setLoading(false);
     };
     load();
@@ -506,6 +526,11 @@ export default function TagEditor() {
         data: dataWithoutLost, 
         is_lost: !!is_lost,
         contact_preference: contact_preference || 'whatsapp',
+        expires_at: expiresAt || null,
+        qr_color: qrColor,
+        qr_bg_color: qrBgColor,
+        qr_logo_url: qrLogoUrl || null,
+        emergency_contacts: contacts,
         updated_at: new Date().toISOString() 
       })
       .eq('id', id);
@@ -517,6 +542,33 @@ export default function TagEditor() {
       setTimeout(() => setSaved(false), 3000);
     }
     setSaving(false);
+  };
+
+  const addContact = () => {
+    if (contacts.length >= 3) return;
+    setContacts(prev => [...prev, { name: '', phone: '', email: '' }]);
+  };
+
+  const updateContact = (idx, field, val) => {
+    setContacts(prev => prev.map((c, i) => i === idx ? { ...c, [field]: val } : c));
+  };
+
+  const removeContact = (idx) => {
+    setContacts(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    setUploadingLogo(true);
+    const ext = file.name.split('.').pop();
+    const path = `qr-logos/${id}-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from('tag-images').upload(path, file, { upsert: true });
+    if (!upErr) {
+      const { data: { publicUrl } } = supabase.storage.from('tag-images').getPublicUrl(path);
+      setQrLogoUrl(publicUrl);
+    }
+    setUploadingLogo(false);
   };
 
   if (loading) return <div className="text-center py-20 text-slate-400">Loading tag details…</div>;
@@ -629,6 +681,141 @@ export default function TagEditor() {
               </label>
             ))}
           </div>
+        </div>
+
+        {/* ── Emergency Contacts (Lost Mode Broadcast) ── */}
+        {['dog', 'kids', 'keychain'].includes(tag.type) && (
+          <div className="glass-card p-6 border-l-4 border-red-400">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🚨</span>
+                <h2 className="text-sm font-bold uppercase tracking-widest text-red-700">Emergency Contacts</h2>
+              </div>
+              {contacts.length < 3 && (
+                <button type="button" onClick={addContact}
+                  className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors">
+                  <Plus size={12} /> Add Contact
+                </button>
+              )}
+            </div>
+            <p className="text-sm text-slate-500 mb-5">When Lost Mode is activated, these contacts will be alerted via SMS &amp; Email automatically. (Max 3)</p>
+            {contacts.length === 0 ? (
+              <div className="border-2 border-dashed border-red-200 rounded-xl p-6 text-center">
+                <p className="text-slate-400 text-sm">No emergency contacts added yet.</p>
+                <button type="button" onClick={addContact}
+                  className="mt-3 text-xs font-bold px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                  + Add First Contact
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {contacts.map((c, idx) => (
+                  <div key={idx} className="bg-red-50/60 border border-red-100 rounded-xl p-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xs font-bold text-red-600 uppercase">Contact {idx + 1}</span>
+                      <button type="button" onClick={() => removeContact(idx)}
+                        className="text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <input type="text" placeholder="Name" value={c.name}
+                        onChange={e => updateContact(idx, 'name', e.target.value)}
+                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                      <input type="tel" placeholder="Phone (+91...)" value={c.phone}
+                        onChange={e => updateContact(idx, 'phone', e.target.value)}
+                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                      <input type="email" placeholder="Email" value={c.email}
+                        onChange={e => updateContact(idx, 'email', e.target.value)}
+                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Expiry Date (Self-Destruct) ── */}
+        <div className="glass-card p-6 border-l-4 border-amber-400">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock size={18} className="text-amber-600" />
+            <h2 className="text-sm font-bold uppercase tracking-widest text-amber-700">Tag Expiry (Optional)</h2>
+          </div>
+          <p className="text-sm text-slate-500 mb-4">Set a date when this tag expires and goes offline. Perfect for rentals, hotel check-outs, or events.</p>
+          <div className="flex items-center gap-4 flex-wrap">
+            <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className="border border-amber-200 bg-amber-50 text-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-400" />
+            {expiresAt && (
+              <button type="button" onClick={() => setExpiresAt('')}
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-500 transition-colors">
+                <X size={13} /> Clear expiry
+              </button>
+            )}
+            {expiresAt && (
+              <span className="text-xs font-semibold text-amber-700 bg-amber-100 px-3 py-1.5 rounded-full">
+                ⏳ Tag will expire on {new Date(expiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* ── Custom QR Design (Premium) ── */}
+        <div className="glass-card p-6 border-l-4 border-yellow-400">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Palette size={18} className="text-yellow-600" />
+              <h2 className="text-sm font-bold uppercase tracking-widest text-yellow-700">Custom QR Design</h2>
+            </div>
+            <span className="flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white">
+              <Crown size={10} /> PREMIUM
+            </span>
+          </div>
+          {!isPremium ? (
+            <div className="flex flex-col items-center py-8 text-center">
+              <Lock size={32} className="text-slate-300 mb-3" />
+              <p className="text-slate-600 font-semibold text-sm">Premium Feature</p>
+              <p className="text-slate-400 text-xs mt-1 max-w-xs">Upgrade to Premium to customise your QR code colours and add a brand logo to the center.</p>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-1.5">
+                  <label className="form-label">QR Code Color</label>
+                  <div className="flex items-center gap-3">
+                    <input type="color" value={qrColor} onChange={e => setQrColor(e.target.value)}
+                      className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
+                    <span className="text-sm font-mono text-slate-600">{qrColor}</span>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="form-label">Background Color</label>
+                  <div className="flex items-center gap-3">
+                    <input type="color" value={qrBgColor} onChange={e => setQrBgColor(e.target.value)}
+                      className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
+                    <span className="text-sm font-mono text-slate-600">{qrBgColor}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="form-label">Center Logo (optional)</label>
+                {qrLogoUrl ? (
+                  <div className="flex items-center gap-3">
+                    <img src={qrLogoUrl} alt="QR Logo" className="w-14 h-14 rounded-xl object-contain border border-slate-200 bg-slate-50 p-1" />
+                    <button type="button" onClick={() => setQrLogoUrl('')}
+                      className="text-xs text-red-500 hover:text-red-700 font-semibold">
+                      Remove logo
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex items-center gap-2 w-fit cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-xs font-bold transition-colors">
+                    <UploadCloud size={14} />
+                    {uploadingLogo ? 'Uploading…' : 'Upload Logo (PNG/SVG)'}
+                    <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
+                  </label>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
 
