@@ -3,17 +3,19 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import {
   LayoutDashboard, ShoppingBag, FileText, Users, Settings,
-  QrCode, LogOut, ChevronRight, Shield, Menu, X, Package, Image
+  QrCode, LogOut, ChevronRight, Shield, Menu, X, Package, Image, Ticket, Megaphone
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { path: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { path: '/admin', label: 'Analytics', icon: LayoutDashboard, exact: true },
   { path: '/admin/products', label: 'Products', icon: Package },
   { path: '/admin/store', label: 'Store Orders', icon: ShoppingBag },
   { path: '/admin/blog', label: 'AI Blog', icon: FileText },
   { path: '/admin/support', label: 'Support Tickets', icon: FileText },
   { path: '/admin/users', label: 'Users', icon: Users },
   { path: '/admin/templates', label: 'Print Templates', icon: Image },
+  { path: '/admin/promo-codes', label: 'Promo Codes', icon: Ticket },
+  { path: '/admin/broadcasts', label: 'Broadcasts', icon: Megaphone },
   { path: '/admin/settings', label: 'Site Settings', icon: Settings },
 ];
 

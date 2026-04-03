@@ -28,6 +28,8 @@ import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminSupport from './pages/admin/AdminSupport';
 import AdminTemplates from './pages/admin/AdminTemplates';
+import AdminPromoCodes from './pages/admin/AdminPromoCodes';
+import AdminBroadcasts from './pages/admin/AdminBroadcasts';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -80,6 +82,8 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="support" element={<AdminSupport />} />
           <Route path="templates" element={<AdminTemplates />} />
+          <Route path="promo-codes" element={<AdminPromoCodes />} />
+          <Route path="broadcasts" element={<AdminBroadcasts />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Routes>
