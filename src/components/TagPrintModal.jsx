@@ -40,45 +40,72 @@ export default function TagPrintModal({ tag, onClose }) {
 
   const getTagUrl = (id) => `${window.location.origin}/tag/${id}`;
   const qrUrl = getTagUrl(tag.id);
+  const qrColor   = tag.qr_color   || '#000000';
+  const qrBgColor = tag.qr_bg_color || '#ffffff';
+  const qrLogoUrl = tag.qr_logo_url || null;
+
 
   const handleDownload = async () => {
     if (!selected) return;
     try {
       setGenerating(true);
-      
-      // 1. Load the background image
+
+      // 1. Load background image
       const bgImage = new Image();
-      bgImage.crossOrigin = "anonymous"; // Important for external URLs
-      
+      bgImage.crossOrigin = 'anonymous';
       await new Promise((resolve, reject) => {
         bgImage.onload = resolve;
         bgImage.onerror = () => reject(new Error('Failed to load background image.'));
         bgImage.src = selected.bg_url;
       });
 
-      // 2. Prepare the Canvas
+      // 2. Prepare canvas
       const canvas = document.createElement('canvas');
-      canvas.width = bgImage.width;
+      canvas.width  = bgImage.width;
       canvas.height = bgImage.height;
       const ctx = canvas.getContext('2d');
-
-      // 3. Draw background
       ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
-      // 4. Get the QR code canvas
+      // 3. Get QR canvas (it already has custom colors baked in)
       const qrCanvas = qrCanvasRef.current?.querySelector('canvas');
       if (!qrCanvas) throw new Error('QR Code not ready');
 
-      // 5. Calculate positioning based on percentages
-      // qr_x and qr_y are the CENTER of the QR code
+      // 4. Calculate position
       const qrSize = (selected.qr_size / 100) * canvas.width;
-      const qrX = (selected.qr_x / 100) * canvas.width - (qrSize / 2);
-      const qrY = (selected.qr_y / 100) * canvas.height - (qrSize / 2);
-
-      // 6. Draw the QR code on top
+      const qrX    = (selected.qr_x / 100) * canvas.width  - qrSize / 2;
+      const qrY    = (selected.qr_y / 100) * canvas.height - qrSize / 2;
       ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
 
-      // 7. Trigger download
+      // 5. Overlay logo in center of QR (CORS-safe blob fetch)
+      if (qrLogoUrl) {
+        try {
+          const resp = await fetch(qrLogoUrl);
+          const blob = await resp.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const logoImg = new Image();
+          await new Promise((res, rej) => {
+            logoImg.onload = res;
+            logoImg.onerror = rej;
+            logoImg.src = blobUrl;
+          });
+          // Logo = 22% of QR size, centered within the QR zone
+          const logoSize = qrSize * 0.22;
+          const logoPad  = logoSize * 0.15;
+          const lx = qrX + qrSize / 2 - logoSize / 2;
+          const ly = qrY + qrSize / 2 - logoSize / 2;
+          // White background pad
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.roundRect(lx - logoPad, ly - logoPad, logoSize + logoPad * 2, logoSize + logoPad * 2, 6);
+          ctx.fill();
+          ctx.drawImage(logoImg, lx, ly, logoSize, logoSize);
+          URL.revokeObjectURL(blobUrl);
+        } catch (_) {
+          // Logo overlay failed silently — QR still downloads fine
+        }
+      }
+
+      // 6. Trigger download
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.download = `GetURQR_${tag.title.replace(/\s+/g, '_')}_Print.png`;
@@ -95,9 +122,17 @@ export default function TagPrintModal({ tag, onClose }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      {/* Hidden QR Code Canvas for extraction */}
-      <div ref={qrCanvasRef} style={{ display: 'none' }}>
-        <QRCodeCanvas value={qrUrl} size={1024} level="H" includeMargin={false} />
+      {/* Hidden high-res QR Canvas for extraction — includes custom colors */}
+      <div ref={qrCanvasRef} style={{ position: 'absolute', top: -9999, left: -9999, pointerEvents: 'none' }}>
+        <QRCodeCanvas
+          value={qrUrl}
+          size={1024}
+          level="H"
+          includeMargin={false}
+          fgColor={qrColor}
+          bgColor={qrBgColor}
+          // Note: logo is drawn manually in handleDownload to keep canvas untainted
+        />
       </div>
 
       <div className="bg-white rounded-[2rem] border border-slate-200 w-full max-w-4xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -193,7 +228,16 @@ export default function TagPrintModal({ tag, onClose }) {
                           aspectRatio: '1/1'
                         }}
                       >
-                       <QRCodeCanvas value={qrUrl} size={256} className="w-full h-full" level="H" includeMargin={false} />
+                       <QRCodeCanvas
+                         value={qrUrl}
+                         size={256}
+                         className="w-full h-full"
+                         level="H"
+                         includeMargin={false}
+                         fgColor={qrColor}
+                         bgColor={qrBgColor}
+                         imageSettings={qrLogoUrl ? { src: qrLogoUrl, height: 48, width: 48, excavate: true } : undefined}
+                       />
                       </div>
                     </div>
                   )}
