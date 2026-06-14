@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2, Link2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
 const TAG_TYPES = [
@@ -35,6 +35,7 @@ const TYPE_COLORS = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
@@ -158,6 +159,9 @@ export default function Dashboard() {
       setTags([data[0], ...tags]);
       setIsModalOpen(false);
       setNewTagTitle('');
+      
+      // Navigate directly to the editor for the newly created tag
+      navigate(`/tag/edit/${data[0].id}`);
     } catch (err) {
       console.error('Error creating tag:', err.message);
       alert('Error creating tag. Ensure the Supabase setup SQL has been run.');
@@ -725,10 +729,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-end">
+              <div className="flex gap-3 justify-end mt-4">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-secondary px-5 py-2.5">Cancel</button>
-                <button type="submit" className="btn btn-primary px-5 py-2.5" disabled={isCreating}>
-                  {isCreating ? 'Creating…' : '✓ Generate Tag'}
+                <button type="submit" className="btn btn-primary px-5 py-2.5 flex items-center gap-2" disabled={isCreating}>
+                  {isCreating ? 'Creating…' : <>Continue to Setup <ArrowRight size={16} /></>}
                 </button>
               </div>
             </form>
