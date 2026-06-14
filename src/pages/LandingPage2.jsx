@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, Lock } from 'lucide-react';
+import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight } from 'lucide-react';
 
 const TABS = [
   { id: 'URL', icon: LinkIcon, title: 'Enter your URL', placeholder: 'https://example.com/' },
@@ -191,6 +191,51 @@ export default function LandingPage2() {
            </div>
         </div>
       </section>
+
+      {/* ── Smart Tags Showcase Section ───────────────────── */}
+      <section className="py-24 w-full bg-white relative z-10 border-t border-slate-100">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#002b80] mb-4 tracking-tight">Go Beyond Generic QR Codes</h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              Sign up to create specialized Smart Tags with built-in privacy controls, WhatsApp integration, and dynamic updates without ever re-printing.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[
+              { id: 'pet', label: 'Pet Tag', icon: Dog, color: 'text-violet-600', bg: 'bg-violet-50' },
+              { id: 'vehicle', label: 'Vehicle Parking', icon: CarFront, color: 'text-blue-600', bg: 'bg-blue-50' },
+              { id: 'medical', label: 'Medical Alert', icon: Stethoscope, color: 'text-rose-600', bg: 'bg-rose-50' },
+              { id: 'luggage', label: 'Smart Luggage', icon: Briefcase, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+              { id: 'doorbell', label: 'QR Doorbell', icon: Bell, color: 'text-amber-600', bg: 'bg-amber-50' },
+              { id: 'keychain', label: 'Secure Keychain', icon: Key, color: 'text-slate-600', bg: 'bg-slate-100' },
+              { id: 'link', label: 'URL Redirect', icon: Link2, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+              { id: 'custom', label: 'More coming soon...', icon: Sparkles, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50' }
+            ].map((tag) => (
+              <div key={tag.id} onClick={() => navigate('/signup')} className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(0,43,128,0.15)] hover:border-[#38b6ff]/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
+                <div className={`w-14 h-14 rounded-2xl ${tag.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <tag.icon className={`w-7 h-7 ${tag.color}`} />
+                </div>
+                <h3 className="text-lg font-bold text-[#002b80] mb-2">{tag.label}</h3>
+                <p className="text-sm text-slate-500 line-clamp-2">Click to preview and build your custom tag.</p>
+                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                   <div className="w-8 h-8 rounded-full bg-[#f8fbff] flex items-center justify-center shadow-sm text-[#002b80]">
+                     <ArrowRight className="w-4 h-4" />
+                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-16 text-center">
+             <button onClick={() => navigate('/signup')} className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-[#002b80]/20 transition-transform hover:-translate-y-0.5 text-lg inline-flex items-center gap-2">
+                Create a Free Account <ArrowRight size={20} />
+             </button>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
