@@ -649,11 +649,11 @@ export default function TagEditor() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold whitespace-nowrap md:whitespace-normal text-left transition-all ${
                   activeTab === tab.id 
-                    ? `${clr.bg} ${clr.text} border-2 ${clr.border} shadow-sm`
+                    ? 'bg-slate-900 text-white border-2 border-slate-900 shadow-md'
                     : 'bg-white hover:bg-slate-50 text-slate-600 border-2 border-slate-100 hover:border-slate-200'
                 }`}
               >
-                <tab.icon size={16} className={activeTab === tab.id ? clr.text : 'text-slate-400'} />
+                <tab.icon size={16} className={activeTab === tab.id ? 'text-slate-300' : 'text-slate-400'} />
                 {tab.label}
               </button>
             ))}
