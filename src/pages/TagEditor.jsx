@@ -905,5 +905,6 @@ export default function TagEditor() {
           </form>
         </div>
       </div>
+    </div>
   );
 }
