@@ -6,7 +6,7 @@ const FILTER_TABS = ['All', 'Admins', 'Suspended'];
 
 const TAG_TYPE_EMOJI = {
   dog: '🐶', kids: '👶', rental: '🔑', doorbell: '🔔', parking: '🚗',
-  hotel: '🏨', electronics: '💻', business: '📇', plant: '🪴', keychain: '🔑',
+  hotel: '🏨', electronics: '💻', business: '📇', plant: '🪴', keychain: '🔑', link: '🔗'
 };
 
 export default function AdminUsers() {

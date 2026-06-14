@@ -7,7 +7,7 @@ import {
   Dog, Stethoscope, Home, Wifi, Clock,
   Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
   Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key,
-  Plus, Trash2, Lock, Sparkles, Crown
+  Plus, Trash2, Lock, Sparkles, Crown, Link2
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -287,6 +287,20 @@ const SCHEMAS = {
         ]
       }
     ]
+  },
+  link: {
+    label: 'URL Link',
+    emoji: '🔗',
+    color: 'cyan',
+    sections: [
+      {
+        title: 'Link Details',
+        fields: [
+          { key: 'url_link', label: 'Redirect URL (e.g. https://...)', type: 'text', placeholder: 'https://example.com', icon: Link2, required: true },
+          { key: 'link_title', label: 'Title / Description', type: 'text', placeholder: 'My Website', icon: Info },
+        ]
+      }
+    ]
   }
 };
 
@@ -301,6 +315,7 @@ const COLOR_MAP = {
   fuchsia: { bg: 'bg-fuchsia-50', border: 'border-fuchsia-200', text: 'text-fuchsia-700', ring: 'ring-fuchsia-400', badge: 'bg-fuchsia-100 text-fuchsia-800' },
   green:   { bg: 'bg-green-50',   border: 'border-green-200',  text: 'text-green-700',   ring: 'ring-green-400',  badge: 'bg-green-100 text-green-800' },
   slate:   { bg: 'bg-slate-100',  border: 'border-slate-300',  text: 'text-slate-700',   ring: 'ring-slate-400',  badge: 'bg-slate-200 text-slate-800' },
+  cyan:    { bg: 'bg-cyan-50',    border: 'border-cyan-200',   text: 'text-cyan-700',    ring: 'ring-cyan-400',   badge: 'bg-cyan-100 text-cyan-800' },
 };
 
 /* ─── Image Uploader Component ────────────────────────────────────────────── */

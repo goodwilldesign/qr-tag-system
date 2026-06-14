@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2 } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2, Link2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -17,6 +17,7 @@ const TAG_TYPES = [
   { id: 'business',    label: 'Digital Card', icon: <Briefcase size={18} /> },
   { id: 'plant',       label: 'Plant Care',   icon: <Leaf size={18} /> },
   { id: 'keychain',    label: 'Keychain',     icon: <Wallet size={18} /> },
+  { id: 'link',        label: 'URL Link',     icon: <Link2 size={18} /> },
 ];
 
 const TYPE_COLORS = {
@@ -30,6 +31,7 @@ const TYPE_COLORS = {
   business:    'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200',
   plant:       'bg-green-50 text-green-700 border-green-200',
   keychain:    'bg-slate-100 text-slate-700 border-slate-300',
+  link:        'bg-cyan-50 text-cyan-700 border-cyan-200',
 };
 
 export default function Dashboard() {

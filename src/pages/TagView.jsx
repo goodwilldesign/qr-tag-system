@@ -209,6 +209,19 @@ const PUBLIC_SCHEMAS = {
       }
     ]
   },
+  link: {
+    label: 'URL Link', emoji: '🔗', color: 'cyan',
+    greeting: (d) => `Here is the link for ${d.link_title || 'this tag'}.`,
+    sections: [
+      {
+        title: 'Link Info',
+        rows: [
+          { key: 'link_title', label: 'Title' },
+          { key: 'url_link', label: 'URL', type: 'url' },
+        ]
+      }
+    ]
+  },
 };
 
 const COLOR_MAP = {
@@ -222,6 +235,7 @@ const COLOR_MAP = {
   fuchsia: { badge: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200', header: 'bg-fuchsia-50', border: 'border-fuchsia-200', label: 'text-fuchsia-700' },
   green:   { badge: 'bg-green-100 text-green-800 border-green-200', header: 'bg-green-50', border: 'border-green-200', label: 'text-green-700' },
   slate:   { badge: 'bg-slate-100 text-slate-800 border-slate-300', header: 'bg-slate-50', border: 'border-slate-300', label: 'text-slate-700' },
+  cyan:    { badge: 'bg-cyan-100 text-cyan-800 border-cyan-200',    header: 'bg-cyan-50',  border: 'border-cyan-200',  label: 'text-cyan-700' },
 };
 
 function DetailRow({ label, value, type }) {
@@ -241,6 +255,8 @@ function DetailRow({ label, value, type }) {
       <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide w-28 shrink-0 pt-0.5">{label}</span>
       {type === 'phone' ? (
         <a href={`tel:${value}`} className="text-sm font-medium text-blue-600 hover:underline break-all">{value}</a>
+      ) : type === 'url' ? (
+        <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-600 hover:underline break-all">{value}</a>
       ) : (
         <span className="text-sm text-slate-800 break-words whitespace-pre-wrap">{value}</span>
       )}
