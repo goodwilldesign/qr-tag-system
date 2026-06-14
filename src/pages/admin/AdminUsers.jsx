@@ -23,10 +23,14 @@ export default function AdminUsers() {
 
   const fetchUsers = async () => {
     setLoading(true);
-    const { data: profiles } = await supabase
+    const { data: profiles, error } = await supabase
       .from('admin_users_view')
       .select('id, full_name, role, created_at, whatsapp_number, email, is_suspended')
       .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching users:", error);
+    }
 
     if (!profiles) { setLoading(false); return; }
 
