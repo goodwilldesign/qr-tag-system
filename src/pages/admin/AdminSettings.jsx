@@ -13,6 +13,7 @@ const SETTINGS_SCHEMA = [
   { key: 'store_maintenance_mode', label: 'Store Maintenance Mode', type: 'toggle' },
   { key: 'maintenance_mode', label: 'Site Maintenance Mode', type: 'toggle' },
   { key: 'announcement_banner', label: 'Announcement Banner Text', placeholder: 'e.g. Free delivery this week!', type: 'text' },
+  { key: 'use_landing_page_2', label: 'Use Alternative Landing Page Design', type: 'toggle' },
 ];
 
 export default function AdminSettings() {

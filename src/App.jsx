@@ -8,6 +8,7 @@ import AdminLayout from './layouts/AdminLayout';
 
 // Public/Auth Pages
 import LandingPage from './pages/LandingPage';
+import LandingPage2 from './pages/LandingPage2';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import UpdatePassword from './pages/UpdatePassword';
@@ -36,12 +37,25 @@ import AdminBroadcasts from './pages/admin/AdminBroadcasts';
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [useLandingPage2, setUseLandingPage2] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
+    const initApp = async () => {
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        setSession(sessionData.session);
+
+        const { data: settings } = await supabase.from('site_settings').select('key, value').eq('key', 'use_landing_page_2');
+        if (settings && settings.length > 0 && settings[0].value === 'true') {
+          setUseLandingPage2(true);
+        }
+      } catch (err) {
+        console.error("Error initializing app:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    initApp();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
@@ -64,7 +78,7 @@ function App() {
       <Routes>
         {/* ── Main App Layout ─────────────── */}
         <Route path="/" element={<Layout />}>
-          <Route index element={!session ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
+          <Route index element={!session ? (useLandingPage2 ? <LandingPage2 /> : <LandingPage />) : <Navigate to="/dashboard" replace />} />
           <Route path="login" element={!session ? <Login /> : <Navigate to="/dashboard" replace />} />
           <Route path="signup" element={!session ? <Login /> : <Navigate to="/dashboard" replace />} />
 
