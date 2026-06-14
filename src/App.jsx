@@ -43,8 +43,13 @@ function App() {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      
+      // Automatically redirect to update password page if recovering password
+      if (event === 'PASSWORD_RECOVERY') {
+        window.location.href = '/update-password';
+      }
     });
 
     return () => subscription.unsubscribe();
