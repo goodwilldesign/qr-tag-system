@@ -75,7 +75,14 @@ export default function Login() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="form-label mb-0">Password</label>
+                {!isSignUp && (
+                  <Link to="/reset-password" className="text-sm font-medium text-violet-600 hover:underline" tabIndex="-1">
+                    Forgot password?
+                  </Link>
+                )}
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input type={showPass ? 'text' : 'password'} className="form-input pl-10 pr-10"

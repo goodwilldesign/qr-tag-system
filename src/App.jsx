@@ -9,6 +9,8 @@ import AdminLayout from './layouts/AdminLayout';
 // Public/Auth Pages
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
+import UpdatePassword from './pages/UpdatePassword';
 import TagView from './pages/TagView';
 import Store from './pages/Store';
 import Blog from './pages/Blog';
@@ -62,6 +64,8 @@ function App() {
           <Route path="signup" element={!session ? <Login /> : <Navigate to="/dashboard" replace />} />
 
           {/* Public Routes */}
+          <Route path="reset-password" element={!session ? <ResetPassword /> : <Navigate to="/dashboard" replace />} />
+          <Route path="update-password" element={<UpdatePassword />} />
           <Route path="tag/:id" element={<TagView />} />
           <Route path="store" element={<Store />} />
           <Route path="blog" element={<Blog />} />
