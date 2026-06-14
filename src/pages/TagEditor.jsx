@@ -591,8 +591,19 @@ export default function TagEditor() {
   const schema = SCHEMAS[tag.type] || SCHEMAS.dog;
   const clr = COLOR_MAP[schema.color] || COLOR_MAP.violet;
 
+  const ALL_TABS = [
+    ...schema.sections.map((sec, i) => ({ id: `sec-${i}`, label: sec.title, type: 'schema', data: sec, icon: Info })),
+    { id: 'contact_pref', label: 'Contact Preference', type: 'custom', icon: MessageSquare },
+    ...(['dog', 'kids', 'keychain'].includes(tag.type) ? [{ id: 'emergency', label: 'Emergency Contacts', type: 'custom', icon: AlertCircle }] : []),
+    { id: 'expiry', label: 'Tag Expiry', type: 'custom', icon: Clock },
+    { id: 'custom_qr', label: 'Custom QR Design', type: 'custom', icon: Palette }
+  ];
+
+  const activeTab = formData._activeTab || ALL_TABS[0].id;
+  const setActiveTab = (id) => setFormData(prev => ({ ...prev, _activeTab: id }));
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       {/* Back */}
       <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
         <ArrowLeft size={16} /> Back to Dashboard
@@ -626,231 +637,273 @@ export default function TagEditor() {
         </div>
       )}
 
-      {/* Form sections */}
-      <form onSubmit={handleSave} className="space-y-6">
-        {schema.sections.map((section, si) => (
-          <div key={si} className="glass-card p-6">
-            <h2 className={`text-sm font-bold uppercase tracking-widest mb-5 ${clr.text}`}>
-              {section.title}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {section.fields.map((field) => {
-                // Conditional visibility logic
-                if (field.showIf && !field.showIf(formData)) return null;
-
-                return (
-                  <div key={field.key} className={`form-group ${field.type === 'textarea' || field.type === 'image_upload' ? 'sm:col-span-2' : ''}`}>
-                    {field.type !== 'toggle' && (
-                      <label className="form-label">
-                        {field.label}
-                        {field.required && <span className="text-red-400 ml-0.5">*</span>}
-                      </label>
-                    )}
-                    <FieldInput field={field} value={formData[field.key]} onChange={handleChange} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-        {/* Contact Preference */}
-        <div className="glass-card p-6 border-l-4 border-violet-500">
-          <div className="flex items-center gap-2 mb-2">
-            <MessageSquare size={18} className="text-violet-600" />
-            <h2 className="text-sm font-bold uppercase tracking-widest text-violet-800">Contact Preference</h2>
-          </div>
-          <p className="text-sm text-slate-500 mb-5">How do you want finders to contact you when this tag is scanned?</p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { id: 'whatsapp', label: 'WhatsApp Only', desc: 'Finders are redirected to chat on WhatsApp.', icon: '💬' },
-              { id: 'chat', label: 'Message Form', desc: 'Finders leave an async message. Keeps number private.', icon: '📩' },
-              { id: 'both', label: 'Allow Both', desc: 'Finders can choose to WhatsApp or leave a message.', icon: '🤝' }
-            ].map(opt => (
-              <label 
-                key={opt.id} 
-                className={`relative flex flex-col p-4 cursor-pointer rounded-xl border-2 transition-all ${
-                  formData.contact_preference === opt.id 
-                    ? 'border-violet-500 bg-violet-50 shadow-sm' 
-                    : 'border-slate-200 bg-white hover:border-violet-300'
+      {/* Main Layout */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Sidebar Navigation */}
+        <div className="w-full md:w-64 shrink-0">
+          <div className="flex md:flex-col gap-2 overflow-x-auto pb-4 md:pb-0 hide-scrollbar md:sticky md:top-6">
+            {ALL_TABS.map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
+                  activeTab === tab.id 
+                    ? `${clr.bg} ${clr.text} ring-2 ${clr.ring}`
+                    : 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200'
                 }`}
               >
-                <input 
-                  type="radio" 
-                  name="contact_preference" 
-                  value={opt.id} 
-                  checked={formData.contact_preference === opt.id}
-                  onChange={(e) => handleChange('contact_preference', e.target.value)}
-                  className="sr-only" 
-                />
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xl">{opt.icon}</span>
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.contact_preference === opt.id ? 'border-violet-500' : 'border-slate-300'}`}>
-                    {formData.contact_preference === opt.id && <div className="w-2 h-2 rounded-full bg-violet-500" />}
-                  </div>
-                </div>
-                <span className={`font-bold text-sm ${formData.contact_preference === opt.id ? 'text-violet-900' : 'text-slate-700'}`}>
-                  {opt.label}
-                </span>
-                <span className="text-xs text-slate-500 mt-1 leading-snug">{opt.desc}</span>
-              </label>
+                <tab.icon size={16} className={activeTab === tab.id ? clr.text : 'text-slate-400'} />
+                {tab.label}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* ── Emergency Contacts (Lost Mode Broadcast) ── */}
-        {['dog', 'kids', 'keychain'].includes(tag.type) && (
-          <div className="glass-card p-6 border-l-4 border-red-400">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">🚨</span>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-red-700">Emergency Contacts</h2>
-              </div>
-              {contacts.length < 3 && (
-                <button type="button" onClick={addContact}
-                  className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors">
-                  <Plus size={12} /> Add Contact
-                </button>
-              )}
-            </div>
-            <p className="text-sm text-slate-500 mb-5">When Lost Mode is activated, these contacts will be alerted via SMS &amp; Email automatically. (Max 3)</p>
-            {contacts.length === 0 ? (
-              <div className="border-2 border-dashed border-red-200 rounded-xl p-6 text-center">
-                <p className="text-slate-400 text-sm">No emergency contacts added yet.</p>
-                <button type="button" onClick={addContact}
-                  className="mt-3 text-xs font-bold px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
-                  + Add First Contact
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {contacts.map((c, idx) => (
-                  <div key={idx} className="bg-red-50/60 border border-red-100 rounded-xl p-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-xs font-bold text-red-600 uppercase">Contact {idx + 1}</span>
-                      <button type="button" onClick={() => removeContact(idx)}
-                        className="text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+        {/* Right Content Area */}
+        <div className="flex-1 min-w-0">
+          <form onSubmit={handleSave} className="space-y-6">
+            {ALL_TABS.map(tab => {
+              if (tab.id !== activeTab) return null;
+
+              if (tab.type === 'schema') {
+                const section = tab.data;
+                return (
+                  <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
+                    <h2 className={`text-sm font-bold uppercase tracking-widest mb-5 ${clr.text}`}>
+                      {section.title}
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {section.fields.map((field) => {
+                        if (field.showIf && !field.showIf(formData)) return null;
+                        return (
+                          <div key={field.key} className={`form-group ${field.type === 'textarea' || field.type === 'image_upload' ? 'sm:col-span-2' : ''}`}>
+                            {field.type !== 'toggle' && (
+                              <label className="form-label">
+                                {field.label}
+                                {field.required && <span className="text-red-400 ml-0.5">*</span>}
+                              </label>
+                            )}
+                            <FieldInput field={field} value={formData[field.key]} onChange={handleChange} />
+                          </div>
+                        );
+                      })}
                     </div>
+                  </div>
+                );
+              }
+
+              if (tab.id === 'contact_pref') {
+                return (
+                  <div key={tab.id} className="glass-card p-6 border-l-4 border-violet-500 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare size={18} className="text-violet-600" />
+                      <h2 className="text-sm font-bold uppercase tracking-widest text-violet-800">Contact Preference</h2>
+                    </div>
+                    <p className="text-sm text-slate-500 mb-5">How do you want finders to contact you when this tag is scanned?</p>
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <input type="text" placeholder="Name" value={c.name}
-                        onChange={e => updateContact(idx, 'name', e.target.value)}
-                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
-                      <input type="tel" placeholder="Phone (+91...)" value={c.phone}
-                        onChange={e => updateContact(idx, 'phone', e.target.value)}
-                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
-                      <input type="email" placeholder="Email" value={c.email}
-                        onChange={e => updateContact(idx, 'email', e.target.value)}
-                        className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                      {[
+                        { id: 'whatsapp', label: 'WhatsApp Only', desc: 'Finders are redirected to chat on WhatsApp.', icon: '💬' },
+                        { id: 'chat', label: 'Message Form', desc: 'Finders leave an async message. Keeps number private.', icon: '📩' },
+                        { id: 'both', label: 'Allow Both', desc: 'Finders can choose to WhatsApp or leave a message.', icon: '🤝' }
+                      ].map(opt => (
+                        <label 
+                          key={opt.id} 
+                          className={`relative flex flex-col p-4 cursor-pointer rounded-xl border-2 transition-all ${
+                            formData.contact_preference === opt.id 
+                              ? 'border-violet-500 bg-violet-50 shadow-sm' 
+                              : 'border-slate-200 bg-white hover:border-violet-300'
+                          }`}
+                        >
+                          <input 
+                            type="radio" 
+                            name="contact_preference" 
+                            value={opt.id} 
+                            checked={formData.contact_preference === opt.id}
+                            onChange={(e) => handleChange('contact_preference', e.target.value)}
+                            className="sr-only" 
+                          />
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xl">{opt.icon}</span>
+                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.contact_preference === opt.id ? 'border-violet-500' : 'border-slate-300'}`}>
+                              {formData.contact_preference === opt.id && <div className="w-2 h-2 rounded-full bg-violet-500" />}
+                            </div>
+                          </div>
+                          <span className={`font-bold text-sm ${formData.contact_preference === opt.id ? 'text-violet-900' : 'text-slate-700'}`}>
+                            {opt.label}
+                          </span>
+                          <span className="text-xs text-slate-500 mt-1 leading-snug">{opt.desc}</span>
+                        </label>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                );
+              }
 
-        {/* ── Expiry Date (Self-Destruct) ── */}
-        <div className="glass-card p-6 border-l-4 border-amber-400">
-          <div className="flex items-center gap-2 mb-2">
-            <Clock size={18} className="text-amber-600" />
-            <h2 className="text-sm font-bold uppercase tracking-widest text-amber-700">Tag Expiry (Optional)</h2>
-          </div>
-          <p className="text-sm text-slate-500 mb-4">Set a date when this tag expires and goes offline. Perfect for rentals, hotel check-outs, or events.</p>
-          <div className="flex items-center gap-4 flex-wrap">
-            <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              className="border border-amber-200 bg-amber-50 text-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-400" />
-            {expiresAt && (
-              <button type="button" onClick={() => setExpiresAt('')}
-                className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-500 transition-colors">
-                <X size={13} /> Clear expiry
-              </button>
-            )}
-            {expiresAt && (
-              <span className="text-xs font-semibold text-amber-700 bg-amber-100 px-3 py-1.5 rounded-full">
-                ⏳ Tag will expire on {new Date(expiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* ── Custom QR Design (Premium) ── */}
-        <div className="glass-card p-6 border-l-4 border-yellow-400">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Palette size={18} className="text-yellow-600" />
-              <h2 className="text-sm font-bold uppercase tracking-widest text-yellow-700">Custom QR Design</h2>
-            </div>
-            <span className="flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white">
-              <Crown size={10} /> PREMIUM
-            </span>
-          </div>
-          {!isPremium ? (
-            <div className="flex flex-col items-center py-8 text-center">
-              <Lock size={32} className="text-slate-300 mb-3" />
-              <p className="text-slate-600 font-semibold text-sm">Premium Feature</p>
-              <p className="text-slate-400 text-xs mt-1 max-w-xs">Upgrade to Premium to customise your QR code colours and add a brand logo to the center.</p>
-            </div>
-          ) : (
-            <div className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
-                  <label className="form-label">QR Code Color</label>
-                  <div className="flex items-center gap-3">
-                    <input type="color" value={qrColor} onChange={e => setQrColor(e.target.value)}
-                      className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
-                    <span className="text-sm font-mono text-slate-600">{qrColor}</span>
+              if (tab.id === 'emergency') {
+                return (
+                  <div key={tab.id} className="glass-card p-6 border-l-4 border-red-400 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">🚨</span>
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-red-700">Emergency Contacts</h2>
+                      </div>
+                      {contacts.length < 3 && (
+                        <button type="button" onClick={addContact}
+                          className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors">
+                          <Plus size={12} /> Add Contact
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-500 mb-5">When Lost Mode is activated, these contacts will be alerted via SMS &amp; Email automatically. (Max 3)</p>
+                    {contacts.length === 0 ? (
+                      <div className="border-2 border-dashed border-red-200 rounded-xl p-6 text-center">
+                        <p className="text-slate-400 text-sm">No emergency contacts added yet.</p>
+                        <button type="button" onClick={addContact}
+                          className="mt-3 text-xs font-bold px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                          + Add First Contact
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {contacts.map((c, idx) => (
+                          <div key={idx} className="bg-red-50/60 border border-red-100 rounded-xl p-4">
+                            <div className="flex justify-between items-center mb-3">
+                              <span className="text-xs font-bold text-red-600 uppercase">Contact {idx + 1}</span>
+                              <button type="button" onClick={() => removeContact(idx)}
+                                className="text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              <input type="text" placeholder="Name" value={c.name}
+                                onChange={e => updateContact(idx, 'name', e.target.value)}
+                                className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                              <input type="tel" placeholder="Phone (+91...)" value={c.phone}
+                                onChange={e => updateContact(idx, 'phone', e.target.value)}
+                                className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                              <input type="email" placeholder="Email" value={c.email}
+                                onChange={e => updateContact(idx, 'email', e.target.value)}
+                                className="border border-slate-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-red-400" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+                );
+              }
+
+              if (tab.id === 'expiry') {
+                return (
+                  <div key={tab.id} className="glass-card p-6 border-l-4 border-amber-400 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock size={18} className="text-amber-600" />
+                      <h2 className="text-sm font-bold uppercase tracking-widest text-amber-700">Tag Expiry (Optional)</h2>
+                    </div>
+                    <p className="text-sm text-slate-500 mb-4">Set a date when this tag expires and goes offline. Perfect for rentals, hotel check-outs, or events.</p>
+                    <div className="flex items-center gap-4 flex-wrap">
+                      <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="border border-amber-200 bg-amber-50 text-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-400" />
+                      {expiresAt && (
+                        <button type="button" onClick={() => setExpiresAt('')}
+                          className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-500 transition-colors">
+                          <X size={13} /> Clear expiry
+                        </button>
+                      )}
+                      {expiresAt && (
+                        <span className="text-xs font-semibold text-amber-700 bg-amber-100 px-3 py-1.5 rounded-full">
+                          ⏳ Tag will expire on {new Date(expiresAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+
+              if (tab.id === 'custom_qr') {
+                return (
+                  <div key={tab.id} className="glass-card p-6 border-l-4 border-yellow-400 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Palette size={18} className="text-yellow-600" />
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-yellow-700">Custom QR Design</h2>
+                      </div>
+                      <span className="flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white">
+                        <Crown size={10} /> PREMIUM
+                      </span>
+                    </div>
+                    {!isPremium ? (
+                      <div className="flex flex-col items-center py-8 text-center">
+                        <Lock size={32} className="text-slate-300 mb-3" />
+                        <p className="text-slate-600 font-semibold text-sm">Premium Feature</p>
+                        <p className="text-slate-400 text-xs mt-1 max-w-xs">Upgrade to Premium to customise your QR code colours and add a brand logo to the center.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div className="space-y-1.5">
+                            <label className="form-label">QR Code Color</label>
+                            <div className="flex items-center gap-3">
+                              <input type="color" value={qrColor} onChange={e => setQrColor(e.target.value)}
+                                className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
+                              <span className="text-sm font-mono text-slate-600">{qrColor}</span>
+                            </div>
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="form-label">Background Color</label>
+                            <div className="flex items-center gap-3">
+                              <input type="color" value={qrBgColor} onChange={e => setQrBgColor(e.target.value)}
+                                className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
+                              <span className="text-sm font-mono text-slate-600">{qrBgColor}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="form-label">Center Logo (optional)</label>
+                          {qrLogoUrl ? (
+                            <div className="flex items-center gap-3">
+                              <img src={qrLogoUrl} alt="QR Logo" className="w-14 h-14 rounded-xl object-contain border border-slate-200 bg-slate-50 p-1" />
+                              <button type="button" onClick={() => setQrLogoUrl('')}
+                                className="text-xs text-red-500 hover:text-red-700 font-semibold">
+                                Remove logo
+                              </button>
+                            </div>
+                          ) : (
+                            <label className="flex items-center gap-2 w-fit cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-xs font-bold transition-colors">
+                              <UploadCloud size={14} />
+                              {uploadingLogo ? 'Uploading…' : 'Upload Logo (PNG/SVG)'}
+                              <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return null;
+            })}
+
+            {/* Save Bar */}
+            <div className="sticky bottom-4 z-10 mt-8">
+              <div className="glass-card p-4 flex items-center justify-between gap-4 shadow-xl border-slate-200">
+                <p className="text-sm font-medium text-slate-500 hidden sm:block">
+                  {saved ? '✓ All changes saved successfully.' : 'You have unsaved changes.'}
+                </p>
+                <div className="flex gap-3 w-full sm:w-auto">
+                  <Link to="/dashboard" className="btn btn-secondary px-5 py-2.5 flex-1 sm:flex-none justify-center font-bold">
+                    Exit
+                  </Link>
+                  <button type="submit" className={`btn btn-primary px-6 py-2.5 flex-1 sm:flex-none justify-center shadow-md ${saved ? 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600' : ''}`} disabled={saving}>
+                    {saving ? 'Saving…' : saved ? <><CheckCircle size={16} /> Saved!</> : <><Save size={16} /> Save Changes</>}
+                  </button>
                 </div>
-                <div className="space-y-1.5">
-                  <label className="form-label">Background Color</label>
-                  <div className="flex items-center gap-3">
-                    <input type="color" value={qrBgColor} onChange={e => setQrBgColor(e.target.value)}
-                      className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer" />
-                    <span className="text-sm font-mono text-slate-600">{qrBgColor}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <label className="form-label">Center Logo (optional)</label>
-                {qrLogoUrl ? (
-                  <div className="flex items-center gap-3">
-                    <img src={qrLogoUrl} alt="QR Logo" className="w-14 h-14 rounded-xl object-contain border border-slate-200 bg-slate-50 p-1" />
-                    <button type="button" onClick={() => setQrLogoUrl('')}
-                      className="text-xs text-red-500 hover:text-red-700 font-semibold">
-                      Remove logo
-                    </button>
-                  </div>
-                ) : (
-                  <label className="flex items-center gap-2 w-fit cursor-pointer bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl px-4 py-2.5 text-xs font-bold transition-colors">
-                    <UploadCloud size={14} />
-                    {uploadingLogo ? 'Uploading…' : 'Upload Logo (PNG/SVG)'}
-                    <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
-                  </label>
-                )}
               </div>
             </div>
-          )}
+          </form>
         </div>
-
-
-        {/* Save Bar */}
-        <div className="sticky bottom-4 z-10">
-          <div className="glass-card p-4 flex items-center justify-between gap-4 shadow-lg border-slate-200">
-            <p className="text-sm text-slate-500 hidden sm:block">
-              {saved ? '✓ All changes saved.' : 'Changes are not saved yet.'}
-            </p>
-            <div className="flex gap-3 w-full sm:w-auto">
-              <Link to="/dashboard" className="btn btn-secondary px-5 py-2.5 flex-1 sm:flex-none justify-center">
-                Cancel
-              </Link>
-              <button type="submit" className={`btn btn-primary px-6 py-2.5 flex-1 sm:flex-none justify-center ${saved ? 'bg-emerald-600 hover:bg-emerald-700' : ''}`} disabled={saving}>
-                {saving ? 'Saving…' : saved ? <><CheckCircle size={16} /> Saved!</> : <><Save size={16} /> Save Details</>}
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
+      </div>
   );
 }
