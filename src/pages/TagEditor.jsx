@@ -695,7 +695,7 @@ export default function TagEditor() {
 
               if (tab.id === 'contact_pref') {
                 return (
-                  <div key={tab.id} className="glass-card p-6 border-l-4 border-violet-500 animate-in fade-in zoom-in-95 duration-200">
+                  <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-center gap-2 mb-2">
                       <MessageSquare size={18} className="text-violet-600" />
                       <h2 className="text-sm font-bold uppercase tracking-widest text-violet-800">Contact Preference</h2>
@@ -743,7 +743,7 @@ export default function TagEditor() {
 
               if (tab.id === 'emergency') {
                 return (
-                  <div key={tab.id} className="glass-card p-6 border-l-4 border-red-400 animate-in fade-in zoom-in-95 duration-200">
+                  <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-xl">🚨</span>
@@ -795,7 +795,7 @@ export default function TagEditor() {
 
               if (tab.id === 'expiry') {
                 return (
-                  <div key={tab.id} className="glass-card p-6 border-l-4 border-amber-400 animate-in fade-in zoom-in-95 duration-200">
+                  <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock size={18} className="text-amber-600" />
                       <h2 className="text-sm font-bold uppercase tracking-widest text-amber-700">Tag Expiry (Optional)</h2>
@@ -823,7 +823,7 @@ export default function TagEditor() {
 
               if (tab.id === 'custom_qr') {
                 return (
-                  <div key={tab.id} className="glass-card p-6 border-l-4 border-yellow-400 animate-in fade-in zoom-in-95 duration-200">
+                  <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Palette size={18} className="text-yellow-600" />

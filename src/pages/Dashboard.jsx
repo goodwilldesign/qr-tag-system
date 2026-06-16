@@ -287,12 +287,12 @@ export default function Dashboard() {
           <p className="text-slate-500 mt-1">Manage your active QR tags and view scan activity.</p>
         </div>
         <button onClick={() => setIsModalOpen(true)} className="hidden sm:flex btn btn-primary px-5 py-2.5 shadow-sm shrink-0">
-          <Plus size={18} /> Create New Tag
+          <Plus size={18} /> Create New QR Code
         </button>
       </div>
 
       {/* Floating Action Button (Mobile) */}
-      <button onClick={() => setIsModalOpen(true)} className="fab" aria-label="Create New Tag">
+      <button onClick={() => setIsModalOpen(true)} className="fab" aria-label="Create New QR Code">
         <Plus size={28} />
       </button>
 
@@ -703,7 +703,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl relative">
             <button onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-            <h2 className="text-2xl font-bold mb-6 text-slate-900">Create New Tag</h2>
+            <h2 className="text-2xl font-bold mb-6 text-slate-900">Create New QR Code</h2>
 
             <form onSubmit={handleCreateTag}>
               <div className="form-group mb-5">

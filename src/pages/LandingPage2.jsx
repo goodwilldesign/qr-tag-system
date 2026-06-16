@@ -22,7 +22,7 @@ export default function LandingPage2() {
   const [emailBody, setEmailBody] = useState('');
   const qrRef = useRef(null);
 
-  const [expandedPanel, setExpandedPanel] = useState('color');
+  const [expandedPanel, setExpandedPanel] = useState(null);
   const [qrColor, setQrColor] = useState('#000000');
   const [qrLogo, setQrLogo] = useState(null);
   const [qrFrame, setQrFrame] = useState('none');
