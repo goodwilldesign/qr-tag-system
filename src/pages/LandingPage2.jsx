@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight } from 'lucide-react';
+import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, ChevronUp, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight, Image as ImageIcon, X, Share2 } from 'lucide-react';
 
 const TABS = [
   { id: 'URL', icon: LinkIcon, title: 'Enter your URL', placeholder: 'https://example.com/' },
@@ -22,6 +22,19 @@ export default function LandingPage2() {
   const [emailBody, setEmailBody] = useState('');
   const qrRef = useRef(null);
 
+  const [expandedPanel, setExpandedPanel] = useState('color');
+  const [qrColor, setQrColor] = useState('#000000');
+  const [qrLogo, setQrLogo] = useState(null);
+  const [qrFrame, setQrFrame] = useState('none');
+
+  const COLORS = ['#000000', '#002b80', '#38b6ff', '#ff9100', '#10b981', '#8b5cf6', '#e11d48'];
+  const FRAMES = [
+    { id: 'none', label: 'None' },
+    { id: 'outline', label: 'Outline' },
+    { id: 'bottom-text', label: 'Text Bottom' },
+    { id: 'top-text', label: 'Text Top' }
+  ];
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setInputValue(tab.placeholder || '');
@@ -29,17 +42,56 @@ export default function LandingPage2() {
     setEmailBody('');
   };
 
-  const handleDownload = (format) => {
+  const handleDownload = async (format) => {
     if (activeTab.signupOnly) {
       navigate('/signup');
       return;
     }
-    const canvas = qrRef.current?.querySelector('canvas');
-    if (!canvas) return;
+    const rawCanvas = qrRef.current?.querySelector('canvas');
+    if (!rawCanvas) return;
+    
+    const qrSize = rawCanvas.width;
+    let finalCanvas = document.createElement('canvas');
+    const ctx = finalCanvas.getContext('2d');
+    
+    if (qrFrame === 'none') {
+      finalCanvas.width = qrSize;
+      finalCanvas.height = qrSize;
+      ctx.drawImage(rawCanvas, 0, 0);
+    } else {
+      const pad = 40;
+      finalCanvas.width = qrSize + pad * 2;
+      finalCanvas.height = qrSize + pad * 2 + (qrFrame.includes('text') ? 60 : 0);
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      
+      ctx.strokeStyle = qrColor;
+      ctx.lineWidth = 8;
+      ctx.strokeRect(4, 4, finalCanvas.width - 8, finalCanvas.height - 8);
+      
+      const qrY = qrFrame === 'top-text' ? pad + 60 : pad;
+      ctx.drawImage(rawCanvas, pad, qrY, qrSize, qrSize);
+      
+      if (qrFrame.includes('text')) {
+        ctx.fillStyle = qrColor;
+        ctx.font = 'bold 36px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const textY = qrFrame === 'top-text' ? pad + 30 : qrSize + pad + 30;
+        ctx.fillText('SCAN ME', finalCanvas.width / 2, textY);
+      }
+    }
+    
     const link = document.createElement('a');
     link.download = `QR_${activeTab.id}_${format}.${format}`;
-    link.href = canvas.toDataURL(`image/${format === 'jpg' ? 'jpeg' : 'png'}`);
+    link.href = finalCanvas.toDataURL(`image/${format === 'jpg' ? 'jpeg' : 'png'}`);
     link.click();
+  };
+
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) setQrLogo(URL.createObjectURL(file));
   };
 
   let qrValue = activeTab.prefix ? `${activeTab.prefix}${inputValue}` : inputValue;
@@ -164,20 +216,71 @@ export default function LandingPage2() {
                       level="H"
                       className="w-full h-full text-[#002b80]"
                       includeMargin={false}
+                      fgColor={qrColor}
+                      imageSettings={qrLogo ? { src: qrLogo, height: 64, width: 64, excavate: true } : undefined}
                     />
                  </div>
+                 
+                 {/* Live Frame Preview Overlay */}
+                 {qrFrame !== 'none' && !activeTab.signupOnly && (
+                   <div className="absolute inset-0 border-4 pointer-events-none" style={{ borderColor: qrColor }}>
+                     {qrFrame.includes('text') && (
+                       <div className={`absolute left-0 right-0 h-8 flex items-center justify-center font-bold text-xs tracking-widest ${qrFrame === 'top-text' ? 'top-0 border-b-4' : 'bottom-0 border-t-4'}`} style={{ borderColor: qrColor, color: qrColor, backgroundColor: '#ffffff' }}>
+                         SCAN ME
+                       </div>
+                     )}
+                   </div>
+                 )}
               </div>
               
               <div className="flex flex-col gap-3 mb-8">
-                 <button className="bg-white/10 hover:bg-white/20 border border-white/5 text-white py-3.5 px-4 rounded-xl text-xs font-bold tracking-wide flex justify-between items-center transition-colors">
-                    FRAME <ChevronDown size={16} className="text-white/50" />
-                 </button>
-                 <button className="bg-white/5 hover:bg-white/10 border border-white/5 text-white py-3.5 px-4 rounded-xl text-xs font-bold tracking-wide flex justify-between items-center transition-colors">
-                    SHAPE & COLOR <ChevronDown size={16} className="text-white/50" />
-                 </button>
-                 <button className="bg-white/5 hover:bg-white/10 border border-white/5 text-white py-3.5 px-4 rounded-xl text-xs font-bold tracking-wide flex justify-between items-center transition-colors">
-                    LOGO <ChevronDown size={16} className="text-white/50" />
-                 </button>
+                 {/* Frame Panel */}
+                 <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'frame' ? null : 'frame')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                      FRAME {expandedPanel === 'frame' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
+                   </button>
+                   {expandedPanel === 'frame' && (
+                     <div className="p-4 pt-0 grid grid-cols-2 gap-2">
+                       {FRAMES.map(f => (
+                         <button key={f.id} onClick={() => setQrFrame(f.id)} className={`text-xs font-bold py-2 rounded-lg border transition-colors ${qrFrame === f.id ? 'bg-[#38b6ff] border-[#38b6ff] text-white' : 'border-white/20 text-white hover:bg-white/10'}`}>
+                           {f.label}
+                         </button>
+                       ))}
+                     </div>
+                   )}
+                 </div>
+
+                 {/* Shape & Color Panel */}
+                 <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'color' ? null : 'color')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                      SHAPE & COLOR {expandedPanel === 'color' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
+                   </button>
+                   {expandedPanel === 'color' && (
+                     <div className="p-4 pt-0 flex flex-wrap gap-3">
+                       {COLORS.map(c => (
+                         <button key={c} onClick={() => setQrColor(c)} className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${qrColor === c ? 'border-white scale-110' : 'border-transparent'}`} style={{ backgroundColor: c }} />
+                       ))}
+                     </div>
+                   )}
+                 </div>
+
+                 {/* Logo Panel */}
+                 <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'logo' ? null : 'logo')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                      LOGO {expandedPanel === 'logo' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
+                   </button>
+                   {expandedPanel === 'logo' && (
+                     <div className="p-4 pt-0 flex flex-wrap gap-2">
+                       <button onClick={() => setQrLogo(null)} className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${!qrLogo ? 'bg-[#38b6ff] border-[#38b6ff] text-white' : 'border-white/20 text-white hover:bg-white/10'}`}>
+                         <X size={20} />
+                       </button>
+                       <label className="w-12 h-12 rounded-xl border border-white/20 text-white hover:bg-white/10 flex items-center justify-center cursor-pointer transition-colors">
+                         <ImageIcon size={20} />
+                         <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                       </label>
+                     </div>
+                   )}
+                 </div>
               </div>
 
               <div className="flex gap-3 mt-auto">
@@ -186,6 +289,20 @@ export default function LandingPage2() {
                  </button>
                  <button onClick={() => handleDownload('png')} className="flex-1 bg-[#ff9100] hover:bg-[#e68200] text-white py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#ff9100]/30 transition-transform hover:-translate-y-0.5">
                    <Download size={16} /> SVG/PNG
+                 </button>
+                 <button onClick={async () => {
+                   try {
+                     if (navigator.share) {
+                       await navigator.share({
+                         title: 'My QR Code',
+                         url: window.location.href,
+                       });
+                     }
+                   } catch (err) {
+                     console.error('Share failed:', err);
+                   }
+                 }} className="w-[52px] h-[52px] bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-full flex items-center justify-center shrink-0 transition-transform hover:-translate-y-0.5" title="Share">
+                   <Share2 size={20} />
                  </button>
               </div>
            </div>
