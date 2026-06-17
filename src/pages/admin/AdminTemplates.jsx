@@ -14,6 +14,13 @@ const TAG_TYPES = [
   { id: 'business',    label: 'Digital Card' },
   { id: 'plant',       label: 'Plant Care' },
   { id: 'keychain',    label: 'Keychain' },
+  { id: 'link',        label: 'URL Link' },
+  { id: 'pdf',         label: 'PDF' },
+  { id: 'email',       label: 'Email' },
+  { id: 'text',        label: 'Text' },
+  { id: 'app_store',   label: 'App Store Link' },
+  { id: 'sms',         label: 'SMS Detail' },
+  { id: 'phone',       label: 'Phone Number' },
 ];
 
 export default function AdminTemplates() {

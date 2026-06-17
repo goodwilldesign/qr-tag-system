@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, MessageSquare, X, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight, FileText, Mail, Type, AppWindow, MessageSquareText, Phone } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 
@@ -18,6 +18,12 @@ const TAG_TYPES = [
   { id: 'plant',       label: 'Plant Care',   icon: <Leaf size={18} /> },
   { id: 'keychain',    label: 'Keychain',     icon: <Wallet size={18} /> },
   { id: 'link',        label: 'URL Link',     icon: <Link2 size={18} /> },
+  { id: 'pdf',         label: 'PDF',          icon: <FileText size={18} /> },
+  { id: 'email',       label: 'Email',        icon: <Mail size={18} /> },
+  { id: 'text',        label: 'Text',         icon: <Type size={18} /> },
+  { id: 'app_store',   label: 'App Store Link', icon: <AppWindow size={18} /> },
+  { id: 'sms',         label: 'SMS Detail',   icon: <MessageSquareText size={18} /> },
+  { id: 'phone',       label: 'Phone Number', icon: <Phone size={18} /> },
 ];
 
 const TYPE_COLORS = {
@@ -32,6 +38,12 @@ const TYPE_COLORS = {
   plant:       'bg-green-50 text-green-700 border-green-200',
   keychain:    'bg-slate-100 text-slate-700 border-slate-300',
   link:        'bg-cyan-50 text-cyan-700 border-cyan-200',
+  pdf:         'bg-red-50 text-red-700 border-red-200',
+  email:       'bg-sky-50 text-sky-700 border-sky-200',
+  text:        'bg-stone-50 text-stone-700 border-stone-200',
+  app_store:   'bg-blue-50 text-blue-700 border-blue-200',
+  sms:         'bg-teal-50 text-teal-700 border-teal-200',
+  phone:       'bg-green-50 text-green-700 border-green-200',
 };
 
 export default function Dashboard() {

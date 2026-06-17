@@ -7,7 +7,8 @@ import {
   Dog, Stethoscope, Home, Wifi, Clock,
   Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
   Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key,
-  Plus, Trash2, Lock, Sparkles, Crown, Link2
+  Plus, Trash2, Lock, Sparkles, Crown, Link2,
+  FileText, Mail, Type, AppWindow, MessageSquareText, Phone
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
 
@@ -301,6 +302,92 @@ const SCHEMAS = {
         ]
       }
     ]
+  },
+  pdf: {
+    label: 'PDF Document',
+    emoji: '📄',
+    color: 'red',
+    sections: [
+      {
+        title: 'PDF Details',
+        fields: [
+          { key: 'pdf_url', label: 'PDF Link / URL', type: 'text', placeholder: 'https://...', icon: Link2, required: true },
+          { key: 'title', label: 'Document Title', type: 'text', placeholder: 'Menu, User Manual...', icon: Info },
+          { key: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description of the document...', icon: Info },
+        ]
+      }
+    ]
+  },
+  email: {
+    label: 'Email',
+    emoji: '📧',
+    color: 'sky',
+    sections: [
+      {
+        title: 'Email Details',
+        fields: [
+          { key: 'email_address', label: 'Email Address', type: 'text', placeholder: 'hello@example.com', icon: Mail, required: true },
+          { key: 'subject', label: 'Pre-filled Subject', type: 'text', placeholder: 'Inquiry from QR Code', icon: Info },
+          { key: 'body', label: 'Pre-filled Body', type: 'textarea', placeholder: 'Hi, I would like to know more about...', icon: Info },
+        ]
+      }
+    ]
+  },
+  text: {
+    label: 'Text',
+    emoji: '📝',
+    color: 'stone',
+    sections: [
+      {
+        title: 'Text Content',
+        fields: [
+          { key: 'text_content', label: 'Enter your text', type: 'textarea', placeholder: 'Type your message, notes, or information here...', icon: Type, required: true },
+        ]
+      }
+    ]
+  },
+  app_store: {
+    label: 'App Store Link',
+    emoji: '📱',
+    color: 'blue',
+    sections: [
+      {
+        title: 'App Links',
+        fields: [
+          { key: 'ios_url', label: 'Apple App Store URL', type: 'text', placeholder: 'https://apps.apple.com/...', icon: Link2 },
+          { key: 'android_url', label: 'Google Play Store URL', type: 'text', placeholder: 'https://play.google.com/...', icon: Link2 },
+          { key: 'fallback_url', label: 'Fallback URL (Website)', type: 'text', placeholder: 'https://...', icon: Link2 },
+        ]
+      }
+    ]
+  },
+  sms: {
+    label: 'SMS Detail',
+    emoji: '💬',
+    color: 'teal',
+    sections: [
+      {
+        title: 'SMS Configuration',
+        fields: [
+          { key: 'phone_number', label: 'Phone Number', type: 'phone', placeholder: '+1234567890', required: true },
+          { key: 'sms_message', label: 'Pre-filled Message', type: 'textarea', placeholder: 'I am interested in your services...', icon: MessageSquare },
+        ]
+      }
+    ]
+  },
+  phone: {
+    label: 'Phone Number',
+    emoji: '📞',
+    color: 'green',
+    sections: [
+      {
+        title: 'Call Details',
+        fields: [
+          { key: 'phone_number', label: 'Phone Number', type: 'phone', placeholder: '+1234567890', required: true },
+          { key: 'contact_name', label: 'Contact Name / Title', type: 'text', placeholder: 'Support Desk', icon: User },
+        ]
+      }
+    ]
   }
 };
 
@@ -316,6 +403,10 @@ const COLOR_MAP = {
   green:   { bg: 'bg-green-50',   border: 'border-green-200',  text: 'text-green-700',   ring: 'ring-green-400',  badge: 'bg-green-100 text-green-800' },
   slate:   { bg: 'bg-slate-100',  border: 'border-slate-300',  text: 'text-slate-700',   ring: 'ring-slate-400',  badge: 'bg-slate-200 text-slate-800' },
   cyan:    { bg: 'bg-cyan-50',    border: 'border-cyan-200',   text: 'text-cyan-700',    ring: 'ring-cyan-400',   badge: 'bg-cyan-100 text-cyan-800' },
+  red:     { bg: 'bg-red-50',     border: 'border-red-200',    text: 'text-red-700',     ring: 'ring-red-400',    badge: 'bg-red-100 text-red-800' },
+  sky:     { bg: 'bg-sky-50',     border: 'border-sky-200',    text: 'text-sky-700',     ring: 'ring-sky-400',    badge: 'bg-sky-100 text-sky-800' },
+  stone:   { bg: 'bg-stone-50',   border: 'border-stone-200',  text: 'text-stone-700',   ring: 'ring-stone-400',  badge: 'bg-stone-100 text-stone-800' },
+  teal:    { bg: 'bg-teal-50',    border: 'border-teal-200',   text: 'text-teal-700',    ring: 'ring-teal-400',   badge: 'bg-teal-100 text-teal-800' },
 };
 
 /* ─── Image Uploader Component ────────────────────────────────────────────── */
