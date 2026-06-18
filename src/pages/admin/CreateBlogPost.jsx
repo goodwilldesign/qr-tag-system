@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import RichTextEditor from '../../components/RichTextEditor';
 import SEOScorePanel from '../../components/SEOScorePanel';
 import { generateSlug, countWords, calculateReadingTime, analyzeSEO } from '../../lib/seoUtils';
+import { OpenRouterClient } from '../../lib/openrouter';
 import {
   Save, Calendar, Sparkles, ArrowLeft, Image as ImageIcon,
   Tag, Folder, Hash, AlignLeft, Type, FileText, Loader2, Upload, X, Plus, HelpCircle, Trash2
@@ -111,46 +112,45 @@ export default function CreateBlogPost() {
     setGenerating(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      const { data: settingsData } = await supabase
+        .from('blog_settings')
+        .select('key, value')
+        .in('key', ['openrouter_api_key', 'openrouter_model', 'openrouter_temperature', 'openrouter_max_tokens']);
+        
+      const settingsMap = new Map(settingsData?.map(s => [s.key, s.value]) || []);
+      const apiKey = settingsMap.get('openrouter_api_key');
+      const model = settingsMap.get('openrouter_model') || 'google/gemini-2.0-flash-exp:free';
+      const temperature = parseFloat(settingsMap.get('openrouter_temperature') || '0.8');
+      const maxTokens = parseInt(settingsMap.get('openrouter_max_tokens') || '2000');
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-blog-post`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            category: categories.find(c => c.id === categoryId)?.slug,
-            keywords: focusKeyword ? [focusKeyword] : undefined,
-            targetLocation: targetLocation || undefined
-          })
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to generate post');
+      if (!apiKey) {
+        toast.error('OpenRouter API key is missing. Please configure it in Blog Settings.');
+        setGenerating(false);
+        return;
       }
 
-      const result = await response.json();
-      const post = result.post;
+      const client = new OpenRouterClient(apiKey);
+      const categoryName = categories.find(c => c.id === categoryId)?.name || 'General';
+      const keywords = focusKeyword ? [focusKeyword] : [categoryName.toLowerCase(), 'guide', 'tips'];
+      
+      const { content: post } = await client.generateBlogPost(
+        categoryName,
+        keywords,
+        model,
+        temperature,
+        maxTokens
+      );
 
-      setExistingPostId(post.id);
-      setTitle(post.title);
-      setSlug(post.slug);
-      setExcerpt(post.excerpt);
-      setContent(post.content);
-      setFeaturedImageUrl(post.featured_image_url || '');
-      setFeaturedImageAlt(post.featured_image_alt || '');
-      setMetaTitle(post.meta_title);
-      setMetaDescription(post.meta_description);
-      setFocusKeyword(post.focus_keyword);
+      setTitle(post.title || '');
+      setSlug(generateSlug(post.title || ''));
+      setExcerpt(post.excerpt || '');
+      setContent(post.content || '');
+      setMetaTitle(post.meta_title || post.title || '');
+      setMetaDescription(post.meta_description || post.excerpt || '');
+      setFocusKeyword(post.focus_keyword || keywords[0] || '');
       if (post.faq_items) setFaqItems(post.faq_items);
 
-      toast.success('AI post generated successfully! Review and publish when ready.');
+      toast.success('AI post generated successfully! Review and save when ready.');
     } catch (error) {
       console.error('Error generating post:', error);
       alert(error.message || 'Failed to generate post');
