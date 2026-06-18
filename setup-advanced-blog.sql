@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   meta_title text,
   meta_description text,
   focus_keyword text,
+  target_location text,
+  faq_items jsonb,
   canonical_url text,
   seo_score integer DEFAULT 0 CHECK (seo_score >= 0 AND seo_score <= 100),
   readability_score integer DEFAULT 0,
