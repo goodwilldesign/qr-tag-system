@@ -51,7 +51,11 @@ Respond ONLY with valid JSON in this exact format:
   "meta_description": "Compelling meta description (150-160 characters)",
   "focus_keyword": "primary SEO keyword",
   "excerpt": "Brief summary (150-200 characters)",
-  "content": "Full HTML content with proper <h2>, <h3>, <p>, <ul>, <ol>, <strong>, <em> tags",
+  "content": "Full HTML content with proper <h2>, <h3>, <p>. Make sure to properly escape HTML string values for JSON.",
+  "faq_items": [
+    { "question": "FAQ Question 1", "answer": "FAQ Answer 1" },
+    { "question": "FAQ Question 2", "answer": "FAQ Answer 2" }
+  ],
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "category": "category-slug",
   "image_keywords": ["keyword1", "keyword2", "keyword3"]
