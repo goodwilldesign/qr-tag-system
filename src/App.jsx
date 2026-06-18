@@ -26,7 +26,10 @@ import TagEditor from './pages/TagEditor';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminStore from './pages/admin/AdminStore';
-import AdminBlog from './pages/admin/AdminBlog';
+import ManageBlog from './pages/admin/ManageBlog';
+import CreateBlogPost from './pages/admin/CreateBlogPost';
+import BlogSettings from './pages/admin/BlogSettings';
+import BlogAnalytics from './pages/admin/BlogAnalytics';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminSupport from './pages/admin/AdminSupport';
@@ -101,7 +104,11 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="store" element={<AdminStore />} />
-          <Route path="blog" element={<AdminBlog />} />
+          <Route path="blog" element={<ManageBlog />} />
+          <Route path="blog/create" element={<CreateBlogPost />} />
+          <Route path="blog/edit/:id" element={<CreateBlogPost />} />
+          <Route path="blog/settings" element={<BlogSettings />} />
+          <Route path="blog/analytics" element={<BlogAnalytics />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="support" element={<AdminSupport />} />
           <Route path="templates" element={<AdminTemplates />} />
