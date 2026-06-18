@@ -76,14 +76,17 @@ export default function BlogSettings() {
       for (const setting of settings) {
         const { error } = await supabase
           .from('blog_settings')
-          .update({
+          .upsert({
+            key: setting.key,
             value: setting.value,
             updated_by: user?.id,
             updated_at: new Date().toISOString()
-          })
-          .eq('key', setting.key);
+          }, { onConflict: 'key' });
 
-        if (error) throw error;
+        if (error) {
+          console.error(`Error saving ${setting.key}:`, error);
+          throw new Error(`Failed to save ${setting.key}: ${error.message}`);
+        }
       }
 
       toast.success('Settings saved successfully!');
