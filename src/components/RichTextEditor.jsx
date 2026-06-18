@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -60,6 +61,14 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Write y
       },
     },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      // Handle the case where editor is empty (<p></p>) and value is empty string
+      if (value === '' && editor.getHTML() === '<p></p>') return;
+      editor.commands.setContent(value || '');
+    }
+  }, [value, editor]);
 
   const addLink = () => {
     const url = prompt('Enter URL:');
