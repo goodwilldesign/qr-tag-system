@@ -91,6 +91,7 @@ function App() {
           <Route path="tag/:id" element={<TagView />} />
           <Route path="store" element={<Store />} />
           <Route path="blog" element={<Blog />} />
+          <Route path="blog/:slug" element={<Blog />} />
 
           {/* Protected Routes */}
           <Route path="dashboard" element={session ? <Dashboard /> : <Navigate to="/login" replace />} />

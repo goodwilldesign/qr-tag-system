@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { BookOpen, ArrowLeft, Share2, Clock, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -25,6 +26,8 @@ export default function Blog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activePost, setActivePost] = useState(null);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -39,6 +42,17 @@ export default function Blog() {
     };
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      if (slug) {
+        const found = posts.find(p => p.slug === slug);
+        setActivePost(found || null);
+      } else {
+        setActivePost(null);
+      }
+    }
+  }, [slug, posts]);
 
   // SEO
   useEffect(() => {
@@ -79,7 +93,7 @@ export default function Blog() {
 
     return (
       <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-16">
-        <button onClick={() => setActivePost(null)}
+        <button onClick={() => navigate('/blog')}
           className="flex items-center gap-2 text-slate-500 hover:text-violet-600 font-semibold transition-colors mt-8">
           <ArrowLeft size={20} /> Back to all articles
         </button>
@@ -123,7 +137,10 @@ export default function Blog() {
             <h3 className="text-2xl font-bold text-slate-900 mb-8">Read next</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map(post => (
-                <div key={post.id} onClick={() => setActivePost(post)}
+                <div key={post.id} onClick={() => {
+                  navigate(`/blog/${post.slug}`);
+                  window.scrollTo(0, 0);
+                }}
                   className="group cursor-pointer bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 flex flex-col">
                   {post.cover_image_url && (
                     <div className="h-40 overflow-hidden">
@@ -172,7 +189,7 @@ export default function Blog() {
           {posts.map(post => {
             const readTime = Math.max(1, Math.ceil((post.content?.split(' ').length || 0) / 200)) + ' min read';
             return (
-              <article key={post.id} onClick={() => setActivePost(post)}
+              <article key={post.id} onClick={() => navigate(`/blog/${post.slug}`)}
                 className="flex flex-col bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer group">
                 <div className="w-full h-56 relative overflow-hidden bg-slate-100">
                   {post.cover_image_url
