@@ -63,7 +63,8 @@ Respond ONLY with valid JSON in this exact format:
 
     const userPrompt = `Generate a blog post for the category "${category}" with these target keywords: ${keywords.join(', ')}.
 
-Make it informative, engaging, and SEO-optimized. Focus on providing value to readers.`;
+Make it informative, engaging, and SEO-optimized. Focus on providing value to readers.
+CRITICAL: You MUST include full HTML content for the blog post and generate 2-3 relevant Frequently Asked Questions (faq_items) in the JSON response.`;
 
     const request = {
       model,
