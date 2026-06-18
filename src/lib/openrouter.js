@@ -37,9 +37,10 @@ export class OpenRouterClient {
 
 Your blog posts should:
 - Be informative, engaging, and original
-- Target a reading level suitable for general audiences (Grade 8-10)
-- Include proper heading structure (H2, H3)
-- Use natural keyword placement (avoid keyword stuffing)
+- Target a reading level suitable for general audiences (Grade 8-10) with very simple, short sentences to ensure a high Flesch reading ease score (> 60).
+- Include proper heading structure (H2, H3). You MUST include at least one H2 heading.
+- The exact \`focus_keyword\` MUST be included EXACTLY in the \`title\` and \`meta_description\`.
+- The exact \`focus_keyword\` MUST appear in the \`content\` multiple times (aim for 1% keyword density, e.g., 5-10 times).
 - Be between 800-1500 words
 - Include practical tips, examples, or insights
 - Have a clear introduction, body, and conclusion
