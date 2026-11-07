@@ -1,0 +1,29 @@
+name: Supabase Keep-Alive & Auto-Wakeup
+
+on:
+  schedule:
+    # Runs every 3 days at 00:00 UTC to prevent the 7-day inactivity pause
+    - cron: '0 0 */3 * *'
+  workflow_dispatch:
+    # Allows manual execution anytime via GitHub UI
+
+jobs:
+  keepalive:
+    name: Ping & Restore Supabase Database
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run Supabase Keep-Alive Script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: node scripts/supabase-keepalive.mjs
