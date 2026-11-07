@@ -31,9 +31,17 @@ function loadLocalEnv() {
 
 loadLocalEnv()
 
-const supabaseUrl = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim().replace(/\/$/, '')
-const supabaseAnonKey = (process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '').trim()
-const supabaseAccessToken = (process.env.SUPABASE_ACCESS_TOKEN || '').trim()
+function cleanVal(val) {
+  let v = (val || '').trim()
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+    v = v.slice(1, -1).trim()
+  }
+  return v
+}
+
+const supabaseUrl = cleanVal(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL).replace(/\/$/, '')
+const supabaseAnonKey = cleanVal(process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY)
+const supabaseAccessToken = cleanVal(process.env.SUPABASE_ACCESS_TOKEN)
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Error: Missing SUPABASE_URL or SUPABASE_ANON_KEY in environment or .env file.')
@@ -49,6 +57,7 @@ console.log(`📡 Pinging Supabase instance: ${supabaseUrl}`)
 if (projectRef) {
   console.log(`🆔 Project Reference: ${projectRef}`)
 }
+console.log(`🔑 Key check: length=${supabaseAnonKey.length}, prefix=${supabaseAnonKey.slice(0, 10)}...`)
 
 async function restoreProject(ref, token) {
   console.log(`⚡ Attempting auto-restore via Supabase Management API for project: ${ref}...`)
@@ -94,6 +103,13 @@ async function pingDatabase() {
       console.log(`✅ [SUCCESS] Keep-alive ping successful! (HTTP ${response.status})`)
       console.log('🎉 Supabase database is active. 7-day inactivity timer has been successfully reset.')
       return
+    }
+
+    if (response.status === 401) {
+      console.error(`\n❌ [AUTHENTICATION ERROR] HTTP 401 Unauthorized: ${bodyText}`)
+      console.error('The SUPABASE_ANON_KEY in your GitHub Secrets does not match your Supabase project.')
+      console.error('Please update the SUPABASE_ANON_KEY secret in GitHub with the anon public key from your .env file (without quotes).\n')
+      process.exit(1)
     }
 
     console.warn(`⚠️ Warning: Received HTTP ${response.status} from Supabase REST API: ${bodyText}`)
