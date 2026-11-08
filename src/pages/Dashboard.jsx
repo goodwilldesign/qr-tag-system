@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
-import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight, FileText, Mail, Type, AppWindow, MessageSquareText, Phone } from 'lucide-react';
+import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight, FileText, Mail, Type, AppWindow, MessageSquareText, Phone, X, Camera, ExternalLink } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
 import SEO from '../components/SEO';
@@ -65,6 +65,7 @@ export default function Dashboard() {
   const [messagesTarget, setMessagesTarget] = useState(null);
   const [tagMessages, setTagMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [viewingPhoto, setViewingPhoto] = useState(null); // { url, sender, time, note }
   // Analytics Modal state  
   const [statsTarget, setStatsTarget] = useState(null);
   const [statsData, setStatsData] = useState([]);
@@ -590,15 +591,96 @@ export default function Dashboard() {
                   {tagMessages.map(msg => (
                     <div key={msg.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 relative">
                       {!msg.is_read && <div className="absolute top-4 right-4 text-[10px] font-black uppercase text-violet-600 bg-violet-100 px-2 py-0.5 rounded-full">New</div>}
-                      <p className="font-bold text-slate-900 mb-0.5">{msg.sender_name}</p>
+                      <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                        <p className="font-bold text-slate-900">{msg.sender_name}</p>
+                        {msg.photo_url && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-violet-700 bg-violet-100 px-2 py-0.5 rounded-full">
+                            <Camera size={11} /> Photo Attached
+                          </span>
+                        )}
+                      </div>
                       {msg.sender_contact && <p className="text-xs text-blue-600 font-medium mb-3">{msg.sender_contact}</p>}
                       <div className="text-sm text-slate-700 whitespace-pre-wrap bg-white p-3 border border-slate-100 rounded-lg">{msg.message}</div>
+                      
+                      {/* Photo Thumbnail preview if captured */}
+                      {msg.photo_url && (
+                        <div className="mt-3">
+                          <button
+                            type="button"
+                            onClick={() => setViewingPhoto({ url: msg.photo_url, sender: msg.sender_name, time: msg.created_at, note: msg.message })}
+                            className="relative group rounded-xl overflow-hidden border-2 border-slate-200 hover:border-violet-500 transition-all shadow-sm bg-slate-900 block max-w-[200px]"
+                          >
+                            <img src={msg.photo_url} alt="Doorstep capture" className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                              <span className="bg-black/70 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1.5 opacity-90 group-hover:opacity-100">
+                                <Eye size={12} /> View Snapshot
+                              </span>
+                            </div>
+                          </button>
+                        </div>
+                      )}
+
                       <p className="text-[10px] font-bold uppercase text-slate-400 mt-3">{timeAgo(msg.created_at)}</p>
                     </div>
                   ))}
                 </div>
               )}
             </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Doorbell Snapshot Lightbox Modal */}
+      {viewingPhoto && createPortal(
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="bg-slate-900 text-white rounded-3xl w-full max-w-xl flex flex-col max-h-[90vh] shadow-2xl overflow-hidden border border-white/10">
+            {/* Modal Header */}
+            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0 bg-slate-950/60">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-violet-600/30 text-violet-400 flex items-center justify-center">
+                  <Camera size={16} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-white leading-tight">{viewingPhoto.sender || 'Doorstep Snapshot'}</h3>
+                  <p className="text-[10px] text-slate-400">{timeAgo(viewingPhoto.time)}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={viewingPhoto.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
+                  title="Open in new tab"
+                >
+                  <ExternalLink size={17} />
+                </a>
+                <button
+                  onClick={() => setViewingPhoto(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body / Image */}
+            <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-black/40 min-h-[250px]">
+              <img
+                src={viewingPhoto.url}
+                alt="Doorstep snapshot"
+                className="max-h-[65vh] w-auto max-w-full rounded-xl object-contain shadow-2xl border border-white/10"
+              />
+            </div>
+
+            {/* Modal Footer */}
+            {viewingPhoto.note && (
+              <div className="px-5 py-3 border-t border-white/10 bg-slate-950/80 text-xs text-slate-300">
+                <span className="font-semibold text-slate-400">Note: </span>
+                {viewingPhoto.note}
+              </div>
+            )}
           </div>
         </div>,
         document.body

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye, Send, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
+import DoorbellCameraWidget from '../components/DoorbellCameraWidget';
 
 /* ── Display schemas: which fields to show on the public page ─────── */
 const PUBLIC_SCHEMAS = {
@@ -645,8 +646,27 @@ export default function TagView() {
           );
         })}
 
-        {/* Contact Options */}
-        {(() => {
+        {/* Contact Options / Doorbell Console */}
+        {tag.type === 'doorbell' ? (
+          <div className="space-y-4">
+            <DoorbellCameraWidget 
+              tag={tag} 
+              profile={profile} 
+              onMessageSent={() => setMsgSent(true)} 
+            />
+            {profile?.whatsapp_number && (
+              <div className="text-center pt-1">
+                <button 
+                  onClick={handleWhatsApp}
+                  className="text-xs font-semibold text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <MessageSquare size={14} className="text-emerald-500" />
+                  Prefer to chat directly with resident on WhatsApp
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (() => {
           const pref = tag.contact_preference || 'whatsapp';
           const showWhatsApp = pref === 'whatsapp' || pref === 'both';
           const showChat = pref === 'chat' || pref === 'both';

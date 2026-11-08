@@ -5,7 +5,7 @@ import {
   ArrowLeft, Save, CheckCircle, AlertCircle,
   Tag, Baby, KeySquare, Bell, CarFront, Hotel,
   Dog, Stethoscope, Home, Wifi, Clock,
-  Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud,
+  Hash, Palette, Info, User, Building2, MapPin, X, UploadCloud, Camera,
   Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, Laptop, Key,
   Plus, Trash2, Lock, Sparkles, Crown, Link2,
   FileText, Mail, Type, AppWindow, MessageSquareText, Phone
@@ -763,6 +763,19 @@ export default function TagEditor() {
                 const section = tab.data;
                 return (
                   <div key={tab.id} className="glass-card p-6 animate-in fade-in zoom-in-95 duration-200">
+                    {tag.type === 'doorbell' && tab.id === 'sec-0' && (
+                      <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200/80 flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                          <Camera size={18} />
+                        </div>
+                        <div className="text-xs">
+                          <p className="font-bold text-violet-900 mb-0.5">✨ Smart Camera Doorbell Active</p>
+                          <p className="text-violet-700 leading-relaxed">
+                            Visitors who scan this QR tag can tap 1-touch to ring your bell with an instant audio chime, and optionally snap a selfie or delivery package photo. All doorbell rings and photos arrive instantly in your Dashboard Messages.
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <h2 className={`text-sm font-bold uppercase tracking-widest mb-5 ${clr.text}`}>
                       {section.title}
                     </h2>
