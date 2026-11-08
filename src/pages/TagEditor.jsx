@@ -11,6 +11,7 @@ import {
   FileText, Mail, Type, AppWindow, MessageSquareText, Phone
 } from 'lucide-react';
 import PhoneInput from '../components/PhoneInput';
+import SEO from '../components/SEO';
 
 
 /* ─── Schema: one entry per tag type ─────────────────────────────────── */
@@ -695,6 +696,7 @@ export default function TagEditor() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <SEO title="Edit QR Tag | GetURQR" noindex={true} />
       {/* Back */}
       <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
         <ArrowLeft size={16} /> Back to Dashboard

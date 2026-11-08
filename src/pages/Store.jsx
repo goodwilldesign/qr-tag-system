@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Star, Package, Truck, Shield, ChevronRight, Check, QrCode } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 /* ── Product Catalogue ─────────────────────────────────── */
 const PRODUCTS = [
@@ -493,94 +494,77 @@ export default function Store() {
   // Dynamic categories from actual products
   const activeCategories = ['All', ...new Set(dbProducts.map(p => p.category))];
 
-  // ── SEO: inject JSON-LD schema + meta tags ───────────────
-  useEffect(() => {
-    const prevTitle = document.title;
-    document.title = 'GetURQR Store — Premium QR Tags, Stickers & Accessories India';
-
-    // Meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) { metaDesc = document.createElement('meta'); metaDesc.name = 'description'; document.head.appendChild(metaDesc); }
-    const prevDesc = metaDesc.content;
-    metaDesc.content = 'Buy premium QR tags, stickers, T-shirts, wristbands and luggage tags from GetURQR. Free delivery across India. Secure Razorpay payments. Starting at ₹199.';
-
-    // JSON-LD Schema
-    const schema = {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          '@id': 'https://geturqr.com/#organization',
-          name: 'GetURQR',
-          url: 'https://geturqr.com',
-          logo: 'https://geturqr.com/logo.png',
-          contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: 'store@geturqr.com', areaServed: 'IN' },
-        },
-        {
-          '@type': 'ItemList',
-          name: 'GetURQR Store — Premium QR Accessories',
-          description: 'Premium QR-enabled tags, stickers, apparel and accessories. Free delivery across India.',
-          numberOfItems: PRODUCTS.length,
-          itemListElement: PRODUCTS.map((product, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
-            item: {
-              '@type': 'Product',
-              name: product.name,
-              description: product.description,
-              image: `https://geturqr.com/products/${product.id}.jpg`,
-              brand: { '@type': 'Brand', name: 'GetURQR' },
-              offers: {
-                '@type': 'Offer',
-                priceCurrency: 'INR',
-                price: product.price,
-                priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
-                availability: 'https://schema.org/InStock',
-                itemCondition: 'https://schema.org/NewCondition',
-                seller: { '@type': 'Organization', name: 'GetURQR' },
-                shippingDetails: {
-                  '@type': 'OfferShippingDetails',
-                  shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'INR' },
-                  deliveryTime: { '@type': 'ShippingDeliveryTime', businessDays: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'] }, handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' }, transitTime: { '@type': 'QuantitativeValue', minValue: 3, maxValue: 7, unitCode: 'DAY' } },
-                  shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'IN' },
-                },
+  // ── SEO: Schema.org structured data ─────────────────────────
+  const storeSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://geturqr.com/#organization',
+        name: 'GetURQR',
+        url: 'https://geturqr.com',
+        logo: 'https://geturqr.com/pwa-512x512.png',
+        contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', email: 'store@geturqr.com', areaServed: 'IN' },
+      },
+      {
+        '@type': 'ItemList',
+        name: 'GetURQR Store — Premium QR Accessories',
+        description: 'Premium QR-enabled tags, stickers, apparel and accessories. Free delivery across India.',
+        numberOfItems: PRODUCTS.length,
+        itemListElement: PRODUCTS.map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Product',
+            name: product.name,
+            description: product.description,
+            image: `https://geturqr.com/products/${product.id}.jpg`,
+            brand: { '@type': 'Brand', name: 'GetURQR' },
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'INR',
+              price: product.price,
+              priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+              availability: 'https://schema.org/InStock',
+              itemCondition: 'https://schema.org/NewCondition',
+              seller: { '@type': 'Organization', name: 'GetURQR' },
+              shippingDetails: {
+                '@type': 'OfferShippingDetails',
+                shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'INR' },
+                deliveryTime: { '@type': 'ShippingDeliveryTime', businessDays: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'] }, handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' }, transitTime: { '@type': 'QuantitativeValue', minValue: 3, maxValue: 7, unitCode: 'DAY' } },
+                shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'IN' },
               },
-              aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', reviewCount: '124' },
             },
-          })),
-        },
-        {
-          '@type': 'WebPage',
-          '@id': 'https://geturqr.com/store',
-          url: 'https://geturqr.com/store',
-          name: 'GetURQR Store — Premium QR Tags & Accessories',
-          isPartOf: { '@id': 'https://geturqr.com/#organization' },
-          breadcrumb: {
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://geturqr.com' },
-              { '@type': 'ListItem', position: 2, name: 'Store', item: 'https://geturqr.com/store' },
-            ],
+            aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', reviewCount: '124' },
           },
+        })),
+      },
+      {
+        '@type': 'WebPage',
+        '@id': 'https://geturqr.com/store',
+        url: 'https://geturqr.com/store',
+        name: 'GetURQR Store — Premium QR Tags & Accessories',
+        isPartOf: { '@id': 'https://geturqr.com/#organization' },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://geturqr.com' },
+            { '@type': 'ListItem', position: 2, name: 'Store', item: 'https://geturqr.com/store' },
+          ],
         },
-      ],
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.id = 'store-jsonld';
-    script.textContent = JSON.stringify(schema);
-    document.head.appendChild(script);
-
-    return () => {
-      document.title = prevTitle;
-      metaDesc.content = prevDesc;
-      document.getElementById('store-jsonld')?.remove();
-    };
-  }, []);
+      },
+    ],
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8">
+      <SEO
+        title="GetURQR Store — Premium QR Tags, Stickers & Accessories India"
+        description="Buy premium QR tags, stickers, T-shirts, wristbands and luggage tags from GetURQR. Free delivery across India. Secure Razorpay payments. Starting at ₹199."
+        keywords="buy QR tag, metal pet tag, QR stickers India, smart luggage tag, waterproof QR tag"
+        canonical="https://geturqr.com/store"
+        jsonLd={storeSchema}
+      />
       {/* Header */}
       <div className="text-center py-8">
         <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 px-3 py-1 rounded-full uppercase tracking-widest">GetURQR Store</span>

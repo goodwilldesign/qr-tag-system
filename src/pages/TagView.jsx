@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye, Send, CheckCircle2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 /* ── Display schemas: which fields to show on the public page ─────── */
 const PUBLIC_SCHEMAS = {
@@ -547,6 +548,7 @@ export default function TagView() {
 
   return (
     <div className={`flex flex-col items-center py-6 px-4 min-h-[100vh] ${isLost ? 'bg-red-50' : 'bg-slate-50'}`}>
+      <SEO title={tag?.title ? `${tag.title} | GetURQR` : 'Scan QR Tag | GetURQR'} noindex={true} />
       <div className="w-full max-w-md space-y-4">
 
         {/* LOST BANNER */}

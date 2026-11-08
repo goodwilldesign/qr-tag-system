@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 import {
   LayoutDashboard, ShoppingBag, FileText, Users, Settings,
   QrCode, LogOut, ChevronRight, Shield, Menu, X, Package, Image, Ticket, Megaphone
@@ -104,6 +105,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
+      <SEO title="Admin Console | GetURQR" noindex={true} />
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-20 bg-black/30 lg:hidden" onClick={() => setSidebarOpen(false)} />

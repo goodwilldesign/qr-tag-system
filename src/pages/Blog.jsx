@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BookOpen, ArrowLeft, Share2, Clock, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 // Render HTML content from TipTap editor
 function PostContent({ html }) {
@@ -54,45 +55,46 @@ export default function Blog() {
     }
   }, [slug, posts]);
 
-  // SEO
   useEffect(() => {
-    document.title = activePost
-      ? `${activePost.title} - GetURQR Blog`
-      : 'GetURQR Blog - Modern QR Safety Insights';
-
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) { metaDesc = document.createElement('meta'); metaDesc.name = 'description'; document.head.appendChild(metaDesc); }
-    metaDesc.content = activePost?.seo_description || activePost?.excerpt
-      || 'Read the latest guides and feature updates about securing your family, property, and luggage using GetURQR smart QR tags.';
-
-    const scriptId = 'blog-schema-jsonld';
-    let schema = document.getElementById(scriptId);
-    if (!schema) { schema = document.createElement('script'); schema.id = scriptId; schema.type = 'application/ld+json'; document.head.appendChild(schema); }
-
-    schema.textContent = JSON.stringify(activePost ? {
-      '@context': 'https://schema.org', '@type': 'BlogPosting',
-      headline: activePost.seo_title || activePost.title,
-      image: activePost.cover_image_url,
-      datePublished: activePost.created_at,
-      description: activePost.seo_description || activePost.excerpt,
-      author: { '@type': 'Organization', name: 'GetURQR' }
-    } : {
-      '@context': 'https://schema.org', '@type': 'Blog',
-      name: 'GetURQR Blog',
-      blogPost: posts.map(p => ({ '@type': 'BlogPosting', headline: p.title, image: p.cover_image_url, datePublished: p.created_at }))
-    });
-
     window.scrollTo(0, 0);
-    return () => { if (schema) schema.remove(); };
-  }, [activePost, posts]);
+  }, [activePost]);
 
   // ── Single Post View ──────────────────────────────────────
   if (activePost) {
     const related = posts.filter(p => p.id !== activePost.id).slice(0, 3);
     const readTime = Math.max(1, Math.ceil((activePost.content?.split(' ').length || 0) / 200)) + ' min read';
 
+    const postSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: activePost.meta_title || activePost.title,
+      image: activePost.featured_image_url || activePost.cover_image_url,
+      datePublished: activePost.publish_date || activePost.created_at,
+      dateModified: activePost.updated_at || activePost.created_at,
+      description: activePost.meta_description || activePost.seo_description || activePost.excerpt,
+      author: { '@type': 'Organization', name: 'GetURQR' },
+      publisher: {
+        '@type': 'Organization',
+        name: 'GetURQR',
+        logo: { '@type': 'ImageObject', url: 'https://geturqr.com/pwa-512x512.png' }
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://geturqr.com/blog/${activePost.slug}`
+      }
+    };
+
     return (
       <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-16">
+        <SEO
+          title={`${activePost.meta_title || activePost.title} — GetURQR Blog`}
+          description={activePost.meta_description || activePost.seo_description || activePost.excerpt || 'Read this article on GetURQR Blog.'}
+          keywords={activePost.focus_keyword || 'QR code safety, smart tags, digital QR tag'}
+          canonical={`https://geturqr.com/blog/${activePost.slug}`}
+          ogType="article"
+          ogImage={activePost.featured_image_url || activePost.cover_image_url || 'https://geturqr.com/pwa-512x512.png'}
+          jsonLd={postSchema}
+        />
         <button onClick={() => navigate('/blog')}
           className="flex items-center gap-2 text-slate-500 hover:text-violet-600 font-semibold transition-colors mt-8">
           <ArrowLeft size={20} /> Back to all articles
@@ -164,9 +166,31 @@ export default function Blog() {
     );
   }
 
+  const blogListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'GetURQR Blog',
+    description: 'Insights and guides about smart QR tags, pet safety, lost & found, luggage, and vehicle tags.',
+    url: 'https://geturqr.com/blog',
+    blogPost: posts.map(p => ({
+      '@type': 'BlogPosting',
+      headline: p.title,
+      image: p.featured_image_url || p.cover_image_url,
+      datePublished: p.publish_date || p.created_at,
+      url: `https://geturqr.com/blog/${p.slug}`
+    }))
+  };
+
   // ── Grid / Main View ──────────────────────────────────────
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-16 px-4 sm:px-6 lg:px-8">
+      <SEO
+        title="GetURQR Blog — Smart QR Safety Insights, Guides & Updates"
+        description="Discover how smart digital QR tags are revolutionizing safety, convenience, and privacy for families, pets, luggage, hosts, and travelers."
+        keywords="QR code safety, pet tags, luggage tags, smart QR codes blog, lost and found guides"
+        canonical="https://geturqr.com/blog"
+        jsonLd={blogListSchema}
+      />
       <div className="text-center space-y-4 py-12 md:py-20 bg-gradient-to-b from-violet-50/50 to-transparent rounded-[3rem] mt-6">
         <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">The GetURQR Blog</h1>
         <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto px-4">

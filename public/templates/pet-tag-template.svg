@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" width="800" height="1200">
+  <defs>
+    <linearGradient id="petBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb" />
+      <stop offset="100%" stop-color="#fef3c7" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#78350f" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Outer Card Background -->
+  <rect x="24" y="24" width="752" height="1152" rx="40" fill="url(#petBg)" stroke="#fde68a" stroke-width="4" />
+
+  <!-- Header Banner -->
+  <rect x="56" y="56" width="688" height="180" rx="28" fill="url(#amberGrad)" filter="url(#shadow)" />
+  <circle cx="120" cy="146" r="44" fill="#ffffff" fill-opacity="0.2" />
+  <text x="120" y="162" font-family="system-ui, sans-serif" font-size="48" font-weight="900" fill="#ffffff" text-anchor="middle">🐶</text>
+  <text x="190" y="126" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#ffffff" letter-spacing="1">IF I AM LOST</text>
+  <text x="190" y="172" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#fef3c7">PLEASE SCAN MY TAG</text>
+
+  <!-- Subheading Info -->
+  <text x="400" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="600" fill="#78350f" text-anchor="middle">
+    Scan with your phone camera to reach my owner directly
+  </text>
+  <text x="400" y="324" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#b45309" text-anchor="middle">
+    Instant WhatsApp &amp; Emergency Dial &bull; No App Needed
+  </text>
+
+  <!-- QR Target Zone Box (Center: x=400, y=624, size=368) -->
+  <rect x="180" y="404" width="440" height="440" rx="36" fill="#ffffff" stroke="#fcd34d" stroke-width="4" filter="url(#shadow)" />
+  <rect x="196" y="420" width="408" height="408" rx="28" fill="#fafaf9" stroke="#fef3c7" stroke-width="2" />
+
+  <!-- Corner Guide Reticles for QR Placement -->
+  <path d="M 220 470 L 220 444 A 4 4 0 0 1 224 440 L 250 440" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round" />
+  <path d="M 580 470 L 580 444 A 4 4 0 0 0 576 440 L 550 440" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round" />
+  <path d="M 220 778 L 220 804 A 4 4 0 0 0 224 808 L 250 808" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round" />
+  <path d="M 580 778 L 580 804 A 4 4 0 0 1 576 808 L 550 808" stroke="#d97706" stroke-width="6" fill="none" stroke-linecap="round" />
+
+  <!-- Reward Badge -->
+  <rect x="230" y="880" width="340" height="64" rx="32" fill="#d97706" fill-opacity="0.12" stroke="#d97706" stroke-width="2" />
+  <text x="400" y="921" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#92400e" text-anchor="middle">
+    ✨ REWARD FOR SAFE RETURN ✨
+  </text>
+
+  <!-- Medical & Vet Notice -->
+  <text x="400" y="990" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#78350f" text-anchor="middle">
+    Dietary, allergy, and vet clinic details on profile
+  </text>
+
+  <!-- Footer Branding -->
+  <line x1="100" y1="1040" x2="700" y2="1040" stroke="#fde68a" stroke-width="2" stroke-dasharray="8 8" />
+  <text x="400" y="1086" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#1c1917" text-anchor="middle">
+    GetURQR.com
+  </text>
+  <text x="400" y="1116" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#a8a29e" text-anchor="middle">
+    Smart Life &amp; Pet Safety Tags &bull; Always Dynamic
+  </text>
+</svg>

@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Plus, Tag, CarFront, Hotel, Bell, Baby, KeySquare, Trash2, Download, Package, QrCode, Pencil, Eye, MapPin, AlertTriangle, CheckCircle2, Activity, Clock, Smartphone, Calendar, MessageSquare, Briefcase, Leaf, Wallet, BarChart2, Link2, ArrowRight, FileText, Mail, Type, AppWindow, MessageSquareText, Phone } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import TagPrintModal from '../components/TagPrintModal';
+import SEO from '../components/SEO';
 
 const TAG_TYPES = [
   { id: 'dog',      label: 'Pet Tag',   icon: <Tag size={18} /> },
@@ -292,6 +293,7 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
+      <SEO title="User Dashboard | GetURQR" noindex={true} />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>

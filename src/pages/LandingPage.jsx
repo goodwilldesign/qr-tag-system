@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { QrCode, Shield, Smartphone, Zap, CheckCircle2, Package, Sparkles, ArrowRight, ChevronDown, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import ParticleCanvas from '../components/ParticleCanvas';
+import SEO from '../components/SEO';
 
 
 const LANDING_BLOG_PREVIEW = [
@@ -158,8 +159,28 @@ export default function LandingPage() {
 
   const [openFaq, setOpenFaq] = useState(null);
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(item => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a
+      }
+    }))
+  };
+
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-slate-50">
+      <SEO
+        title="GetURQR — Smart QR Tags for Pets, Luggage, Vehicles & Valuables"
+        description="Create smart digital QR tags with instant WhatsApp chat connectivity. Secure pets, luggage, parking, and home rentals without exposing your phone number."
+        keywords="smart QR tags, pet QR tags, luggage tags, vehicle parking QR, lost and found QR, WhatsApp QR tag"
+        canonical="https://geturqr.com"
+        jsonLd={faqSchema}
+      />
 
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative min-h-[90vh] md:min-h-screen w-full flex flex-col justify-center overflow-hidden bg-white">

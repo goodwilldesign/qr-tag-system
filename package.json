@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "supabase:keepalive": "node scripts/supabase-keepalive.mjs"
+    "supabase:keepalive": "node scripts/supabase-keepalive.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.2",

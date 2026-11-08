@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, ChevronUp, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight, Image as ImageIcon, X, Share2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const TABS = [
   { id: 'URL', icon: LinkIcon, title: 'Enter your URL', placeholder: 'https://example.com/' },
@@ -101,6 +102,12 @@ export default function LandingPage2() {
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-[#f0f4f8] font-sans min-h-screen relative">
+      <SEO
+        title="GetURQR — Free Custom QR Code Generator & Smart Tags"
+        description="Generate custom QR codes instantly with logos, colors, and frames. Create smart tags for pets, luggage, keys, and parking with direct WhatsApp connection."
+        keywords="QR code generator, custom QR code, free QR generator, QR code with logo, smart pet tag, WhatsApp QR code"
+        canonical="https://geturqr.com"
+      />
       
       {/* Background Geometric Shapes */}
       <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#002b80] rounded-full mix-blend-multiply opacity-90 blur-[2px] pointer-events-none"></div>
