@@ -18,6 +18,9 @@ export default function Login() {
     setIsSignUp(location.pathname === '/signup');
   }, [location.pathname]);
 
+  const searchParams = new URLSearchParams(location.search);
+  const returnUrl = searchParams.get('returnUrl') || '/dashboard';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); setInfo('');
@@ -30,7 +33,7 @@ export default function Login() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate('/dashboard');
+        navigate(returnUrl);
       }
     } catch (err) {
       setError(err.message);

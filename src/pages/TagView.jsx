@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { QrCode, MessageSquare, AlertCircle, Phone, MapPin, Home, Eye, Send, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
 import DoorbellCameraWidget from '../components/DoorbellCameraWidget';
+import UnclaimedTagClaimView from '../components/UnclaimedTagClaimView';
 
 /* ── Display schemas: which fields to show on the public page ─────── */
 const PUBLIC_SCHEMAS = {
@@ -268,8 +269,10 @@ function DetailRow({ label, value, type }) {
 
 export default function TagView() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [tag, setTag] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -288,6 +291,9 @@ export default function TagView() {
   useEffect(() => {
     const fetchTag = async () => {
       try {
+        const { data: { session: s } } = await supabase.auth.getSession();
+        setSession(s);
+
         const { data: tagData, error: e } = await supabase
           .from('tags').select('*').eq('id', id).single();
         if (e || !tagData) throw new Error('Tag not found.');
@@ -297,13 +303,19 @@ export default function TagView() {
           throw new Error(`expired::${tagData.expires_at}`);
         }
         setTag(tagData);
+
+        // If tag is not claimed yet, skip owner checks and finder scan logging
+        if (tagData.is_claimed === false || !tagData.user_id) {
+          setLoading(false);
+          return;
+        }
+
         const { data: profileData } = await supabase
           .from('profiles').select('full_name, whatsapp_number').eq('id', tagData.user_id).single();
         if (profileData) setProfile(profileData);
 
         // Only log scan if viewer is NOT the tag owner
-        const { data: { session } } = await supabase.auth.getSession();
-        const isOwner = session?.user?.id === tagData.user_id;
+        const isOwner = s?.user?.id === tagData.user_id;
         if (!isOwner) {
           logScan(tagData.id);
         }
@@ -419,6 +431,21 @@ export default function TagView() {
     );
   }
 
+
+  // If tag is pre-generated and unclaimed, show the activation experience!
+  const isUnclaimed = tag && (tag.is_claimed === false || !tag.user_id);
+  if (isUnclaimed) {
+    return (
+      <div className="flex flex-col items-center py-8 sm:py-12 px-4 min-h-[100vh] bg-slate-50">
+        <SEO title="Activate Your Smart QR Tag | GetURQR" noindex={true} />
+        <UnclaimedTagClaimView
+          tag={tag}
+          session={session}
+          onClaimSuccess={(claimedTag) => navigate(`/tag/edit/${claimedTag.id}`)}
+        />
+      </div>
+    );
+  }
 
   const schema = PUBLIC_SCHEMAS[tag.type] || null;
   const isLost = tag.type === 'rental' ? false : !!tag.is_lost;

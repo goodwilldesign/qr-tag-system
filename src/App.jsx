@@ -34,6 +34,7 @@ import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminSupport from './pages/admin/AdminSupport';
 import AdminTemplates from './pages/admin/AdminTemplates';
+import AdminBatchTags from './pages/admin/AdminBatchTags';
 import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 import AdminBroadcasts from './pages/admin/AdminBroadcasts';
 
@@ -113,6 +114,7 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="support" element={<AdminSupport />} />
           <Route path="templates" element={<AdminTemplates />} />
+          <Route path="batch-tags" element={<AdminBatchTags />} />
           <Route path="promo-codes" element={<AdminPromoCodes />} />
           <Route path="broadcasts" element={<AdminBroadcasts />} />
           <Route path="settings" element={<AdminSettings />} />

@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { path: '/admin/support', label: 'Support Tickets', icon: FileText },
   { path: '/admin/users', label: 'Users', icon: Users },
   { path: '/admin/templates', label: 'Print Templates', icon: Image },
+  { path: '/admin/batch-tags', label: 'Pre-Printed Tags', icon: QrCode },
   { path: '/admin/promo-codes', label: 'Promo Codes', icon: Ticket },
   { path: '/admin/broadcasts', label: 'Broadcasts', icon: Megaphone },
   { path: '/admin/settings', label: 'Site Settings', icon: Settings },
