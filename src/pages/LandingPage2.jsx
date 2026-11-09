@@ -101,7 +101,7 @@ export default function LandingPage2() {
   }
 
   return (
-    <div className="flex flex-col w-full overflow-x-hidden bg-[#f0f4f8] font-sans min-h-screen relative">
+    <div className="flex flex-col w-full overflow-x-hidden bg-gradient-to-b from-[#f4f7fb] via-[#edf2f8] to-[#f8fbff] font-sans min-h-screen relative">
       <SEO
         title="GetURQR — Free Custom QR Code Generator & Smart Tags"
         description="Generate custom QR codes instantly with logos, colors, and frames. Create smart tags for pets, luggage, keys, and parking with direct WhatsApp connection."
@@ -109,27 +109,46 @@ export default function LandingPage2() {
         canonical="https://geturqr.com"
       />
       
-      {/* Background Geometric Shapes */}
-      <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#002b80] rounded-full mix-blend-multiply opacity-90 blur-[2px] pointer-events-none"></div>
-      <div className="absolute top-[30%] right-[5%] w-[15vw] h-[15vw] bg-[#38b6ff] rounded-full mix-blend-multiply opacity-90 blur-[1px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-5%] w-[30vw] h-[30vw] bg-[#ff9100] rounded-full mix-blend-multiply opacity-90 blur-[2px] pointer-events-none"></div>
+      {/* ── Background Atmosphere & Crisp Vector Accents ── */}
+      {/* 1. Subtle high-tech dot matrix pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
+
+      {/* 2. Soft atmospheric ambient lighting (diffused blur-3xl mesh - no fuzzy 1px/2px raster artifacts) */}
+      <div className="absolute -top-32 -right-32 w-[550px] h-[550px] bg-gradient-to-bl from-sky-400/20 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-[550px] h-[550px] bg-gradient-to-tr from-indigo-500/15 via-blue-400/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 -right-24 w-[420px] h-[420px] bg-gradient-to-l from-[#38b6ff]/15 via-indigo-200/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+      {/* 3. Razor-sharp vector geometric accents (vector SVG, 100% crisp on any DPI, zero blur) */}
+      <svg className="absolute top-[26%] -right-16 w-80 h-80 text-[#38b6ff]/20 pointer-events-none hidden md:block" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 6" />
+        <circle cx="100" cy="100" r="65" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="100" cy="100" r="40" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+      </svg>
+      <svg className="absolute bottom-[10%] -left-16 w-72 h-72 text-[#002b80]/15 pointer-events-none hidden md:block" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="1.5" strokeDasharray="8 8" />
+        <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="1.5" />
+      </svg>
 
       {/* ── Hero Generator Section ───────────────────── */}
-      <section className="relative z-10 w-full flex-1 flex flex-col items-center pt-20 sm:pt-24 pb-12 sm:pb-16 px-3 sm:px-6 lg:px-8">
+      {/* min-h-[100dvh] guarantees the hero occupies the entire screen fold on desktop, eliminating any bottom white strip peeking through */}
+      <section className="relative z-10 w-full min-h-[100dvh] flex flex-col justify-between items-center pt-20 sm:pt-24 pb-4 px-3 sm:px-6 lg:px-8">
         
-        {/* Main Card */}
-        <div className="bg-[#f8fbff] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1100px] mx-auto p-3 sm:p-5 md:p-6 shadow-[0_20px_50px_-12px_rgba(0,43,128,0.2)] border border-white/60 flex flex-col md:flex-row gap-4 sm:gap-6 relative overflow-hidden backdrop-blur-xl">
+        {/* Top spacer for clean vertical balance */}
+        <div className="h-1 sm:h-2" aria-hidden="true" />
+
+        {/* Main Generator Card */}
+        <div className="bg-[#f8fbff]/95 rounded-3xl lg:rounded-[2.5rem] w-full max-w-[1140px] mx-auto p-4 sm:p-6 lg:p-8 shadow-[0_25px_60px_-15px_rgba(0,43,128,0.18)] border border-white/80 flex flex-col lg:flex-row gap-6 lg:gap-8 relative overflow-hidden backdrop-blur-2xl my-auto">
            
-           {/* Left Sidebar (Nav) */}
-           <div className="w-full md:w-auto flex flex-row md:flex-col items-center justify-start md:py-4 px-1 sm:px-2 z-10">
-              <div className="flex md:flex-col gap-2 sm:gap-3 bg-white rounded-2xl md:rounded-full p-1.5 sm:p-2 shadow-sm border border-slate-100 overflow-x-auto md:overflow-visible w-full md:w-auto hide-scrollbar no-scrollbar">
+           {/* Left Sidebar (Category Navigation) */}
+           <div className="w-full lg:w-auto flex flex-row lg:flex-col items-center justify-start lg:py-4 px-1 z-10">
+              <div className="flex lg:flex-col gap-2 sm:gap-2.5 bg-white rounded-2xl lg:rounded-full p-1.5 sm:p-2 shadow-sm border border-slate-100 overflow-x-auto lg:overflow-visible w-full lg:w-auto hide-scrollbar no-scrollbar">
                 {TABS.map((tab) => {
                   const isActive = activeTab.id === tab.id;
                   return (
                     <button 
                       key={tab.id} 
                       onClick={() => handleTabChange(tab)}
-                      className={`relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shrink-0 ${isActive ? 'bg-[#002b80] text-white shadow-lg shadow-[#002b80]/40 scale-105 md:scale-110 z-10' : 'text-slate-400 hover:text-[#002b80] hover:bg-slate-50'}`}
+                      className={`relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shrink-0 ${isActive ? 'bg-[#002b80] text-white shadow-lg shadow-[#002b80]/40 scale-105 lg:scale-110 z-10' : 'text-slate-400 hover:text-[#002b80] hover:bg-slate-50'}`}
                       title={tab.id}
                     >
                        <tab.icon className={`w-5 h-5 ${isActive ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -139,12 +158,12 @@ export default function LandingPage2() {
               </div>
            </div>
            
-           {/* Middle Pane (Input) */}
-           <div className="flex-1 flex flex-col justify-center px-2 sm:px-6 md:px-12 py-3 sm:py-6 md:py-8 z-10">
-              <h2 className="text-2xl sm:text-3xl md:text-[2.75rem] font-bold text-[#002b80] mb-1 sm:mb-2 tracking-tight">{activeTab.title}</h2>
-              <p className="text-xs sm:text-sm text-slate-400 mb-6 sm:mb-8 md:mb-12 font-medium">Your QR code will be generated automatically</p>
+           {/* Middle Pane (Input Controls) */}
+           <div className="flex-1 min-w-0 flex flex-col justify-center px-1 sm:px-4 lg:px-8 xl:px-12 py-2 lg:py-6 z-10">
+              <h2 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-bold text-[#002b80] mb-1 sm:mb-2 tracking-tight">{activeTab.title}</h2>
+              <p className="text-xs sm:text-sm text-slate-400 mb-6 lg:mb-8 font-medium">Your QR code will be generated automatically</p>
               
-              <div className="w-full max-w-full md:max-w-md">
+              <div className="w-full max-w-full lg:max-w-md xl:max-w-lg">
                 {activeTab.signupOnly ? (
                   <div className="bg-white rounded-2xl sm:rounded-3xl border-2 border-dashed border-slate-200 p-6 sm:p-8 text-center flex flex-col items-center justify-center group hover:border-[#38b6ff] transition-colors cursor-pointer" onClick={() => navigate('/signup')}>
                     <div className="w-12 h-12 bg-[#38b6ff] rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-[#38b6ff]/30 group-hover:scale-110 transition-transform">
@@ -156,39 +175,39 @@ export default function LandingPage2() {
                     </div>
                   </div>
                 ) : activeTab.isEmail ? (
-                  <div className="flex flex-col gap-4 sm:gap-6">
+                  <div className="flex flex-col gap-3.5 sm:gap-4">
                     <input 
                       type="email" 
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Enter email address" 
-                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] focus:ring-2 focus:ring-[#002b80]/15 shadow-sm transition-all" 
                     />
                     <input 
                       type="text" 
                       value={emailSubject}
                       onChange={(e) => setEmailSubject(e.target.value)}
                       placeholder="Enter email subject" 
-                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] focus:ring-2 focus:ring-[#002b80]/15 shadow-sm transition-all" 
                     />
                     <textarea 
                       value={emailBody}
                       onChange={(e) => setEmailBody(e.target.value)}
                       placeholder="Enter your message" 
-                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-24"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] focus:ring-2 focus:ring-[#002b80]/15 shadow-sm transition-all resize-none h-24"
                     />
-                    <button className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-[#002b80]/20 self-start mt-2 sm:mt-4 flex items-center gap-2 transition-transform hover:-translate-y-0.5 w-full sm:w-auto justify-center">
+                    <button className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-[#002b80]/20 self-start mt-2 sm:mt-3 flex items-center gap-2 transition-transform hover:-translate-y-0.5 w-full sm:w-auto justify-center">
                       <QrCode size={18} /> GENERATE QR CODE
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-4 sm:gap-6">
+                  <div className="flex flex-col gap-3.5 sm:gap-4">
                     {activeTab.id === 'Text' ? (
                       <textarea 
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={activeTab.placeholder} 
-                        className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-28 sm:h-32"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] focus:ring-2 focus:ring-[#002b80]/15 shadow-sm transition-all resize-none h-28 sm:h-32"
                       />
                     ) : (
                       <input 
@@ -196,7 +215,7 @@ export default function LandingPage2() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={activeTab.placeholder} 
-                        className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] focus:ring-2 focus:ring-[#002b80]/15 shadow-sm transition-all" 
                       />
                     )}
                   </div>
@@ -204,9 +223,9 @@ export default function LandingPage2() {
               </div>
            </div>
            
-           {/* Right Pane (Preview) */}
-           <div className="w-full md:w-[380px] bg-[#002b80] rounded-2xl sm:rounded-3xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 flex flex-col z-10 shrink-0">
-              <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center justify-center aspect-square mb-6 md:mb-8 relative group overflow-hidden shadow-xl shadow-black/10 max-w-[280px] sm:max-w-[320px] md:max-w-none mx-auto w-full">
+           {/* Right Pane (QR Preview & Customization) */}
+           <div className="w-full max-w-[360px] sm:max-w-[420px] lg:max-w-none lg:w-[350px] xl:w-[380px] mx-auto bg-[#002b80] rounded-2xl sm:rounded-3xl lg:rounded-[2rem] p-4 sm:p-6 lg:p-7 flex flex-col z-10 shrink-0 shadow-xl shadow-[#002b80]/15">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center justify-center aspect-square mb-5 lg:mb-6 relative group overflow-hidden shadow-xl shadow-black/10 max-w-[260px] sm:max-w-[300px] lg:max-w-none mx-auto w-full">
                  {activeTab.signupOnly ? (
                    <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-10">
                      <Lock className="w-10 h-10 text-slate-300" />
@@ -236,10 +255,10 @@ export default function LandingPage2() {
                  )}
               </div>
               
-              <div className="flex flex-col gap-3 mb-8">
+              <div className="flex flex-col gap-2.5 mb-6">
                  {/* Frame Panel */}
                  <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
-                   <button onClick={() => setExpandedPanel(expandedPanel === 'frame' ? null : 'frame')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'frame' ? null : 'frame')} className="w-full text-white py-3 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
                       FRAME {expandedPanel === 'frame' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
                    </button>
                    {expandedPanel === 'frame' && (
@@ -255,7 +274,7 @@ export default function LandingPage2() {
 
                  {/* Shape & Color Panel */}
                  <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
-                   <button onClick={() => setExpandedPanel(expandedPanel === 'color' ? null : 'color')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'color' ? null : 'color')} className="w-full text-white py-3 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
                       SHAPE & COLOR {expandedPanel === 'color' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
                    </button>
                    {expandedPanel === 'color' && (
@@ -269,7 +288,7 @@ export default function LandingPage2() {
 
                  {/* Logo Panel */}
                  <div className="flex flex-col bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all">
-                   <button onClick={() => setExpandedPanel(expandedPanel === 'logo' ? null : 'logo')} className="w-full text-white py-3.5 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
+                   <button onClick={() => setExpandedPanel(expandedPanel === 'logo' ? null : 'logo')} className="w-full text-white py-3 px-4 text-xs font-bold tracking-wide flex justify-between items-center hover:bg-white/5 transition-colors">
                       LOGO {expandedPanel === 'logo' ? <ChevronUp size={16} className="text-white/50" /> : <ChevronDown size={16} className="text-white/50" />}
                    </button>
                    {expandedPanel === 'logo' && (
@@ -286,7 +305,7 @@ export default function LandingPage2() {
                  </div>
               </div>
 
-              <div className="flex gap-2 sm:gap-3 mt-auto pt-2">
+              <div className="flex gap-2 sm:gap-3 mt-auto pt-1">
                  <button onClick={() => handleDownload('jpg')} className="flex-1 bg-[#38b6ff] hover:bg-[#2fa0e6] text-white py-3 sm:py-3.5 px-2 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-[#38b6ff]/30 transition-transform hover:-translate-y-0.5">
                    <Download size={15} /> JPG
                  </button>
@@ -304,16 +323,30 @@ export default function LandingPage2() {
                    } catch (err) {
                      console.error('Share failed:', err);
                    }
-                 }} className="w-11 h-11 sm:w-[52px] sm:h-[52px] bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl sm:rounded-full flex items-center justify-center shrink-0 transition-transform hover:-translate-y-0.5" title="Share">
+                 }} className="w-11 h-11 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl sm:rounded-full flex items-center justify-center shrink-0 transition-transform hover:-translate-y-0.5" title="Share">
                    <Share2 size={18} />
                  </button>
               </div>
            </div>
         </div>
+
+        {/* ── Desktop Scroll Cue (Clean, intentional indicator that eliminates the awkward bottom white strip) ── */}
+        <div className="pt-3 pb-1 flex flex-col items-center justify-center shrink-0">
+          <button 
+            onClick={() => document.getElementById('smart-tags-showcase')?.scrollIntoView({ behavior: 'smooth' })}
+            className="group flex flex-col items-center gap-1 text-slate-400 hover:text-[#002b80] transition-colors py-1 cursor-pointer focus:outline-none"
+            aria-label="Scroll to Smart Tags"
+          >
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-slate-400 group-hover:text-[#002b80] transition-colors">
+              Explore Smart Tags
+            </span>
+            <ChevronDown size={18} className="animate-bounce text-[#38b6ff] group-hover:text-[#002b80] transition-colors" />
+          </button>
+        </div>
       </section>
 
       {/* ── Smart Tags Showcase Section ───────────────────── */}
-      <section className="py-24 w-full bg-white relative z-10 border-t border-slate-100">
+      <section id="smart-tags-showcase" className="py-20 sm:py-24 w-full bg-gradient-to-b from-white via-slate-50/70 to-white relative z-10 border-t border-slate-200/60 shadow-inner">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#002b80] mb-4 tracking-tight">Go Beyond Generic QR Codes</h2>

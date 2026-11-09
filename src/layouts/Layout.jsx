@@ -83,9 +83,13 @@ export default function Layout() {
             {siteLogo ? (
               <img src={siteLogo} alt="Logo" className="h-8 w-auto object-contain" />
             ) : (
-              <QrCode className="h-6 w-6 text-violet-600" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#002b80] to-[#38b6ff] flex items-center justify-center text-white shadow-sm shadow-[#002b80]/20">
+                <QrCode className="h-4.5 w-4.5 text-white stroke-[2.2]" />
+              </div>
             )}
-            <span className={session ? 'hidden sm:inline' : ''}>GetURQR</span>
+            <span className={`font-black text-xl tracking-tight text-[#002b80] ${session ? 'hidden sm:inline' : ''}`}>
+              Get<span className="text-[#38b6ff]">UR</span>QR
+            </span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
