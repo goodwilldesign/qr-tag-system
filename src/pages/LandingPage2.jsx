@@ -115,25 +115,21 @@ export default function LandingPage2() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[30vw] h-[30vw] bg-[#ff9100] rounded-full mix-blend-multiply opacity-90 blur-[2px] pointer-events-none"></div>
 
       {/* ── Hero Generator Section ───────────────────── */}
-      <section className="relative z-10 w-full flex-1 flex flex-col items-center pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-10 w-full flex-1 flex flex-col items-center pt-20 sm:pt-24 pb-12 sm:pb-16 px-3 sm:px-6 lg:px-8">
         
         {/* Main Card */}
-        <div className="bg-[#f8fbff] rounded-[2.5rem] w-full max-w-[1100px] mx-auto p-4 md:p-6 shadow-[0_20px_50px_-12px_rgba(0,43,128,0.2)] border border-white/60 flex flex-col md:flex-row gap-6 relative overflow-hidden backdrop-blur-xl">
+        <div className="bg-[#f8fbff] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1100px] mx-auto p-3 sm:p-5 md:p-6 shadow-[0_20px_50px_-12px_rgba(0,43,128,0.2)] border border-white/60 flex flex-col md:flex-row gap-4 sm:gap-6 relative overflow-hidden backdrop-blur-xl">
            
            {/* Left Sidebar (Nav) */}
-           <div className="flex flex-row md:flex-col items-center gap-6 md:py-6 px-4 md:px-2 z-10">
-              <div className="w-10 h-10 flex items-center justify-center font-black text-2xl text-[#002b80] mb-0 md:mb-6 shrink-0">
-                G
-              </div>
-              
-              <div className="flex md:flex-col gap-3 bg-white rounded-full p-2 shadow-sm border border-slate-100 overflow-x-auto md:overflow-visible flex-1 md:flex-none">
+           <div className="w-full md:w-auto flex flex-row md:flex-col items-center justify-start md:py-4 px-1 sm:px-2 z-10">
+              <div className="flex md:flex-col gap-2 sm:gap-3 bg-white rounded-2xl md:rounded-full p-1.5 sm:p-2 shadow-sm border border-slate-100 overflow-x-auto md:overflow-visible w-full md:w-auto hide-scrollbar no-scrollbar">
                 {TABS.map((tab) => {
                   const isActive = activeTab.id === tab.id;
                   return (
                     <button 
                       key={tab.id} 
                       onClick={() => handleTabChange(tab)}
-                      className={`relative w-12 h-12 flex items-center justify-center rounded-full transition-all shrink-0 ${isActive ? 'bg-[#002b80] text-white shadow-lg shadow-[#002b80]/40 scale-110 z-10' : 'text-slate-400 hover:text-[#002b80] hover:bg-slate-50'}`}
+                      className={`relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shrink-0 ${isActive ? 'bg-[#002b80] text-white shadow-lg shadow-[#002b80]/40 scale-105 md:scale-110 z-10' : 'text-slate-400 hover:text-[#002b80] hover:bg-slate-50'}`}
                       title={tab.id}
                     >
                        <tab.icon className={`w-5 h-5 ${isActive ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -144,55 +140,55 @@ export default function LandingPage2() {
            </div>
            
            {/* Middle Pane (Input) */}
-           <div className="flex-1 flex flex-col justify-center px-4 md:px-12 py-8 z-10">
-              <h2 className="text-4xl md:text-[2.75rem] font-bold text-[#002b80] mb-2 tracking-tight">{activeTab.title}</h2>
-              <p className="text-sm text-slate-400 mb-12 font-medium">Your QR code will be generated automatically</p>
+           <div className="flex-1 flex flex-col justify-center px-2 sm:px-6 md:px-12 py-3 sm:py-6 md:py-8 z-10">
+              <h2 className="text-2xl sm:text-3xl md:text-[2.75rem] font-bold text-[#002b80] mb-1 sm:mb-2 tracking-tight">{activeTab.title}</h2>
+              <p className="text-xs sm:text-sm text-slate-400 mb-6 sm:mb-8 md:mb-12 font-medium">Your QR code will be generated automatically</p>
               
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-full md:max-w-md">
                 {activeTab.signupOnly ? (
-                  <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-8 text-center flex flex-col items-center justify-center group hover:border-[#38b6ff] transition-colors cursor-pointer" onClick={() => navigate('/signup')}>
+                  <div className="bg-white rounded-2xl sm:rounded-3xl border-2 border-dashed border-slate-200 p-6 sm:p-8 text-center flex flex-col items-center justify-center group hover:border-[#38b6ff] transition-colors cursor-pointer" onClick={() => navigate('/signup')}>
                     <div className="w-12 h-12 bg-[#38b6ff] rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-[#38b6ff]/30 group-hover:scale-110 transition-transform">
                       <UploadCloud className="w-6 h-6" />
                     </div>
-                    <p className="text-sm font-semibold text-[#002b80]">Upload any file <span className="text-slate-400 font-normal">(jpg, .pdf, .mp3, .docx, .pptx)</span></p>
+                    <p className="text-xs sm:text-sm font-semibold text-[#002b80]">Upload any file <span className="text-slate-400 font-normal">(jpg, .pdf, .mp3, .docx, .pptx)</span></p>
                     <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full border border-amber-200">
                       <Lock size={12} /> Sign up to unlock
                     </div>
                   </div>
                 ) : activeTab.isEmail ? (
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4 sm:gap-6">
                     <input 
                       type="email" 
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Enter email address" 
-                      className="w-full border-b border-slate-200 py-3 bg-transparent text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
                     />
                     <input 
                       type="text" 
                       value={emailSubject}
                       onChange={(e) => setEmailSubject(e.target.value)}
                       placeholder="Enter email subject" 
-                      className="w-full border-b border-slate-200 py-3 bg-transparent text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
                     />
                     <textarea 
                       value={emailBody}
                       onChange={(e) => setEmailBody(e.target.value)}
                       placeholder="Enter your message" 
-                      className="w-full border-b border-slate-200 py-3 bg-transparent text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-24"
+                      className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-24"
                     />
-                    <button className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-[#002b80]/20 self-start mt-4 flex items-center gap-2 transition-transform hover:-translate-y-0.5">
+                    <button className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-[#002b80]/20 self-start mt-2 sm:mt-4 flex items-center gap-2 transition-transform hover:-translate-y-0.5 w-full sm:w-auto justify-center">
                       <QrCode size={18} /> GENERATE QR CODE
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4 sm:gap-6">
                     {activeTab.id === 'Text' ? (
                       <textarea 
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={activeTab.placeholder} 
-                        className="w-full border-b border-slate-200 py-3 bg-transparent text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-32"
+                        className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors resize-none h-28 sm:h-32"
                       />
                     ) : (
                       <input 
@@ -200,7 +196,7 @@ export default function LandingPage2() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={activeTab.placeholder} 
-                        className="w-full border-b border-slate-200 py-3 bg-transparent text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
+                        className="w-full bg-white/70 sm:bg-transparent border border-slate-200 sm:border-0 sm:border-b sm:border-slate-200 rounded-xl sm:rounded-none px-3.5 sm:px-0 py-3 text-sm sm:text-base text-[#002b80] font-medium placeholder-slate-300 focus:outline-none focus:border-[#002b80] transition-colors" 
                       />
                     )}
                   </div>
@@ -209,8 +205,8 @@ export default function LandingPage2() {
            </div>
            
            {/* Right Pane (Preview) */}
-           <div className="w-full md:w-[380px] bg-[#002b80] rounded-[2rem] p-8 flex flex-col z-10 shrink-0">
-              <div className="bg-white rounded-2xl p-6 flex items-center justify-center aspect-square mb-8 relative group overflow-hidden shadow-xl shadow-black/10">
+           <div className="w-full md:w-[380px] bg-[#002b80] rounded-2xl sm:rounded-3xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 flex flex-col z-10 shrink-0">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center justify-center aspect-square mb-6 md:mb-8 relative group overflow-hidden shadow-xl shadow-black/10 max-w-[280px] sm:max-w-[320px] md:max-w-none mx-auto w-full">
                  {activeTab.signupOnly ? (
                    <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-10">
                      <Lock className="w-10 h-10 text-slate-300" />
@@ -290,12 +286,12 @@ export default function LandingPage2() {
                  </div>
               </div>
 
-              <div className="flex gap-3 mt-auto">
-                 <button onClick={() => handleDownload('jpg')} className="flex-1 bg-[#38b6ff] hover:bg-[#2fa0e6] text-white py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#38b6ff]/30 transition-transform hover:-translate-y-0.5">
-                   <Download size={16} /> JPG
+              <div className="flex gap-2 sm:gap-3 mt-auto pt-2">
+                 <button onClick={() => handleDownload('jpg')} className="flex-1 bg-[#38b6ff] hover:bg-[#2fa0e6] text-white py-3 sm:py-3.5 px-2 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-[#38b6ff]/30 transition-transform hover:-translate-y-0.5">
+                   <Download size={15} /> JPG
                  </button>
-                 <button onClick={() => handleDownload('png')} className="flex-1 bg-[#ff9100] hover:bg-[#e68200] text-white py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#ff9100]/30 transition-transform hover:-translate-y-0.5">
-                   <Download size={16} /> SVG/PNG
+                 <button onClick={() => handleDownload('png')} className="flex-1 bg-[#ff9100] hover:bg-[#e68200] text-white py-3 sm:py-3.5 px-2 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-[#ff9100]/30 transition-transform hover:-translate-y-0.5">
+                   <Download size={15} /> SVG/PNG
                  </button>
                  <button onClick={async () => {
                    try {
@@ -308,8 +304,8 @@ export default function LandingPage2() {
                    } catch (err) {
                      console.error('Share failed:', err);
                    }
-                 }} className="w-[52px] h-[52px] bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-full flex items-center justify-center shrink-0 transition-transform hover:-translate-y-0.5" title="Share">
-                   <Share2 size={20} />
+                 }} className="w-11 h-11 sm:w-[52px] sm:h-[52px] bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl sm:rounded-full flex items-center justify-center shrink-0 transition-transform hover:-translate-y-0.5" title="Share">
+                   <Share2 size={18} />
                  </button>
               </div>
            </div>
