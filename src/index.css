@@ -58,24 +58,22 @@
     @apply text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600;
   }
 
-  /* Header styling */
+  /* Seamless header - transparent by default on landing */
   .navbar {
-    @apply fixed top-0 w-full z-40 py-3.5 transition-all duration-300;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.7);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    @apply fixed top-0 w-full z-40 py-4 transition-all duration-300;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
   }
 
-  /* Frosted glass when scrolled */
+  /* Frosted glass active ONLY after user scrolls */
   .navbar-scrolled {
     @apply py-3;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid #cbd5e1;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   }
 
   .nav-brand {

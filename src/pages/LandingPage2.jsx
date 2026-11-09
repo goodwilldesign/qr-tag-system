@@ -110,6 +110,9 @@ export default function LandingPage2() {
       />
       
       {/* ── Background Atmosphere & Crisp Vector Accents ── */}
+      {/* Soft atmospheric top vignette for transparent navbar depth */}
+      <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-white/30 via-white/5 to-transparent pointer-events-none z-0" />
+
       {/* 1. Subtle high-tech dot matrix pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
