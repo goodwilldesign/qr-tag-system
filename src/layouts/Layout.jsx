@@ -129,7 +129,7 @@ export default function Layout() {
         </div>
       </nav>
 
-      <main className={`w-full flex-1 ${isLandingPage || hideNavbar ? '' : 'mt-16'} ${isFullWidthPage ? '' : (showBottomNav ? 'px-4 sm:px-6 lg:px-8 pt-4 pb-24' : 'px-4 sm:px-6 lg:px-8 pt-4 pb-12')}`}>
+      <main className={`w-full flex-1 ${isLandingPage || hideNavbar ? '' : 'pt-20 sm:pt-24'} ${isFullWidthPage ? '' : (showBottomNav ? 'px-4 sm:px-6 lg:px-8 pb-24' : 'px-4 sm:px-6 lg:px-8 pb-12')}`}>
         <Outlet />
       </main>
 

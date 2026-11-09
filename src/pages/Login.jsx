@@ -16,6 +16,7 @@ export default function Login() {
 
   useEffect(() => {
     setIsSignUp(location.pathname === '/signup');
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   const searchParams = new URLSearchParams(location.search);
@@ -43,23 +44,28 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
+    <div className="w-full min-h-[calc(100vh-6rem)] flex flex-col items-center justify-start py-4 sm:py-8 px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-2xl font-black text-slate-900 mb-2">
-            <QrCode className="h-7 w-7 text-violet-600" />GetURQR
+        <div className="text-center mb-6 sm:mb-8">
+          <Link to="/" className="inline-flex items-center gap-2.5 text-2xl font-black text-slate-900 mb-1 hover:opacity-90 transition-opacity">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#002b80] to-[#38b6ff] flex items-center justify-center text-white shadow-sm shadow-[#002b80]/20">
+              <QrCode className="h-5 w-5 text-white stroke-[2.2]" />
+            </div>
+            <span className="font-black text-2xl tracking-tight text-[#002b80]">
+              Get<span className="text-[#38b6ff]">UR</span>QR
+            </span>
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900 mt-4">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#002b80] mt-3 tracking-tight">
             {isSignUp ? 'Create your account' : 'Welcome back'}
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">
             {isSignUp ? 'Start generating smart QR tags for free.' : 'Sign in to manage your QR tags.'}
           </p>
         </div>
 
         {/* Card */}
-        <div className="glass-card p-8 shadow-lg">
+        <div className="glass-card p-6 sm:p-8 shadow-xl border border-slate-200/80 rounded-3xl bg-white/95 backdrop-blur-xl">
           {error && (
             <div className="mb-5 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">{error}</div>
           )}

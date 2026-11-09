@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { QrCode } from 'lucide-react';
 import { supabase } from './lib/supabase';
+import ScrollToTop from './components/ScrollToTop';
 
 // Layouts
 import Layout from './layouts/Layout';
@@ -106,6 +107,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* ── Main App Layout ─────────────── */}
         <Route path="/" element={<Layout />}>

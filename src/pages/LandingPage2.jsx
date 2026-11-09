@@ -369,7 +369,7 @@ export default function LandingPage2() {
               { id: 'link', label: 'URL Redirect', icon: Link2, color: 'text-cyan-600', bg: 'bg-cyan-50' },
               { id: 'custom', label: 'More coming soon...', icon: Sparkles, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50' }
             ].map((tag) => (
-              <div key={tag.id} onClick={() => navigate('/signup')} className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(0,43,128,0.15)] hover:border-[#38b6ff]/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
+              <div key={tag.id} onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }} className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(0,43,128,0.15)] hover:border-[#38b6ff]/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
                 <div className={`w-14 h-14 rounded-2xl ${tag.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <tag.icon className={`w-7 h-7 ${tag.color}`} />
                 </div>
@@ -385,7 +385,7 @@ export default function LandingPage2() {
           </div>
           
           <div className="mt-16 text-center">
-             <button onClick={() => navigate('/signup')} className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-[#002b80]/20 transition-transform hover:-translate-y-0.5 text-lg inline-flex items-center gap-2">
+             <button onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }} className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-[#002b80]/20 transition-transform hover:-translate-y-0.5 text-lg inline-flex items-center gap-2">
                 Create a Free Account <ArrowRight size={20} />
              </button>
           </div>
