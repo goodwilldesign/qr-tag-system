@@ -159,6 +159,21 @@ export default function AdminBatchTags() {
     setPrintTargetBatch(batch);
   };
 
+  const handleAdminResetTag = async (tagId, e) => {
+    e.stopPropagation();
+    if (!window.confirm('Are you sure you want to reset this tag to Unclaimed? This will wipe the current owner data and allow the physical tag to be claimed again.')) {
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.rpc('admin_reset_tag', { p_tag_id: tagId });
+      if (error) throw error;
+      await fetchBatchData();
+    } catch (err) {
+      alert('Failed to reset tag: ' + err.message);
+    }
+  };
+
   const triggerBrowserPrint = () => {
     window.print();
   };
@@ -344,15 +359,27 @@ export default function AdminBatchTags() {
                               </p>
                             )}
 
-                            <a
-                              href={`/tag/${t.id}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[11px] text-violet-600 hover:underline flex items-center gap-1 font-semibold pt-1"
-                            >
-                              <span>View Scan Page</span>
-                              <ExternalLink size={10} />
-                            </a>
+                            <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                              <a
+                                href={`/tag/${t.id}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[11px] text-violet-600 hover:underline flex items-center gap-1 font-semibold"
+                              >
+                                <span>Scan Page</span>
+                                <ExternalLink size={10} />
+                              </a>
+                              {t.is_claimed && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => handleAdminResetTag(t.id, e)}
+                                  className="text-[10px] font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200 transition-colors"
+                                  title="Unlink and reset this tag back to unclaimed"
+                                >
+                                  Reset
+                                </button>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>

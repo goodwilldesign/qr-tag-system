@@ -154,3 +154,112 @@ BEGIN
   );
 END;
 $$;
+
+-- 5. Atomic function to delete (or safely unlink/reset physical pre-printed tags)
+CREATE OR REPLACE FUNCTION public.delete_or_reset_tag(p_tag_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_user_id UUID;
+  v_tag RECORD;
+  v_is_admin BOOLEAN := false;
+BEGIN
+  v_user_id := auth.uid();
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'You must be logged in.';
+  END IF;
+
+  SELECT * INTO v_tag FROM public.tags WHERE id = p_tag_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Tag not found.';
+  END IF;
+
+  SELECT (role = 'admin') INTO v_is_admin FROM public.profiles WHERE id = v_user_id;
+
+  IF v_tag.user_id <> v_user_id AND NOT COALESCE(v_is_admin, false) THEN
+    RAISE EXCEPTION 'Permission denied. You can only delete your own tags.';
+  END IF;
+
+  -- Always wipe previous private messages & photos so the next owner starts clean
+  DELETE FROM public.tag_messages WHERE tag_id = p_tag_id;
+  DELETE FROM public.tag_scans WHERE tag_id = p_tag_id;
+
+  -- If it's a pre-printed tag (has a batch_id) -> UNLINK & RESET
+  IF v_tag.batch_id IS NOT NULL AND TRIM(v_tag.batch_id) <> '' THEN
+    UPDATE public.tags
+    SET 
+      user_id = NULL,
+      is_claimed = false,
+      is_active = true,
+      is_lost = false,
+      title = 'Unclaimed Tag #' || UPPER(SUBSTRING(p_tag_id::TEXT FROM 1 FOR 8)),
+      data = '{}'::jsonb,
+      claimed_at = NULL,
+      updated_at = NOW()
+    WHERE id = p_tag_id;
+
+    RETURN jsonb_build_object(
+      'success', true,
+      'action', 'reset',
+      'batch_id', v_tag.batch_id,
+      'message', 'Physical tag has been unlinked and reset. It can now be scanned and activated again.'
+    );
+  ELSE
+    -- If it's a purely digital tag with no batch_id -> HARD DELETE
+    DELETE FROM public.tags WHERE id = p_tag_id;
+
+    RETURN jsonb_build_object(
+      'success', true,
+      'action', 'deleted',
+      'message', 'Tag permanently deleted.'
+    );
+  END IF;
+END;
+$$;
+
+-- 6. Dedicated admin reset function for Customer Support
+CREATE OR REPLACE FUNCTION public.admin_reset_tag(p_tag_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_is_admin BOOLEAN := false;
+  v_tag RECORD;
+BEGIN
+  SELECT (role = 'admin') INTO v_is_admin FROM public.profiles WHERE id = auth.uid();
+  IF NOT COALESCE(v_is_admin, false) THEN
+    RAISE EXCEPTION 'Only administrators can reset tags.';
+  END IF;
+
+  SELECT * INTO v_tag FROM public.tags WHERE id = p_tag_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Tag not found.';
+  END IF;
+
+  DELETE FROM public.tag_messages WHERE tag_id = p_tag_id;
+  DELETE FROM public.tag_scans WHERE tag_id = p_tag_id;
+
+  UPDATE public.tags
+  SET 
+    user_id = NULL,
+    is_claimed = false,
+    is_active = true,
+    is_lost = false,
+    title = 'Unclaimed Tag #' || UPPER(SUBSTRING(p_tag_id::TEXT FROM 1 FOR 8)),
+    data = '{}'::jsonb,
+    claimed_at = NULL,
+    updated_at = NOW()
+  WHERE id = p_tag_id;
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'action', 'reset',
+    'tag_id', p_tag_id
+  );
+END;
+$$;

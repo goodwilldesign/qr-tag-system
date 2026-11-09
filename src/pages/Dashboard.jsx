@@ -187,14 +187,17 @@ export default function Dashboard() {
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setDeleteError('');
-    const { error } = await supabase.from('tags').delete().eq('id', deleteTarget.id);
-    if (error) {
-      console.error('Delete error:', error);
-      setDeleteError(`Could not delete tag: ${error.message}`);
-    } else {
+    try {
+      const { data, error } = await supabase.rpc('delete_or_reset_tag', { p_tag_id: deleteTarget.id });
+      if (error) throw error;
+
       setTags(prev => prev.filter(t => t.id !== deleteTarget.id));
+    } catch (err) {
+      console.error('Delete error:', err);
+      setDeleteError(`Could not remove tag: ${err.message}`);
+    } finally {
+      setDeleteTarget(null);
     }
-    setDeleteTarget(null);
   };
 
   const handleToggleLost = async (tag) => {
@@ -536,20 +539,35 @@ export default function Dashboard() {
       {/* Delete Confirm Modal */}
       {deleteTarget && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
-          <div className="bg-white rounded-2xl w-full max-w-sm p-8 shadow-2xl">
-            <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Trash2 className="h-6 w-6 text-red-500" />
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 sm:p-8 shadow-2xl">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 ${deleteTarget.batch_id ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-500'}`}>
+              <Trash2 className="h-6 w-6" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Tag?</h2>
-            <p className="text-slate-500 text-sm text-center mb-6">
-              Are you sure you want to delete <span className="font-semibold text-slate-800">"{deleteTarget.title}"</span>? This action cannot be undone.
-            </p>
+            <h2 className="text-xl font-bold text-slate-900 text-center mb-2">
+              {deleteTarget.batch_id ? 'Unlink & Reset Tag?' : 'Delete Tag?'}
+            </h2>
+            <div className="text-slate-500 text-sm text-center mb-6 space-y-2">
+              <p>
+                Are you sure you want to remove <span className="font-semibold text-slate-800">"{deleteTarget.title}"</span>?
+              </p>
+              {deleteTarget.batch_id ? (
+                <div className="text-left text-xs text-violet-800 bg-violet-50/80 p-3 rounded-xl border border-violet-100">
+                  <span className="font-bold block mb-1">💡 Physical Pre-Printed Tag Notice:</span>
+                  Your private contacts, address, and messages will be safely erased. The physical QR code will be reset to unclaimed so you (or someone else) can scan and activate it again!
+                </div>
+              ) : (
+                <p className="text-xs text-red-500">This action cannot be undone.</p>
+              )}
+            </div>
             <div className="flex gap-3">
               <button onClick={() => setDeleteTarget(null)} className="btn btn-secondary flex-1 py-2.5">
                 Cancel
               </button>
-              <button onClick={handleDelete} className="btn flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white">
-                <Trash2 size={16} /> Delete
+              <button
+                onClick={handleDelete}
+                className={`btn flex-1 py-2.5 text-white ${deleteTarget.batch_id ? 'bg-amber-600 hover:bg-amber-700' : 'bg-red-600 hover:bg-red-700'}`}
+              >
+                <Trash2 size={16} /> {deleteTarget.batch_id ? 'Unlink & Reset' : 'Delete'}
               </button>
             </div>
           </div>
