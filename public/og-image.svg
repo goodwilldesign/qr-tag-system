@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#002b80" />
+      <stop offset="60%" stop-color="#00184d" />
+      <stop offset="100%" stop-color="#050b1a" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38b6ff" />
+      <stop offset="100%" stop-color="#0052cc" />
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38b6ff" />
+      <stop offset="100%" stop-color="#ff9100" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="60" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- Ambient Light Orbs -->
+  <circle cx="1050" cy="120" r="320" fill="#38b6ff" opacity="0.18" filter="url(#glow)" />
+  <circle cx="150" cy="550" r="280" fill="#0052cc" opacity="0.25" filter="url(#glow)" />
+  <circle cx="850" cy="500" r="220" fill="#ff9100" opacity="0.12" filter="url(#glow)" />
+
+  <!-- Dot Matrix Pattern -->
+  <g fill="#38b6ff" opacity="0.08">
+    <circle cx="60" cy="60" r="2" /><circle cx="100" cy="60" r="2" /><circle cx="140" cy="60" r="2" /><circle cx="180" cy="60" r="2" />
+    <circle cx="60" cy="100" r="2" /><circle cx="100" cy="100" r="2" /><circle cx="140" cy="100" r="2" /><circle cx="180" cy="100" r="2" />
+    <circle cx="60" cy="140" r="2" /><circle cx="100" cy="140" r="2" /><circle cx="140" cy="140" r="2" /><circle cx="180" cy="140" r="2" />
+    <circle cx="60" cy="180" r="2" /><circle cx="100" cy="180" r="2" /><circle cx="140" cy="180" r="2" /><circle cx="180" cy="180" r="2" />
+  </g>
+
+  <!-- Left Content Column -->
+  <g transform="translate(100, 130)">
+    <!-- Brand Pill Badge -->
+    <rect x="0" y="0" width="220" height="42" rx="21" fill="rgba(56, 182, 255, 0.15)" stroke="rgba(56, 182, 255, 0.4)" stroke-width="1.5" />
+    <text x="24" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="800" fill="#38b6ff" letter-spacing="1.5">SMART DIGITAL TAGS</text>
+
+    <!-- Main Title -->
+    <text x="0" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="900" fill="#ffffff" letter-spacing="-1">
+      Get<tspan fill="#38b6ff">UR</tspan>QR
+    </text>
+    <text x="0" y="170" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="700" fill="#e2e8f0" letter-spacing="-0.5">
+      Smart QR Codes with WhatsApp Privacy
+    </text>
+
+    <!-- Subtitle / Value Prop -->
+    <text x="0" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="400" fill="#94a3b8">
+      Protect pets, vehicles, luggage, and home doorbells without
+    </text>
+    <text x="0" y="255" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="400" fill="#94a3b8">
+      ever exposing your private phone number to strangers.
+    </text>
+
+    <!-- Feature Tags -->
+    <g transform="translate(0, 305)">
+      <rect x="0" y="0" width="130" height="36" rx="10" fill="rgba(255,255,255,0.08)" />
+      <text x="18" y="23" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">🐶 Pet Tags</text>
+
+      <rect x="145" y="0" width="150" height="36" rx="10" fill="rgba(255,255,255,0.08)" />
+      <text x="162" y="23" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">🚗 Vehicle Tags</text>
+
+      <rect x="310" y="0" width="145" height="36" rx="10" fill="rgba(255,255,255,0.08)" />
+      <text x="328" y="23" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">🔔 QR Doorbell</text>
+    </g>
+  </g>
+
+  <!-- Right Visual: Sleek Phone & Smart QR Card -->
+  <g transform="translate(760, 100)">
+    <!-- Ambient glow under card -->
+    <rect x="10" y="10" width="340" height="420" rx="36" fill="#38b6ff" opacity="0.2" filter="url(#glow)" />
+
+    <!-- Card Background -->
+    <rect x="0" y="0" width="340" height="420" rx="36" fill="#ffffff" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+
+    <!-- Inner Card Header -->
+    <rect x="0" y="0" width="340" height="85" rx="36" fill="#002b80" />
+    <rect x="0" y="55" width="340" height="30" fill="#002b80" />
+    <text x="30" y="46" font-family="system-ui, sans-serif" font-size="20" font-weight="800" fill="#ffffff">Smart Tag Active</text>
+    <circle cx="295" cy="42" r="8" fill="#10b981" />
+
+    <!-- QR Code Center Simulation -->
+    <rect x="50" y="115" width="240" height="240" rx="20" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+    
+    <!-- Stylized QR Corner Targets -->
+    <rect x="70" y="135" width="56" height="56" rx="10" fill="#002b80" />
+    <rect x="80" y="145" width="36" height="36" rx="6" fill="#ffffff" />
+    <rect x="88" y="153" width="20" height="20" rx="4" fill="#38b6ff" />
+
+    <rect x="214" y="135" width="56" height="56" rx="10" fill="#002b80" />
+    <rect x="224" y="145" width="36" height="36" rx="6" fill="#ffffff" />
+    <rect x="232" y="153" width="20" height="20" rx="4" fill="#38b6ff" />
+
+    <rect x="70" y="279" width="56" height="56" rx="10" fill="#002b80" />
+    <rect x="80" y="289" width="36" height="36" rx="6" fill="#ffffff" />
+    <rect x="88" y="297" width="20" height="20" rx="4" fill="#38b6ff" />
+
+    <!-- Center Icon Shield -->
+    <rect x="145" y="210" width="50" height="50" rx="14" fill="#002b80" stroke="#ffffff" stroke-width="3" />
+    <text x="157" y="243" font-family="system-ui, sans-serif" font-size="24" fill="#38b6ff">⚡</text>
+
+    <!-- Bottom Badge -->
+    <rect x="50" y="370" width="240" height="36" rx="18" fill="#25D366" />
+    <text x="170" y="393" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">💬 Connect on WhatsApp</text>
+  </g>
+
+  <!-- URL Branding Bottom Right -->
+  <text x="1100" y="585" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94a3b8" text-anchor="end">
+    geturqr.com
+  </text>
+</svg>

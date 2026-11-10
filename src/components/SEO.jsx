@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const DEFAULT_SITE_NAME = 'GetURQR';
 const DEFAULT_DOMAIN = 'https://geturqr.com';
-const DEFAULT_IMAGE = `${DEFAULT_DOMAIN}/pwa-512x512.png`;
+const DEFAULT_IMAGE = `${DEFAULT_DOMAIN}/og-image.svg`;
 const DEFAULT_DESC = 'Create smart digital QR tags with instant WhatsApp chat connectivity. Secure your pets, luggage, parking, and home rentals without exposing your phone number.';
 
 function updateMetaTag(attrName, attrValue, content) {

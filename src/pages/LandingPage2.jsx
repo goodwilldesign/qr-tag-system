@@ -1,7 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, ChevronUp, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight, Image as ImageIcon, X, Share2 } from 'lucide-react';
+import { 
+  QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, 
+  MessageSquare, Mail, Download, UploadCloud, ChevronDown, ChevronUp, Lock, 
+  Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight, 
+  Image as ImageIcon, X, Share2, CheckCircle2, XCircle, HelpCircle, Layers, 
+  Settings2, Printer, ShieldCheck, Zap 
+} from 'lucide-react';
 import SEO from '../components/SEO';
 import SmartTagSimulatorModal from '../components/SmartTagSimulatorModal';
 
@@ -16,6 +22,180 @@ const TABS = [
   { id: 'Phone', icon: Phone, title: 'Enter phone number', placeholder: '+1234567890', prefix: 'tel:' }
 ];
 
+const FAQS = [
+  {
+    q: "What is the difference between a static QR code and a dynamic smart tag?",
+    a: "Static QR codes encode fixed text or URLs permanently into the square matrix; if your destination changes, you must re-generate and re-print. Dynamic smart tags from GetURQR point to an intelligent cloud router, allowing you to update destinations, emergency contacts, or messages anytime without re-printing. Plus, GetURQR smart tags include WhatsApp privacy routing and scan notifications."
+  },
+  {
+    q: "Are the QR codes generated on GetURQR completely free?",
+    a: "Yes! You can generate, customize with logos and colors, and download unlimited static QR codes (URL, Text, SMS, Email, Phone) in high-resolution JPG or PNG/SVG 100% free with no watermark. For dynamic tags, our free tier lets you manage active smart tags with instant WhatsApp connections."
+  },
+  {
+    q: "How does the WhatsApp smart contact feature protect my privacy?",
+    a: "When someone scans your GetURQR pet, luggage, or vehicle tag, they see a clean mobile landing page with a direct 'Chat on WhatsApp' button. Your phone number is masked behind a secure server-side redirect or prefilled WhatsApp URI, preventing scammers and strangers from scraping your real phone number."
+  },
+  {
+    q: "Can I change where my QR code points after printing it?",
+    a: "Yes! With GetURQR Smart Tags, the destination is completely dynamic. You can log into your dashboard at any time to change your destination URL, pet medical notes, contact phone, or vehicle parking message instantly — the printed physical QR code continues to work seamlessly."
+  },
+  {
+    q: "What image formats can I download my QR code in?",
+    a: "GetURQR provides instant downloads in high-resolution JPG and razor-sharp PNG and vector SVG. Vector SVG is ideal for large-scale billboard printing, laser engraving, t-shirts, stickers, and business cards without any pixelation or quality loss."
+  },
+  {
+    q: "Do I need a special app to scan GetURQR codes?",
+    a: "No special app is required. Every modern iOS and Android smartphone has a built-in QR scanner in its default camera app. Anyone who points their phone camera at your code can scan and interact with it in under two seconds."
+  },
+  {
+    q: "Can I add my business or personal logo inside the QR code?",
+    a: "Yes! Our built-in customization studio lets you upload any PNG or JPG logo. GetURQR generates QR codes using Level H Reed-Solomon error correction (up to 30% redundancy), ensuring your code remains 100% readable even with a centered custom brand logo."
+  },
+  {
+    q: "How do vehicle parking QR tags help when I am temporarily parked?",
+    a: "A GetURQR Vehicle Parking Tag placed on your windshield allows other drivers or building security to tap a single button to alert you on WhatsApp (e.g., 'Please move your car' or 'Window left open') without having your personal phone number visible to pedestrians or parked neighbors."
+  }
+];
+
+const SCHEMA_GRAPH = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "GetURQR",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "1280",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "description": "Free high-resolution QR code generator and dynamic Smart Tag management platform with privacy-masked WhatsApp connectivity for pets, luggage, keys, and vehicles."
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to Create a Custom QR Code or Dynamic Smart Tag",
+      "description": "Step-by-step guide to generating free high-resolution QR codes and privacy-protected smart tags with GetURQR.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Choose Your Tag Type or Input",
+          "text": "Select from static types (URL, Text, vCard, SMS, Email) or dynamic smart tags (Pet ID, Vehicle Parking, Luggage, Medical, Doorbell).",
+          "url": "https://geturqr.com/#generator"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Customize Design, Colors, & Privacy Rules",
+          "text": "Upload your brand logo, pick custom hex colors, select frame styles, and configure masked WhatsApp notifications or emergency contacts.",
+          "url": "https://geturqr.com/#customization"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Download in Vector SVG or Print Instantly",
+          "text": "Export your high-resolution QR code in vector SVG, PNG, or JPG formats. Attach to your items and update destinations anytime without re-printing.",
+          "url": "https://geturqr.com/#download"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": FAQS.map(faq => ({
+        "@type": "Question",
+        "name": faq.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.a
+        }
+      }))
+    }
+  ]
+};
+
+const COMPARISON_FEATURES = [
+  {
+    feature: 'Destination Updating',
+    desc: 'Change destination link or contact info after printing',
+    staticQr: 'Impossible (Requires re-printing)',
+    smartTag: 'Instant 1-Click Update Anytime',
+    staticOk: false,
+    smartOk: true
+  },
+  {
+    feature: 'Privacy & Number Masking',
+    desc: 'Protect personal phone numbers from strangers and bots',
+    staticQr: 'Raw phone number exposed',
+    smartTag: 'Secure WhatsApp chat routing',
+    staticOk: false,
+    smartOk: true
+  },
+  {
+    feature: 'Real-Time Scan Notifications',
+    desc: 'Instant alerts when someone scans your physical tag',
+    staticQr: 'Zero scan awareness',
+    smartTag: 'Instant alerts & device breakdown',
+    staticOk: false,
+    smartOk: true
+  },
+  {
+    feature: 'Purpose-Built Mobile Flows',
+    desc: 'Tailored interfaces for Pets, Vehicles, Luggage & Medical',
+    staticQr: 'Generic plain text only',
+    smartTag: 'Dedicated responsive web apps',
+    staticOk: false,
+    smartOk: true
+  },
+  {
+    feature: 'High-Res Vector SVG Downloads',
+    desc: 'Infinitely scalable output for print, stickers & engraving',
+    staticQr: 'Often blurry raster only',
+    smartTag: 'Razor-sharp 300+ DPI vector SVG/PNG',
+    staticOk: true,
+    smartOk: true
+  },
+  {
+    feature: 'Price & Starter Tier',
+    desc: 'Core generation and basic usage cost',
+    staticQr: '100% Free',
+    smartTag: 'Free Starter Plan Included',
+    staticOk: true,
+    smartOk: true
+  }
+];
+
+const HOW_IT_WORKS_STEPS = [
+  {
+    step: '01',
+    title: 'Choose Tag Type or Input',
+    desc: 'Generate static codes for instant URLs, WiFi, or vCards — or create dynamic Smart Tags for pets, cars, luggage, and emergency contact.',
+    icon: Layers,
+    color: 'from-blue-600 to-sky-500'
+  },
+  {
+    step: '02',
+    title: 'Brand & Configure Privacy',
+    desc: 'Upload your company logo, choose eye-catching custom brand colors, select scan frames, and configure safe WhatsApp contact masking.',
+    icon: Settings2,
+    color: 'from-indigo-600 to-blue-500'
+  },
+  {
+    step: '03',
+    title: 'Download, Print & Manage',
+    desc: 'Export high-res vector SVG or print-ready PNG. Need to update your phone number or notes later? Change it in seconds without re-printing.',
+    icon: Printer,
+    color: 'from-sky-500 to-teal-400'
+  }
+];
+
 export default function LandingPage2() {
   const navigate = useNavigate();
   const [simulatorTag, setSimulatorTag] = useState(null);
@@ -23,6 +203,7 @@ export default function LandingPage2() {
   const [inputValue, setInputValue] = useState(TABS[0].placeholder || '');
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const qrRef = useRef(null);
 
   const [expandedPanel, setExpandedPanel] = useState(null);
@@ -37,6 +218,10 @@ export default function LandingPage2() {
     { id: 'bottom-text', label: 'Text Bottom' },
     { id: 'top-text', label: 'Text Top' }
   ];
+
+  const toggleFaq = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -105,25 +290,25 @@ export default function LandingPage2() {
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-gradient-to-b from-[#f4f7fb] via-[#edf2f8] to-[#f8fbff] font-sans min-h-screen relative">
       <SEO
-        title="GetURQR — Free Custom QR Code Generator & Smart Tags"
-        description="Generate custom QR codes instantly with logos, colors, and frames. Create smart tags for pets, luggage, keys, and parking with direct WhatsApp connection."
-        keywords="QR code generator, custom QR code, free QR generator, QR code with logo, smart pet tag, WhatsApp QR code"
+        title="GetURQR — Free Custom QR Code Generator & Dynamic Smart Tags"
+        description="Generate custom QR codes instantly with logos, colors, and frames. Create dynamic smart tags for pets, luggage, keys, and parking with privacy-protected WhatsApp connection."
+        keywords="QR code generator, custom QR code, free QR generator, QR code with logo, smart pet tag, WhatsApp QR code, dynamic QR code, vector SVG QR code"
         canonical="https://geturqr.com"
+        jsonLd={SCHEMA_GRAPH}
       />
       
       {/* ── Background Atmosphere & Crisp Vector Accents ── */}
-      {/* Soft atmospheric top vignette for transparent navbar depth */}
       <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-white/30 via-white/5 to-transparent pointer-events-none z-0" />
 
       {/* 1. Subtle high-tech dot matrix pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
-      {/* 2. Soft atmospheric ambient lighting (diffused blur-3xl mesh - no fuzzy 1px/2px raster artifacts) */}
+      {/* 2. Soft atmospheric ambient lighting */}
       <div className="absolute -top-32 -right-32 w-[550px] h-[550px] bg-gradient-to-bl from-sky-400/20 via-blue-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-[550px] h-[550px] bg-gradient-to-tr from-indigo-500/15 via-blue-400/10 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 -right-24 w-[420px] h-[420px] bg-gradient-to-l from-[#38b6ff]/15 via-indigo-200/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-      {/* 3. Razor-sharp vector geometric accents (vector SVG, 100% crisp on any DPI, zero blur) */}
+      {/* 3. Vector geometric accents */}
       <svg className="absolute top-[26%] -right-16 w-80 h-80 text-[#38b6ff]/20 pointer-events-none hidden md:block" viewBox="0 0 200 200" fill="none">
         <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 6" />
         <circle cx="100" cy="100" r="65" stroke="currentColor" strokeWidth="1.5" />
@@ -135,11 +320,21 @@ export default function LandingPage2() {
       </svg>
 
       {/* ── Hero Generator Section ───────────────────── */}
-      {/* min-h-[100dvh] guarantees the hero occupies the entire screen fold on desktop, eliminating any bottom white strip peeking through */}
-      <section className="relative z-10 w-full min-h-[100dvh] flex flex-col justify-between items-center pt-20 sm:pt-24 pb-4 px-3 sm:px-6 lg:px-8">
+      <section id="generator" className="relative z-10 w-full min-h-[100dvh] flex flex-col justify-between items-center pt-20 sm:pt-24 pb-4 px-3 sm:px-6 lg:px-8">
         
-        {/* Top spacer for clean vertical balance */}
-        <div className="h-1 sm:h-2" aria-hidden="true" />
+        {/* Semantic H1 & Value Proposition */}
+        <div className="text-center max-w-4xl mx-auto px-4 pt-1 sm:pt-2 pb-3 sm:pb-5">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/60 text-[#002b80] text-xs font-semibold mb-2.5 shadow-sm">
+            <Sparkles size={13} className="text-[#38b6ff]" />
+            <span>Free Custom QR Code Generator & Dynamic Smart Tags</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-extrabold text-[#002b80] tracking-tight leading-[1.15]">
+            Create Custom QR Codes & <span className="bg-gradient-to-r from-[#002b80] via-[#38b6ff] to-[#002b80] bg-clip-text text-transparent">Smart Dynamic Tags</span>
+          </h1>
+          <p className="mt-2.5 text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto font-normal">
+            Design brand-ready QR codes with logos, custom colors, and frames — or activate dynamic smart tags with privacy protection and direct WhatsApp alerts.
+          </p>
+        </div>
 
         {/* Main Generator Card */}
         <div className="bg-[#f8fbff]/95 rounded-3xl lg:rounded-[2.5rem] w-full max-w-[1140px] mx-auto p-4 sm:p-6 lg:p-8 shadow-[0_25px_60px_-15px_rgba(0,43,128,0.18)] border border-white/80 flex flex-col lg:flex-row gap-6 lg:gap-8 relative overflow-hidden backdrop-blur-2xl my-auto">
@@ -155,6 +350,7 @@ export default function LandingPage2() {
                       onClick={() => handleTabChange(tab)}
                       className={`relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shrink-0 ${isActive ? 'bg-[#002b80] text-white shadow-lg shadow-[#002b80]/40 scale-105 lg:scale-110 z-10' : 'text-slate-400 hover:text-[#002b80] hover:bg-slate-50'}`}
                       title={tab.id}
+                      aria-label={`Select ${tab.id} QR Code Type`}
                     >
                        <tab.icon className={`w-5 h-5 ${isActive ? 'stroke-2' : 'stroke-[1.5]'}`} />
                     </button>
@@ -335,7 +531,7 @@ export default function LandingPage2() {
            </div>
         </div>
 
-        {/* ── Desktop Scroll Cue (Clean, intentional indicator that eliminates the awkward bottom white strip) ── */}
+        {/* ── Desktop Scroll Cue ── */}
         <div className="pt-3 pb-1 flex flex-col items-center justify-center shrink-0">
           <button 
             onClick={() => document.getElementById('smart-tags-showcase')?.scrollIntoView({ behavior: 'smooth' })}
@@ -343,7 +539,7 @@ export default function LandingPage2() {
             aria-label="Scroll to Smart Tags"
           >
             <span className="text-[11px] font-semibold tracking-wider uppercase text-slate-400 group-hover:text-[#002b80] transition-colors">
-              Explore Smart Tags
+              Explore Smart Tags & Features
             </span>
             <ChevronDown size={18} className="animate-bounce text-[#38b6ff] group-hover:text-[#002b80] transition-colors" />
           </button>
@@ -400,6 +596,206 @@ export default function LandingPage2() {
              <button onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }} className="bg-[#002b80] hover:bg-[#001f5c] text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-[#002b80]/20 transition-transform hover:-translate-y-0.5 text-lg inline-flex items-center gap-2">
                 Create a Free Account <ArrowRight size={20} />
              </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works Section (SEO 3-Step Guide) ───────── */}
+      <section id="how-it-works" className="py-20 sm:py-24 w-full bg-[#f8fbff] relative z-10 border-t border-slate-200/50">
+        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 text-[#002b80] text-xs font-bold mb-3 shadow-sm">
+              <Layers size={14} className="text-[#38b6ff]" />
+              <span>Simple 3-Step Workflow</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002b80] tracking-tight">
+              How GetURQR Works
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-slate-500 max-w-2xl mx-auto">
+              From instant browser creation to dynamic cloud updates in three effortless steps.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            {HOW_IT_WORKS_STEPS.map((s, idx) => (
+              <div 
+                key={s.step} 
+                className="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0_10px_30px_-15px_rgba(0,43,128,0.08)] hover:shadow-[0_20px_45px_-15px_rgba(0,43,128,0.14)] hover:-translate-y-1 transition-all duration-300 relative flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-3xl font-black text-[#002b80]/15 group-hover:text-[#38b6ff] transition-colors font-mono">
+                      {s.step}
+                    </span>
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${s.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                      <s.icon size={22} />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-[#002b80] mb-2.5">
+                    {s.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {s.desc}
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-[#002b80]">
+                  <span>Step {idx + 1} of 3</span>
+                  <ArrowRight size={13} className="text-[#38b6ff]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Static vs Smart Tag Comparison Section ───────── */}
+      <section id="comparison" className="py-20 sm:py-24 w-full bg-white relative z-10 border-t border-slate-200/60 shadow-sm">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 text-[#002b80] text-xs font-bold mb-3 shadow-sm">
+              <ShieldCheck size={14} className="text-[#38b6ff]" />
+              <span>Why Smart Tags Win</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002b80] tracking-tight">
+              Static QR Codes vs. GetURQR Smart Tags
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-slate-500 max-w-2xl mx-auto">
+              Understand why traditional static QR codes fail when printed on physical items, and how smart tags solve real-world lost & found and privacy problems.
+            </p>
+          </div>
+
+          {/* Responsive Comparison Table Container */}
+          <div className="overflow-x-auto rounded-3xl border border-slate-200/80 bg-white shadow-xl shadow-slate-200/50">
+            <table className="w-full text-left border-collapse min-w-[620px]">
+              <thead>
+                <tr className="bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-b border-slate-200 text-xs font-black uppercase tracking-wider text-slate-500">
+                  <th className="py-4 px-6 sm:px-8 w-2/5">Capability & Feature</th>
+                  <th className="py-4 px-6 w-[30%] text-slate-400">Traditional Static QR</th>
+                  <th className="py-4 px-6 w-[30%] bg-blue-50/70 text-[#002b80] border-l border-blue-100">GetURQR Smart Tag</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {COMPARISON_FEATURES.map((row, i) => (
+                  <tr key={i} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-4 px-6 sm:px-8">
+                      <div className="font-bold text-[#002b80] text-sm sm:text-base">{row.feature}</div>
+                      <div className="text-xs text-slate-500 mt-0.5">{row.desc}</div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-2 text-slate-500 font-medium text-xs sm:text-sm">
+                        {row.staticOk ? (
+                          <CheckCircle2 size={16} className="text-slate-400 shrink-0" />
+                        ) : (
+                          <XCircle size={16} className="text-rose-500 shrink-0" />
+                        )}
+                        <span>{row.staticQr}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6 bg-blue-50/40 border-l border-blue-100/80">
+                      <div className="flex items-center gap-2 text-[#002b80] font-semibold text-xs sm:text-sm">
+                        <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+                        <span>{row.smartTag}</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-10 text-center">
+            <button 
+              onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }} 
+              className="inline-flex items-center gap-2 text-sm font-bold text-[#002b80] hover:text-[#38b6ff] transition-colors underline-offset-4 hover:underline"
+            >
+              <span>Explore all smart tag features in your free dashboard</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ Section (Semantic & JSON-LD Synchronized) ── */}
+      <section id="faq" className="py-20 sm:py-24 w-full bg-gradient-to-b from-[#f8fbff] via-slate-50/70 to-white relative z-10 border-t border-slate-200/60">
+        <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 text-[#002b80] text-xs font-bold mb-3 shadow-sm">
+              <HelpCircle size={14} className="text-[#38b6ff]" />
+              <span>Common Questions</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002b80] tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-3 text-base text-slate-500 max-w-xl mx-auto">
+              Everything you need to know about creating custom QR codes, dynamic smart tags, and WhatsApp privacy protection.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3.5">
+            {FAQS.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div 
+                  key={index}
+                  className={`border rounded-2xl sm:rounded-3xl transition-all duration-200 bg-white ${
+                    isOpen 
+                      ? 'border-[#38b6ff]/50 shadow-[0_10px_30px_-10px_rgba(0,43,128,0.12)] ring-1 ring-[#38b6ff]/20' 
+                      : 'border-slate-200/80 hover:border-slate-300 shadow-sm'
+                  }`}
+                >
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full py-4 sm:py-5 px-5 sm:px-6 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-[#002b80] focus:outline-none cursor-pointer"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="flex-1 pr-2">{faq.q}</span>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'bg-[#002b80] text-white rotate-180' : 'bg-slate-100 text-slate-500'
+                    }`}>
+                      <ChevronDown size={18} />
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 sm:px-6 pb-5 pt-1 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── High-Converting CTA Banner ───────────────────── */}
+      <section className="py-16 sm:py-20 w-full bg-gradient-to-tr from-[#002b80] via-[#0038a8] to-[#001d57] text-white relative z-10 overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 bg-[radial-gradient(#38b6ff_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
+        <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-[#38b6ff] text-xs font-bold mb-4 backdrop-blur-sm">
+            <Zap size={13} className="text-[#38b6ff]" />
+            <span>Get Started In Seconds</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 text-white">
+            Ready to Upgrade to Smart QR Tags?
+          </h2>
+          <p className="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto mb-8 font-normal">
+            Join thousands of pet owners, travelers, and vehicle drivers protecting what matters most. Create your first dynamic tag completely free.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }}
+              className="w-full sm:w-auto bg-[#38b6ff] hover:bg-[#2fa0e6] text-white font-bold py-4 px-8 rounded-full shadow-xl shadow-[#38b6ff]/30 transition-transform hover:-translate-y-0.5 text-base flex items-center justify-center gap-2"
+            >
+              <span>Create Free Smart Tag</span>
+              <ArrowRight size={18} />
+            </button>
+            <button
+              onClick={() => setSimulatorTag('pet')}
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/15 border border-white/25 text-white font-semibold py-4 px-8 rounded-full transition-colors text-base flex items-center justify-center gap-2 backdrop-blur-sm"
+            >
+              <Sparkles size={18} className="text-[#38b6ff]" />
+              <span>Try Interactive Simulator</span>
+            </button>
           </div>
         </div>
       </section>
