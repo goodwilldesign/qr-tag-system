@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { QrCode, Link as LinkIcon, User, Phone, AlignJustify, AlignLeft, LayoutGrid, MessageSquare, Mail, Download, UploadCloud, ChevronDown, ChevronUp, Lock, Dog, CarFront, Stethoscope, Briefcase, Bell, Key, Link2, Sparkles, ArrowRight, Image as ImageIcon, X, Share2 } from 'lucide-react';
 import SEO from '../components/SEO';
+import SmartTagSimulatorModal from '../components/SmartTagSimulatorModal';
 
 const TABS = [
   { id: 'URL', icon: LinkIcon, title: 'Enter your URL', placeholder: 'https://example.com/' },
@@ -17,6 +18,7 @@ const TABS = [
 
 export default function LandingPage2() {
   const navigate = useNavigate();
+  const [simulatorTag, setSimulatorTag] = useState(null);
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [inputValue, setInputValue] = useState(TABS[0].placeholder || '');
   const [emailSubject, setEmailSubject] = useState('');
@@ -369,12 +371,22 @@ export default function LandingPage2() {
               { id: 'link', label: 'URL Redirect', icon: Link2, color: 'text-cyan-600', bg: 'bg-cyan-50' },
               { id: 'custom', label: 'More coming soon...', icon: Sparkles, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50' }
             ].map((tag) => (
-              <div key={tag.id} onClick={() => { window.scrollTo(0, 0); navigate('/signup'); }} className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(0,43,128,0.15)] hover:border-[#38b6ff]/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
+              <div 
+                key={tag.id} 
+                onClick={() => setSimulatorTag(tag.id === 'custom' ? 'pet' : tag.id)} 
+                className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_-15px_rgba(0,43,128,0.15)] hover:border-[#38b6ff]/40 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden"
+              >
                 <div className={`w-14 h-14 rounded-2xl ${tag.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <tag.icon className={`w-7 h-7 ${tag.color}`} />
                 </div>
-                <h3 className="text-lg font-bold text-[#002b80] mb-2">{tag.label}</h3>
-                <p className="text-sm text-slate-500 line-clamp-2">Click to preview and build your custom tag.</p>
+                <h3 className="text-lg font-bold text-[#002b80] mb-1.5">{tag.label}</h3>
+                <p className="text-sm text-slate-500 line-clamp-2 mb-3">Click to preview and build your custom tag.</p>
+                
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#38b6ff] group-hover:text-[#002b80] transition-colors">
+                  <Sparkles size={13} className="text-[#38b6ff]" />
+                  <span>Test-drive live demo</span>
+                </div>
+
                 <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                    <div className="w-8 h-8 rounded-full bg-[#f8fbff] flex items-center justify-center shadow-sm text-[#002b80]">
                      <ArrowRight className="w-4 h-4" />
@@ -391,6 +403,14 @@ export default function LandingPage2() {
           </div>
         </div>
       </section>
+
+      {/* ── Interactive Smartphone Simulator Modal ───────────────────── */}
+      {simulatorTag && (
+        <SmartTagSimulatorModal 
+          initialTag={simulatorTag} 
+          onClose={() => setSimulatorTag(null)} 
+        />
+      )}
 
     </div>
   );
